@@ -1,40 +1,32 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Play, Users, Calendar, MessageCircle, Zap, Target, TrendingUp } from 'lucide-react';
-import HeroSection from './sections/HeroSection';
-import ProblemSection from './sections/ProblemSection';
-import ProductSection from './sections/ProductSection';
-import DayWithAsmiSection from './sections/DayWithAsmiSection';
+import InteractiveHeroSection from './sections/InteractiveHeroSection';
+import InteractiveProblemSection from './sections/InteractiveProblemSection';
+import WhatsAppFlowSection from './sections/WhatsAppFlowSection';
+import UseCasesSection from './sections/UseCasesSection';
 import WhyPlatformSection from './sections/WhyPlatformSection';
-import DifferentiatorSection from './sections/DifferentiatorSection';
-import TargetAudienceSection from './sections/TargetAudienceSection';
-import TractionSection from './sections/TractionSection';
-import RoadmapSection from './sections/RoadmapSection';
-import WhyNowSection from './sections/WhyNowSection';
-import BusinessModelSection from './sections/BusinessModelSection';
-import TeamSection from './sections/TeamSection';
-import FundingSection from './sections/FundingSection';
-import ClosingSection from './sections/ClosingSection';
+import PersonalizationSection from './sections/PersonalizationSection';
+import FounderSection from './sections/FounderSection';
+import TractionTimelineSection from './sections/TractionTimelineSection';
+import InvestorAskSection from './sections/InvestorAskSection';
+import ClosingCTASection from './sections/ClosingCTASection';
 
 const InvestorSite = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const sections = [
-    { component: HeroSection, title: 'Hero' },
-    { component: ProblemSection, title: 'Problem' },
-    { component: ProductSection, title: 'Solution' },
-    { component: DayWithAsmiSection, title: 'Experience' },
+    { component: InteractiveHeroSection, title: 'Hero' },
+    { component: InteractiveProblemSection, title: 'Problem' },
+    { component: WhatsAppFlowSection, title: 'Experience' },
+    { component: UseCasesSection, title: 'Use Cases' },
     { component: WhyPlatformSection, title: 'Platform' },
-    { component: DifferentiatorSection, title: 'Differentiators' },
-    { component: TargetAudienceSection, title: 'Market' },
-    { component: TractionSection, title: 'Traction' },
-    { component: RoadmapSection, title: 'Roadmap' },
-    { component: WhyNowSection, title: 'Timing' },
-    { component: BusinessModelSection, title: 'Business' },
-    { component: TeamSection, title: 'Team' },
-    { component: FundingSection, title: 'Investment' },
-    { component: ClosingSection, title: 'Vision' },
+    { component: PersonalizationSection, title: 'Personalization' },
+    { component: FounderSection, title: 'Founders' },
+    { component: TractionTimelineSection, title: 'Traction' },
+    { component: InvestorAskSection, title: 'Investment' },
+    { component: ClosingCTASection, title: 'Vision' },
   ];
 
   useEffect(() => {
@@ -65,24 +57,29 @@ const InvestorSite = () => {
 
   return (
     <div className="bg-black text-white overflow-x-hidden">
-      {/* Navigation */}
-      <nav className="fixed top-0 right-0 z-50 p-6">
-        <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
-          <div className="flex flex-col space-y-2">
-            {sections.map((section, index) => (
-              <button
-                key={index}
-                onClick={() => scrollToSection(index)}
-                className={`text-xs px-3 py-2 rounded-lg transition-all duration-300 text-left ${
-                  currentSection === index
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {section.title}
-              </button>
-            ))}
-          </div>
+      {/* Progress indicator */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50">
+        <div 
+          className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300"
+          style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
+        />
+      </div>
+
+      {/* Mobile-first navigation */}
+      <nav className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 md:top-6 md:right-6 md:left-auto md:transform-none">
+        <div className="bg-black/80 backdrop-blur-sm rounded-full p-2 border border-white/10 flex md:flex-col space-x-2 md:space-x-0 md:space-y-2">
+          {sections.map((section, index) => (
+            <button
+              key={index}
+              onClick={() => scrollToSection(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                currentSection === index
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 scale-125'
+                  : 'bg-gray-600 hover:bg-gray-400'
+              }`}
+              aria-label={section.title}
+            />
+          ))}
         </div>
       </nav>
 
