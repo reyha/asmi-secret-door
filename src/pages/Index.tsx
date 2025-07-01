@@ -20,7 +20,6 @@ const Index = () => {
     } else {
       setError('Not quite. Try again or contact us.');
       setIsShaking(true);
-      // Apple-like bounce animation
       setTimeout(() => {
         setIsShaking(false);
       }, 600);
@@ -39,11 +38,11 @@ const Index = () => {
         <div className="text-center max-w-2xl mx-auto">
           {/* Main heading */}
           <div className="mb-12">
-            <h1 className="text-4xl md:text-6xl font-light mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-light mb-6 tracking-tight leading-tight">
               Asmi is not for <span className="text-gray-500">everyone</span>.
             </h1>
-            <p className="text-2xl md:text-3xl text-gray-300 font-light">
-              But if you're here, <span className="text-white">welcome</span>.
+            <p className="text-2xl md:text-3xl lg:text-4xl text-gray-300 font-light">
+              But if you're here, <span className="text-white font-medium">welcome</span>.
             </p>
           </div>
 
@@ -65,7 +64,7 @@ const Index = () => {
                     setError('');
                   }}
                   placeholder="Enter password"
-                  className="w-full px-6 py-4 bg-transparent text-white placeholder-gray-400 focus:outline-none text-center rounded-full text-lg"
+                  className="w-full px-6 py-4 bg-transparent text-white placeholder-gray-400 focus:outline-none text-center rounded-full text-lg font-light"
                   autoFocus
                 />
                 <button
@@ -79,7 +78,7 @@ const Index = () => {
               
               {error && (
                 <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-2xl animate-fade-in">
-                  <p className="text-red-400 text-sm">
+                  <p className="text-red-400 text-sm font-light">
                     {error}
                   </p>
                 </div>
@@ -88,7 +87,7 @@ const Index = () => {
 
             <button
               type="submit"
-              className="mt-8 px-10 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 text-lg"
+              className="mt-8 px-12 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 text-lg"
             >
               Enter Experience
             </button>
@@ -96,10 +95,10 @@ const Index = () => {
 
           {/* Contact */}
           <div className="text-gray-500">
-            <p className="mb-2">If you're here without a password, reach out to</p>
+            <p className="mb-2 font-light">If you're here without a password, reach out to</p>
             <a 
               href="mailto:rishi@asmi.ai" 
-              className="text-blue-400 hover:text-blue-300 transition-colors text-lg hover:underline"
+              className="text-blue-400 hover:text-blue-300 transition-colors text-lg hover:underline font-medium"
             >
               rishi@asmi.ai
             </a>
@@ -111,7 +110,7 @@ const Index = () => {
           <div className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
             Asmi
           </div>
-          <p className="text-gray-600 text-sm">Your AI Chief of Staff</p>
+          <p className="text-gray-600 text-sm font-light">Your AI Chief of Staff</p>
         </div>
       </div>
     </div>
