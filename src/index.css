@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -89,7 +90,7 @@ All colors MUST be HSL.
   }
 }
 
-/* AI-native animations - Made faster for mobile-first experience */
+/* AI-native animations - Made faster for fast-moving company */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -121,7 +122,7 @@ All colors MUST be HSL.
   }
 }
 
-/* Ultra-fast animations for mobile */
+/* Faster animations for fast-moving AI company */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -140,81 +141,81 @@ All colors MUST be HSL.
   }
 }
 
-@keyframes typing {
-  from {
-    width: 0;
+@keyframes neural-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
   }
-  to {
-    width: 100%;
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 }
 
 .animate-fade-in {
-  animation: fade-in 0.6s ease-out forwards;
+  animation: fade-in 0.3s ease-out forwards;
 }
 
 .animate-scale-in {
-  animation: scale-in 0.4s ease-out forwards;
+  animation: scale-in 0.25s ease-out forwards;
 }
 
 .animate-glow {
-  animation: glow 2s ease-in-out infinite;
+  animation: glow 1s ease-in-out infinite;
 }
 
 .animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 1.5s ease-in-out infinite;
 }
 
-.animate-typing {
-  animation: typing 1.5s steps(20, end);
+.animate-neural-pulse {
+  animation: neural-pulse 2s ease-in-out infinite;
 }
 
-/* Scroll snapping */
-.snap-y {
-  scroll-snap-type: y mandatory;
+/* Message animation styles */
+.message {
+  transition: all 0.2s ease-out;
 }
 
-.snap-start {
-  scroll-snap-align: start;
+.user-message {
+  text-align: right;
 }
 
-.snap-mandatory {
-  scroll-snap-type: y mandatory;
+.asmi-message {
+  text-align: left;
 }
 
-/* Smooth scrolling with momentum */
+/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 }
 
-/* Custom scrollbar - minimal and elegant */
+/* Custom scrollbar with green theme */
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.3);
-  border-radius: 1px;
+  background: linear-gradient(135deg, #10b981, #16a34a);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.6);
+  background: linear-gradient(135deg, #059669, #15803d);
 }
 
-/* Typography - ultra-crisp */
+/* Typography improvements */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 300;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  letter-spacing: -0.025em;
 }
 
 .font-light {
@@ -230,83 +231,6 @@ h1, h2, h3, h4, h5, h6 {
   .text-responsive {
     font-size: clamp(1.5rem, 5vw, 3rem);
   }
-  
-  /* Improve touch targets */
-  button {
-    min-height: 44px;
-    min-width: 44px;
-  }
-}
-
-/* Interaction feedback - instant */
-.interactive-element {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
-}
-
-.interactive-element:active {
-  transform: scale(0.98);
-}
-
-/* Chat bubble animations */
-.chat-message {
-  animation: message-appear 0.4s ease-out;
-}
-
-@keyframes message-appear {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Memory visualization */
-.memory-node {
-  animation: node-pulse 2s ease-in-out infinite;
-}
-
-@keyframes node-pulse {
-  0%, 100% {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-/* Prevent text selection on interactive elements */
-.no-select {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Focus states for accessibility */
-button:focus,
-input:focus {
-  outline: 2px solid rgba(16, 185, 129, 0.5);
-  outline-offset: 2px;
-}
-
-/* Backdrop blur support */
-.backdrop-blur-sm {
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-/* Gradient text support */
-.text-gradient {
-  background: linear-gradient(135deg, #10b981, #3b82f6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 /* AI-native design elements */
@@ -326,4 +250,24 @@ input:focus {
 .interactive-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
+}
+
+/* Scientific visualization styles */
+.context-point {
+  animation: context-build 2s ease-out infinite;
+}
+
+@keyframes context-build {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
 }
