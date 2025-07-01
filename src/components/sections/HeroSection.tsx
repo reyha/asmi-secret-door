@@ -93,18 +93,6 @@ const HeroSection = () => {
           <ChevronDown className="inline-block ml-2 group-hover:translate-y-1 transition-transform" size={20} />
         </button>
       </div>
-
-      <style jsx>{`
-        .message {
-          transition: all 0.5s ease-out;
-        }
-        .user-message {
-          text-align: right;
-        }
-        .asmi-message {
-          text-align: left;
-        }
-      `}</style>
     </div>
   );
 };
