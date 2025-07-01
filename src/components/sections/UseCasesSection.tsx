@@ -1,165 +1,208 @@
 
-import { useState } from 'react';
-import { Brain, Calendar, Mic2, Gift, Clock, Zap, Play } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Brain, Calendar, Mic, Gift, MessageCircle, Zap, Play, Pause } from 'lucide-react';
 
 const UseCasesSection = () => {
   const [activeUseCase, setActiveUseCase] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   const useCases = [
     {
       title: 'Memory & Recall',
+      description: 'Never lose context again',
       icon: <Brain className="text-blue-400" size={24} />,
-      description: 'What happened on last week\'s call?',
-      demoText: 'Last Tuesday with Eric: He mentioned concerns about user retention, wants to see cohort analysis by Friday. Also, his daughter starts Stanford in fall - he seemed excited about that.',
-      gradient: 'from-blue-400 to-cyan-500',
-      bgGradient: 'from-blue-500/20 to-cyan-500/10'
+      color: 'from-blue-400 to-cyan-500',
+      bgColor: 'from-blue-500/20 to-cyan-500/10',
+      demo: {
+        userMessage: 'What did Sarah mention about the budget last week?',
+        asmiResponse: 'In your call on March 8th, Sarah mentioned concerns about Q2 marketing spend exceeding 40% of revenue. She suggested reallocating $50K from events to digital ads.'
+      },
+      stat: '100%',
+      statLabel: 'Context retention'
     },
     {
-      title: 'Meeting Prep & Follow-ups',
+      title: 'Meeting Prep',
+      description: 'Walk into every meeting prepared',
       icon: <Calendar className="text-green-400" size={24} />,
-      description: 'Seamless context for every conversation',
-      demoText: 'Your 3 PM with Sarah: Last time you discussed Q4 roadmap priorities. She\'s still waiting on the mobile timeline. Her key concerns: iOS release timeline and Android parity.',
-      gradient: 'from-green-400 to-emerald-500',
-      bgGradient: 'from-green-500/20 to-emerald-500/10'
+      color: 'from-green-400 to-emerald-500',
+      bgColor: 'from-green-500/20 to-emerald-500/10',
+      demo: {
+        userMessage: 'Prep me for the investor call in 30 mins',
+        asmiResponse: 'Your call with Andreessen Horowitz: Last discussion was user growth metrics. They asked about retention rates. Here are your latest numbers and 3 key talking points.'
+      },
+      stat: '85%',
+      statLabel: 'Better meeting outcomes'
     },
     {
-      title: 'Voice Journal → Actions',
-      icon: <Mic2 className="text-purple-400" size={24} />,
-      description: 'Speak thoughts, get organized outcomes',
-      demoText: '"Thinking about expanding to enterprise... need to hire sales, maybe reach out to John at Salesforce..." → Task created: Research enterprise pricing, Contact John Peterson, Draft sales hiring plan',
-      gradient: 'from-purple-400 to-pink-500',
-      bgGradient: 'from-purple-500/20 to-pink-500/10'
+      title: 'Voice to Action',
+      description: 'Think out loud, get things done',
+      icon: <Mic className="text-purple-400" size={24} />,
+      color: 'from-purple-400 to-pink-500',
+      bgColor: 'from-purple-500/20 to-pink-500/10',
+      demo: {
+        userMessage: '🎤 I need to follow up on the partnership discussion with Stripe',
+        asmiResponse: 'Added to your follow-up list. I found the contact info for their BD team and drafted a follow-up email. Want me to send it?'
+      },
+      stat: '3x',
+      statLabel: 'Faster task completion'
     },
     {
-      title: 'Personal Nudges',
+      title: 'Personal Assistant',
+      description: 'Life admin that actually works',
       icon: <Gift className="text-yellow-400" size={24} />,
-      description: 'Birthdays, errands, life management',
-      demoText: 'Tomorrow is Sarah\'s birthday! Based on her recent mentions of wanting to learn guitar, here are 3 gift ideas: Fender acoustic starter kit, guitar lessons with local instructor, or a vintage songbook collection.',
-      gradient: 'from-yellow-400 to-orange-500',
-      bgGradient: 'from-yellow-500/20 to-orange-500/10'
+      color: 'from-yellow-400 to-orange-500',
+      bgColor: 'from-yellow-500/20 to-orange-500/10',
+      demo: {
+        userMessage: '',
+        asmiResponse: 'Reminder: It\'s Alex\'s birthday tomorrow. Based on your past conversations, they love specialty coffee. I found 3 local roasters that deliver same-day.'
+      },
+      stat: '0',
+      statLabel: 'Forgotten birthdays'
     }
   ];
 
+  useEffect(() => {
+    if (!isPlaying) return;
+    
+    const interval = setInterval(() => {
+      setActiveUseCase((prev) => (prev + 1) % useCases.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  const currentUseCase = useCases[activeUseCase];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black to-gray-900 py-20">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black py-12 md:py-20">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-light mb-6 tracking-tight">
-            Core <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent font-medium">use cases</span>
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-light mb-6 tracking-tight leading-tight">
+            What Asmi <span className="text-blue-400 font-medium">does</span>
           </h2>
-          <p className="text-xl text-gray-400">
-            Click to see Asmi in action
+          <p className="text-xl md:text-2xl text-gray-400 mb-8 font-light">
+            Real use cases from real users
           </p>
-        </div>
-
-        {/* Mobile: Stacked layout */}
-        <div className="md:hidden space-y-6">
-          {useCases.map((useCase, index) => (
-            <div
-              key={index}
-              onClick={() => setActiveUseCase(index)}
-              className={`p-6 rounded-3xl border cursor-pointer transition-all duration-300 ${
-                activeUseCase === index
-                  ? `bg-gradient-to-r ${useCase.bgGradient} border-white/30 scale-105`
-                  : 'bg-white/5 border-white/10 hover:border-white/20'
-              }`}
+          
+          <div className="flex items-center justify-center space-x-4 mb-8">
+            <button
+              onClick={() => setIsPlaying(!isPlaying)}
+              className="flex items-center space-x-2 px-6 py-3 bg-white/10 border border-white/20 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all duration-300"
             >
-              <div className="flex items-center space-x-4 mb-4">
-                <div className={`p-3 rounded-xl bg-gradient-to-r ${useCase.gradient}`}>
-                  {useCase.icon}
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium">{useCase.title}</h3>
-                  <p className="text-gray-400 text-sm">{useCase.description}</p>
-                </div>
-              </div>
-              
-              {activeUseCase === index && (
-                <div className="mt-4 p-4 bg-black/40 rounded-xl backdrop-blur-sm animate-fade-in">
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    {useCase.demoText}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
+              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+              <span className="text-sm font-light">{isPlaying ? 'Pause' : 'Play'} Demo</span>
+            </button>
+          </div>
         </div>
 
-        {/* Desktop: Grid layout */}
-        <div className="hidden md:grid md:grid-cols-2 gap-8">
-          {/* Use case cards */}
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Use case selector - Mobile optimized */}
+          <div className="space-y-4">
             {useCases.map((useCase, index) => (
               <div
                 key={index}
-                onClick={() => setActiveUseCase(index)}
-                className={`p-6 rounded-3xl border cursor-pointer transition-all duration-300 ${
+                onClick={() => {
+                  setActiveUseCase(index);
+                  setIsPlaying(false);
+                }}
+                className={`p-6 rounded-3xl border cursor-pointer transition-all duration-500 backdrop-blur-sm ${
                   activeUseCase === index
-                    ? `bg-gradient-to-r ${useCase.bgGradient} border-white/30 scale-105`
-                    : 'bg-white/5 border-white/10 hover:border-white/20'
+                    ? `bg-gradient-to-r ${useCase.bgColor} border-white/30 scale-105 shadow-xl`
+                    : 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10'
                 }`}
               >
-                <div className="flex items-center space-x-4">
-                  <div className={`p-3 rounded-xl bg-gradient-to-r ${useCase.gradient}`}>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className={`p-3 rounded-2xl bg-gradient-to-r ${useCase.color} shadow-lg`}>
                     {useCase.icon}
                   </div>
-                  <div>
-                    <h3 className="text-xl font-medium">{useCase.title}</h3>
-                    <p className="text-gray-400 text-sm">{useCase.description}</p>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-medium mb-1">{useCase.title}</h3>
+                    <p className="text-gray-400 text-sm font-light">{useCase.description}</p>
                   </div>
                   {activeUseCase === index && (
-                    <Zap className="text-green-400 ml-auto" size={20} />
+                    <div className="flex items-center space-x-2 text-green-400">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-sm font-light">Active</span>
+                    </div>
                   )}
+                </div>
+
+                {/* Stat display */}
+                <div className="flex items-baseline space-x-2">
+                  <div className={`text-3xl font-bold bg-gradient-to-r ${useCase.color} bg-clip-text text-transparent`}>
+                    {useCase.stat}
+                  </div>
+                  <div className="text-gray-400 text-sm font-light">{useCase.statLabel}</div>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Demo area */}
-          <div className="bg-gradient-to-r from-white/10 to-white/5 rounded-3xl p-8 border border-white/20 sticky top-8">
-            <div className="flex items-center justify-between mb-6">
-              <h4 className="text-2xl font-medium">Live Demo</h4>
-              <div className="flex items-center space-x-2 text-green-400">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-sm">Active</span>
-              </div>
-            </div>
-
-            <div className={`p-6 bg-gradient-to-r ${useCases[activeUseCase].bgGradient} rounded-2xl border border-white/20 backdrop-blur-sm`}>
-              <div className="flex items-center space-x-3 mb-4">
-                <div className={`p-2 rounded-lg bg-gradient-to-r ${useCases[activeUseCase].gradient}`}>
-                  {useCases[activeUseCase].icon}
+          <div className="sticky top-8">
+            <div className="bg-black/60 backdrop-blur-sm rounded-3xl border border-white/20 overflow-hidden shadow-2xl">
+              {/* Phone header */}
+              <div className="bg-gray-900 px-4 py-3 flex items-center space-x-3 border-b border-white/10">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">A</span>
                 </div>
-                <span className="font-medium">{useCases[activeUseCase].title}</span>
+                <div>
+                  <h3 className="text-white font-medium">Asmi</h3>
+                  <p className="text-gray-400 text-xs">Your AI Chief of Staff</p>
+                </div>
+                <div className="ml-auto">
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                </div>
               </div>
-              
-              <p className="text-gray-300 leading-relaxed">
-                {useCases[activeUseCase].demoText}
-              </p>
+
+              {/* Messages */}
+              <div className="p-6 space-y-4 min-h-[300px] bg-black">
+                {/* Use case title */}
+                <div className="text-center mb-6">
+                  <div className={`inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r ${currentUseCase.bgColor} border border-white/20 rounded-full backdrop-blur-sm`}>
+                    {currentUseCase.icon}
+                    <span className="text-sm font-light">{currentUseCase.title}</span>
+                  </div>
+                </div>
+
+                {/* User message (if exists) */}
+                {currentUseCase.demo.userMessage && (
+                  <div className="flex justify-end animate-fade-in">
+                    <div className="max-w-xs px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg">
+                      {currentUseCase.demo.userMessage.includes('🎤') ? (
+                        <div className="flex items-center space-x-2">
+                          <Mic size={16} />
+                          <span className="text-sm font-light">{currentUseCase.demo.userMessage.replace('🎤 ', '')}</span>
+                        </div>
+                      ) : (
+                        <span className="text-sm font-light">{currentUseCase.demo.userMessage}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Asmi response */}
+                <div className="flex justify-start animate-fade-in" style={{ animationDelay: '1s' }}>
+                  <div className="max-w-sm bg-white/10 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <div className="w-6 h-6 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                        <span className="text-xs font-bold">A</span>
+                      </div>
+                      <span className="text-xs text-gray-400 font-light">Asmi</span>
+                    </div>
+                    <span className="text-sm font-light leading-relaxed">{currentUseCase.demo.asmiResponse}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
+            {/* Bottom stats */}
             <div className="mt-6 text-center">
-              <button className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-sm font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover:scale-105">
-                <Play size={16} />
-                <span>See full interaction</span>
-              </button>
+              <div className={`inline-flex items-center space-x-4 px-6 py-3 bg-gradient-to-r ${currentUseCase.bgColor} border border-white/20 rounded-full backdrop-blur-sm`}>
+                <Zap className="text-yellow-400" size={16} />
+                <span className="text-sm font-light">Real user feedback</span>
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Bottom stats */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center p-6 bg-gradient-to-b from-white/10 to-white/5 rounded-2xl border border-white/10">
-            <div className="text-4xl font-bold text-blue-400 mb-2">10x</div>
-            <p className="text-gray-300">Faster context switching</p>
-          </div>
-          <div className="text-center p-6 bg-gradient-to-b from-white/10 to-white/5 rounded-2xl border border-white/10">
-            <div className="text-4xl font-bold text-green-400 mb-2">100%</div>
-            <p className="text-gray-300">Context retention</p>
-          </div>
-          <div className="text-center p-6 bg-gradient-to-b from-white/10 to-white/5 rounded-2xl border border-white/10">
-            <div className="text-4xl font-bold text-purple-400 mb-2">0</div>
-            <p className="text-gray-300">Apps to learn</p>
           </div>
         </div>
       </div>
