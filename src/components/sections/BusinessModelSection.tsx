@@ -51,7 +51,7 @@ const BusinessModelSection = () => {
             Freemium → Pro @ $19/mo
           </p>
           <div className="text-green-400 text-lg font-medium">
-            LTV > $500 • Power users already asking to pay
+            LTV &gt; $500 • Power users already asking to pay
           </div>
         </div>
 
