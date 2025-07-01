@@ -90,7 +90,7 @@ All colors MUST be HSL.
   }
 }
 
-/* Custom animations for Asmi AI - Made faster for fast-moving company */
+/* AI-native animations - Made faster for fast-moving company */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -115,14 +115,14 @@ All colors MUST be HSL.
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
   }
 }
 
-/* Faster animations for fast-moving company */
+/* Faster animations for fast-moving AI company */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -141,29 +141,44 @@ All colors MUST be HSL.
   }
 }
 
+@keyframes neural-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
 .animate-fade-in {
-  animation: fade-in 0.4s ease-out forwards;
+  animation: fade-in 0.3s ease-out forwards;
 }
 
 .animate-scale-in {
-  animation: scale-in 0.3s ease-out forwards;
+  animation: scale-in 0.25s ease-out forwards;
 }
 
 .animate-glow {
-  animation: glow 1.5s ease-in-out infinite;
+  animation: glow 1s ease-in-out infinite;
 }
 
 .animate-pulse {
-  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .animate-float {
-  animation: float 2s ease-in-out infinite;
+  animation: float 1.5s ease-in-out infinite;
+}
+
+.animate-neural-pulse {
+  animation: neural-pulse 2s ease-in-out infinite;
 }
 
 /* Message animation styles */
 .message {
-  transition: all 0.3s ease-out;
+  transition: all 0.2s ease-out;
 }
 
 .user-message {
@@ -179,7 +194,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar with green theme */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -189,12 +204,12 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(135deg, #10b981, #16a34a);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  background: linear-gradient(135deg, #059669, #15803d);
 }
 
 /* Typography improvements */
@@ -215,5 +230,44 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
   .text-responsive {
     font-size: clamp(1.5rem, 5vw, 3rem);
+  }
+}
+
+/* AI-native design elements */
+.neural-bg {
+  background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+}
+
+.memory-gradient {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+}
+
+/* Interaction feedback */
+.interactive-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
+}
+
+/* Scientific visualization styles */
+.context-point {
+  animation: context-build 2s ease-out infinite;
+}
+
+@keyframes context-build {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
   }
 }

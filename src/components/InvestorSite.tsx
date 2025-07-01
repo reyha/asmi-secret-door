@@ -3,13 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Play, Users, Calendar, MessageCircle, Zap, Target, TrendingUp } from 'lucide-react';
 import InteractiveHeroSection from './sections/InteractiveHeroSection';
 import InteractiveProblemSection from './sections/InteractiveProblemSection';
-import WhatsAppFlowSection from './sections/WhatsAppFlowSection';
-import UseCasesSection from './sections/UseCasesSection';
-import WhyPlatformSection from './sections/WhyPlatformSection';
-import PersonalizationSection from './sections/PersonalizationSection';
+import OneInterfaceSection from './sections/OneInterfaceSection';
+import WhatAsmiDoesSection from './sections/WhatAsmiDoesSection';
+import MemoryEngineSection from './sections/MemoryEngineSection';
 import FounderSection from './sections/FounderSection';
 import TractionTimelineSection from './sections/TractionTimelineSection';
-import InvestorAskSection from './sections/InvestorAskSection';
+import RoadAheadSection from './sections/RoadAheadSection';
 import ClosingCTASection from './sections/ClosingCTASection';
 
 const InvestorSite = () => {
@@ -19,14 +18,13 @@ const InvestorSite = () => {
   const sections = [
     { component: InteractiveHeroSection, title: 'Hero' },
     { component: InteractiveProblemSection, title: 'Problem' },
-    { component: WhatsAppFlowSection, title: 'Experience' },
-    { component: UseCasesSection, title: 'Use Cases' },
-    { component: WhyPlatformSection, title: 'Platform' },
-    { component: PersonalizationSection, title: 'Personalization' },
+    { component: OneInterfaceSection, title: 'Interface' },
+    { component: WhatAsmiDoesSection, title: 'Features' },
+    { component: MemoryEngineSection, title: 'Memory' },
     { component: FounderSection, title: 'Founders' },
     { component: TractionTimelineSection, title: 'Traction' },
-    { component: InvestorAskSection, title: 'Investment' },
-    { component: ClosingCTASection, title: 'Vision' },
+    { component: RoadAheadSection, title: 'Roadmap' },
+    { component: ClosingCTASection, title: 'CTA' },
   ];
 
   useEffect(() => {
@@ -60,22 +58,22 @@ const InvestorSite = () => {
       {/* Progress indicator */}
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50">
         <div 
-          className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300"
+          className="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-300"
           style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
         />
       </div>
 
       {/* Mobile-first navigation */}
       <nav className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 md:top-6 md:right-6 md:left-auto md:transform-none">
-        <div className="bg-black/80 backdrop-blur-sm rounded-full p-2 border border-white/10 flex md:flex-col space-x-2 md:space-x-0 md:space-y-2">
+        <div className="bg-black/80 backdrop-blur-sm rounded-full p-2 border border-green-500/20 flex md:flex-col space-x-2 md:space-x-0 md:space-y-2">
           {sections.map((section, index) => (
             <button
               key={index}
               onClick={() => scrollToSection(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 currentSection === index
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 scale-125'
-                  : 'bg-gray-600 hover:bg-gray-400'
+                  ? 'bg-green-400 scale-125 shadow-lg shadow-green-400/50'
+                  : 'bg-gray-600 hover:bg-green-500/50'
               }`}
               aria-label={section.title}
             />
