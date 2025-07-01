@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Brain, Clock, User, MessageCircle } from 'lucide-react';
+import { Brain, Clock, User, MessageCircle, Mic } from 'lucide-react';
 
 const MemoryEngineSection = () => {
   const [showDemo, setShowDemo] = useState(false);
