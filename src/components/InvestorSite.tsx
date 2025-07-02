@@ -6,7 +6,8 @@ import MeetingContextDemo from './sections/MeetingContextDemo';
 import PersonBackgroundDemo from './sections/PersonBackgroundDemo';
 import VoiceRescheduleDemo from './sections/VoiceRescheduleDemo';
 import MemoryEngineSection from './sections/MemoryEngineSection';
-import TeamSection from './sections/TeamSection';
+import TimelineHowItWorks from './sections/TimelineHowItWorks';
+import FounderSectionNew from './sections/FounderSectionNew';
 import TractionSection from './sections/TractionSection';
 import RoadmapSection from './sections/RoadmapSection';
 import TargetMarketSection from './sections/TargetMarketSection';
@@ -23,7 +24,8 @@ const InvestorSite = () => {
     { component: PersonBackgroundDemo, title: 'Person Background' },
     { component: VoiceRescheduleDemo, title: 'Voice Reschedule' },
     { component: MemoryEngineSection, title: 'Memory Engine' },
-    { component: TeamSection, title: 'Team' },
+    { component: TimelineHowItWorks, title: 'How It Works' },
+    { component: FounderSectionNew, title: 'Founders' },
     { component: TractionSection, title: 'Traction' },
     { component: RoadmapSection, title: 'Roadmap' },
     { component: TargetMarketSection, title: 'Target Market' },
@@ -57,7 +59,7 @@ const InvestorSite = () => {
   };
 
   return (
-    <div className="bg-black text-white overflow-x-hidden" style={{ scrollSnapType: 'y mandatory' }}>
+    <div className="bg-black text-white overflow-x-hidden font-inter" style={{ scrollSnapType: 'y mandatory' }}>
       {/* Progress indicator */}
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50">
         <div 
@@ -66,9 +68,9 @@ const InvestorSite = () => {
         />
       </div>
 
-      {/* Mobile navigation dots */}
+      {/* Navigation dots */}
       <nav className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="bg-black/80 backdrop-blur-sm rounded-full p-2 border border-green-500/20 flex space-x-2">
+        <div className="bg-black/80 backdrop-blur-sm rounded-full p-3 border border-green-500/20 flex space-x-2">
           {sections.map((section, index) => (
             <button
               key={index}
