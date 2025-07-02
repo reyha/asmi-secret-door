@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Brain, Mail, Calendar, MessageCircle, Mic, FileText, User } from 'lucide-react';
 
 const MemoryEngineSection = () => {
@@ -7,6 +7,8 @@ const MemoryEngineSection = () => {
   const [dataSources, setDataSources] = useState([]);
   const [selectedDataSource, setSelectedDataSource] = useState(null);
   const [graphProgress, setGraphProgress] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
 
   const dataSourceIcons = [
     { icon: <Mic className="text-red-400" size={16} />, label: 'Voice Notes', color: '#f87171', bgColor: 'bg-red-500/20', borderColor: 'border-red-400/30' },
@@ -17,30 +19,54 @@ const MemoryEngineSection = () => {
     { icon: <User className="text-pink-400" size={16} />, label: 'Contacts', color: '#f472b6', bgColor: 'bg-pink-500/20', borderColor: 'border-pink-400/30' }
   ];
 
+  // Intersection Observer for scroll-based animation
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
     // Animate graph progress
     const progressInterval = setInterval(() => {
       setGraphProgress(prev => {
         if (prev >= 100) return 100;
-        return prev + 2;
+        return prev + 1;
       });
     }, 50);
 
-    // Add memory points progressively
+    // Add memory points progressively with fixed positions
     const pointInterval = setInterval(() => {
       setMemoryPoints(prev => {
         if (prev.length >= 30) return prev;
         const randomDataSource = dataSourceIcons[Math.floor(Math.random() * dataSourceIcons.length)];
+        const baseX = Math.random() * 80 + 10;
+        const baseY = Math.random() * 60 + 20;
         return [...prev, {
-          id: Date.now(),
-          x: Math.random() * 90 + 5,
-          y: Math.random() * 70 + 15,
+          id: Date.now() + Math.random(),
+          baseX,
+          baseY,
+          x: baseX,
+          y: baseY,
           time: Date.now(),
           color: randomDataSource.color,
           sourceIndex: dataSourceIcons.indexOf(randomDataSource)
         }];
       });
-    }, 150);
+    }, 200);
 
     // Show data sources
     const sourceInterval = setInterval(() => {
@@ -50,12 +76,22 @@ const MemoryEngineSection = () => {
       });
     }, 600);
 
+    // Slight movement animation for dots
+    const moveInterval = setInterval(() => {
+      setMemoryPoints(prev => prev.map(point => ({
+        ...point,
+        x: point.baseX + (Math.sin(Date.now() * 0.001 + point.id) * 2),
+        y: point.baseY + (Math.cos(Date.now() * 0.001 + point.id) * 2)
+      })));
+    }, 100);
+
     return () => {
       clearInterval(progressInterval);
       clearInterval(pointInterval);
       clearInterval(sourceInterval);
+      clearInterval(moveInterval);
     };
-  }, []);
+  }, [isVisible]);
 
   const handleDataSourceClick = (index) => {
     setSelectedDataSource(selectedDataSource === index ? null : index);
@@ -65,8 +101,22 @@ const MemoryEngineSection = () => {
     ? memoryPoints.filter(point => point.sourceIndex === selectedDataSource)
     : memoryPoints;
 
+  // Generate exponential curve path
+  const generateExponentialPath = (progress) => {
+    let path = "M 50 230";
+    const steps = Math.floor(progress);
+    
+    for (let i = 0; i <= steps; i++) {
+      const x = 50 + (i / 100) * 300;
+      const y = 230 - Math.pow(i / 100, 2) * 180; // Exponential curve going up
+      path += ` L ${x} ${y}`;
+    }
+    
+    return path;
+  };
+
   return (
-    <div className="min-h-screen bg-black py-20">
+    <div ref={sectionRef} className="min-h-screen bg-black py-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-space font-bold mb-6 text-white">
@@ -89,41 +139,36 @@ const MemoryEngineSection = () => {
             </div>
             
             <div className="relative w-full h-80">
-              <svg className="w-full h-full" viewBox="0 0 400 300">
+              <svg className="w-full h-full" viewBox="0 0 400 280">
                 {/* Grid */}
                 <defs>
-                  <pattern id="grid" width="40" height="30" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 30" fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="1"/>
+                  <pattern id="grid" width="40" height="28" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 28" fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="1"/>
                   </pattern>
                 </defs>
-                <rect width="400" height="300" fill="url(#grid)" />
+                <rect width="400" height="280" fill="url(#grid)" />
                 
                 {/* Axes */}
-                <line x1="50" y1="250" x2="380" y2="250" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" />
-                <line x1="50" y1="250" x2="50" y2="30" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" />
+                <line x1="50" y1="230" x2="370" y2="230" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" />
+                <line x1="50" y1="230" x2="50" y2="30" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" />
                 
-                {/* Dynamic curve */}
+                {/* Exponential curve */}
                 <path 
-                  d={`M 50 230 Q ${50 + (graphProgress * 1.5)} ${230 - (graphProgress * 1.2)} ${50 + (graphProgress * 3)} ${230 - (graphProgress * 1.8)} T ${50 + (graphProgress * 3.3)} ${50 + (100 - graphProgress) * 0.8}`}
+                  d={generateExponentialPath(graphProgress)}
                   fill="none" 
                   stroke="url(#memoryGradient)" 
                   strokeWidth="3"
-                  style={{ 
-                    strokeDasharray: graphProgress * 10,
-                    strokeDashoffset: (100 - graphProgress) * 5
-                  }}
                 />
                 
                 {/* Memory points */}
                 {filteredMemoryPoints.map((point, index) => (
                   <circle
                     key={point.id}
-                    cx={50 + (point.x / 100) * 330}
-                    cy={250 - (point.y / 100) * 220}
+                    cx={50 + (point.x / 100) * 300}
+                    cy={230 - (point.y / 100) * 200}
                     r="4"
                     fill={point.color}
-                    className="memory-dot"
-                    style={{ animationDelay: `${index * 100}ms` }}
+                    opacity="0.8"
                   />
                 ))}
                 
@@ -137,7 +182,7 @@ const MemoryEngineSection = () => {
               </svg>
               
               {/* Axis labels */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 font-inter">
+              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 font-inter">
                 Time (Days)
               </div>
               <div className="absolute top-1/2 left-2 transform -translate-y-1/2 -rotate-90 text-xs text-gray-400 font-inter origin-center">
@@ -175,7 +220,7 @@ const MemoryEngineSection = () => {
             </div>
           </div>
 
-          {/* Right side content can be added here */}
+          {/* Right side content */}
           <div className="space-y-8">
             <div className="dark-card rounded-3xl p-8">
               <h3 className="text-2xl font-space font-bold text-white mb-4">

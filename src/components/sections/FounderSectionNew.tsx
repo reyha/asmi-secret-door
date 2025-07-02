@@ -1,10 +1,12 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const FounderSectionNew = () => {
   const [typedLines, setTypedLines] = useState<string[]>(['']);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
+  const [isTyping, setIsTyping] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
 
   const lines = [
     'We have built companies',
@@ -13,7 +15,25 @@ const FounderSectionNew = () => {
   ];
 
   useEffect(() => {
-    if (!isTyping || currentLineIndex >= lines.length) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          setIsTyping(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isTyping || !isVisible || currentLineIndex >= lines.length) return;
 
     const currentLine = lines[currentLineIndex];
     const currentTypedLine = typedLines[currentLineIndex] || '';
@@ -36,10 +56,10 @@ const FounderSectionNew = () => {
     } else {
       setIsTyping(false);
     }
-  }, [typedLines, currentLineIndex, isTyping]);
+  }, [typedLines, currentLineIndex, isTyping, isVisible]);
 
   return (
-    <div className="min-h-screen bg-black py-20 flex items-center">
+    <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
       <div className="max-w-6xl mx-auto px-6">
         {/* Typing Animation Section */}
         <div className="text-center mb-20">
@@ -64,7 +84,7 @@ const FounderSectionNew = () => {
         {/* Founder Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Rishi */}
-          <div className="dark-card dark-card-hover rounded-3xl p-8">
+          <div className="bg-black rounded-3xl p-8 border border-white/10">
             <div className="text-center mb-6">
               <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
                 R
@@ -94,7 +114,7 @@ const FounderSectionNew = () => {
           </div>
 
           {/* Satwik */}
-          <div className="dark-card dark-card-hover rounded-3xl p-8">
+          <div className="bg-black rounded-3xl p-8 border border-white/10">
             <div className="text-center mb-6">
               <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
                 S

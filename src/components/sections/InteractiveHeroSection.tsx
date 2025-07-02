@@ -14,7 +14,7 @@ const InteractiveHeroSection = () => {
   }, []);
 
   return (
-    <div className="h-[70vh] flex items-center justify-center relative overflow-hidden">
+    <div className="h-[50vh] flex items-center justify-center relative overflow-hidden">
       {/* Minimal background */}
       <div className="absolute inset-0 bg-black">
         <div className="absolute inset-0 opacity-20">
@@ -24,17 +24,9 @@ const InteractiveHeroSection = () => {
       </div>
 
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-        {/* Badge */}
-        <div className="mb-8 opacity-0 animate-fade-in">
-          <div className="inline-flex items-center space-x-2 bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-full px-4 py-2">
-            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-red-300 font-medium">Only 47 spots left in beta</span>
-          </div>
-        </div>
-
         {/* Main heading */}
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold mb-8 tracking-tight opacity-0 animate-fade-in text-white leading-tight" style={{ animationDelay: '0.3s' }}>
-          Get Things Done.
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-space font-bold mb-8 tracking-tight opacity-0 animate-fade-in leading-tight" style={{ animationDelay: '0.3s' }}>
+          <span className="text-green-400">Get Things Done.</span>
         </h1>
         
         {/* Platform switcher with smooth animation */}
@@ -55,11 +47,6 @@ const InteractiveHeroSection = () => {
             </div>
           </div>
         </div>
-
-        {/* Subtitle */}
-        <p className="text-lg text-gray-300 font-inter font-light opacity-0 animate-fade-in" style={{ animationDelay: '0.9s' }}>
-          Join the exclusive beta before we close applications.
-        </p>
       </div>
     </div>
   );

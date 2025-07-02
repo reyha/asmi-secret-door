@@ -8,10 +8,11 @@ import VoiceRescheduleDemo from './sections/VoiceRescheduleDemo';
 import MemoryEngineSection from './sections/MemoryEngineSection';
 import TimelineHowItWorks from './sections/TimelineHowItWorks';
 import FounderSectionNew from './sections/FounderSectionNew';
-import TractionSection from './sections/TractionSection';
-import RoadmapSection from './sections/RoadmapSection';
-import TargetMarketSection from './sections/TargetMarketSection';
-import FinalCTASection from './sections/FinalCTASection';
+import TractionSectionNew from './sections/TractionSectionNew';
+import MessagingToOSSection from './sections/MessagingToOSSection';
+import VoiceToOSSection from './sections/VoiceToOSSection';
+import BuiltForEveryoneSection from './sections/BuiltForEveryoneSection';
+import FinalCTASectionNew from './sections/FinalCTASectionNew';
 
 const InvestorSite = () => {
   const [currentSection, setCurrentSection] = useState(0);
@@ -26,10 +27,11 @@ const InvestorSite = () => {
     { component: MemoryEngineSection, title: 'Memory Engine' },
     { component: TimelineHowItWorks, title: 'How It Works' },
     { component: FounderSectionNew, title: 'Founders' },
-    { component: TractionSection, title: 'Traction' },
-    { component: RoadmapSection, title: 'Roadmap' },
-    { component: TargetMarketSection, title: 'Target Market' },
-    { component: FinalCTASection, title: 'CTA' },
+    { component: TractionSectionNew, title: 'Traction' },
+    { component: MessagingToOSSection, title: 'Messaging to OS' },
+    { component: VoiceToOSSection, title: 'Voice to OS' },
+    { component: BuiltForEveryoneSection, title: 'Built for Everyone' },
+    { component: FinalCTASectionNew, title: 'CTA' },
   ];
 
   useEffect(() => {
