@@ -5,6 +5,7 @@ import { MessageCircle } from 'lucide-react';
 const MorningBriefDemo = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const messages = [
     { type: 'user', text: 'Good morning Asmi', delay: 500 },
@@ -16,6 +17,17 @@ const MorningBriefDemo = () => {
   ];
 
   useEffect(() => {
+    // Start animation when component mounts
+    const startTimer = setTimeout(() => {
+      setHasStarted(true);
+    }, 500);
+
+    return () => clearTimeout(startTimer);
+  }, []);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+
     const timer = setTimeout(() => {
       if (currentMessage < messages.length) {
         if (messages[currentMessage].type === 'asmi') {
@@ -31,17 +43,7 @@ const MorningBriefDemo = () => {
     }, messages[currentMessage]?.delay || 1000);
 
     return () => clearTimeout(timer);
-  }, [currentMessage]);
-
-  useEffect(() => {
-    // Reset animation when component comes into view
-    const resetTimer = setTimeout(() => {
-      setCurrentMessage(0);
-      setIsTyping(false);
-    }, 100);
-
-    return () => clearTimeout(resetTimer);
-  }, []);
+  }, [currentMessage, hasStarted]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">

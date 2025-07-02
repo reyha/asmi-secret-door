@@ -5,6 +5,7 @@ import { Mic, Calendar, CheckCircle } from 'lucide-react';
 const VoiceRescheduleDemo = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const steps = [
     { 
@@ -34,6 +35,17 @@ const VoiceRescheduleDemo = () => {
   ];
 
   useEffect(() => {
+    // Start animation when component mounts
+    const startTimer = setTimeout(() => {
+      setHasStarted(true);
+    }, 500);
+
+    return () => clearTimeout(startTimer);
+  }, []);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+
     if (currentStep === 0) {
       setIsRecording(true);
       setTimeout(() => setIsRecording(false), 1500);
@@ -46,16 +58,7 @@ const VoiceRescheduleDemo = () => {
     }, steps[currentStep]?.delay || 1000);
 
     return () => clearTimeout(timer);
-  }, [currentStep]);
-
-  useEffect(() => {
-    const resetTimer = setTimeout(() => {
-      setCurrentStep(0);
-      setIsRecording(false);
-    }, 100);
-
-    return () => clearTimeout(resetTimer);
-  }, []);
+  }, [currentStep, hasStarted]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
