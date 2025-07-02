@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import InvestorSite from '../components/InvestorSite';
+import NeuralBloomBackground from '../components/NeuralBloomBackground';
 
 const Index = () => {
   const [password, setPassword] = useState('');
@@ -30,50 +31,15 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Meteor Lights Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black">
-          {/* Left side meteors */}
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={`left-${i}`}
-              className="absolute w-0.5 h-32 bg-gradient-to-b from-transparent via-white to-transparent opacity-60"
-              style={{
-                left: `${10 + i * 15}%`,
-                animationName: 'meteorFall',
-                animationDuration: '4s',
-                animationDelay: `${i * 1.5}s`,
-                animationIterationCount: 'infinite',
-                animationTimingFunction: 'linear',
-                transform: 'rotate(15deg)',
-              }}
-            />
-          ))}
-          {/* Right side meteors */}
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={`right-${i}`}
-              className="absolute w-0.5 h-32 bg-gradient-to-b from-transparent via-white to-transparent opacity-60"
-              style={{
-                right: `${10 + i * 15}%`,
-                animationName: 'meteorFall',
-                animationDuration: '4s',
-                animationDelay: `${i * 1.5 + 2}s`,
-                animationIterationCount: 'infinite',
-                animationTimingFunction: 'linear',
-                transform: 'rotate(-15deg)',
-              }}
-            />
-          ))}
-        </div>
-      </div>
+    <div className="min-h-screen text-white relative overflow-hidden">
+      {/* Neural Bloom Background */}
+      <NeuralBloomBackground />
       
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4">
         <div className="text-center max-w-2xl mx-auto">
           {/* Main heading */}
           <div className="mb-12">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-space font-light mb-6 tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-space font-light mb-6 tracking-tight leading-tight text-white">
               Asmi is not for <span className="text-gray-500">everyone</span>.
             </h1>
             <p className="text-2xl md:text-3xl lg:text-4xl text-gray-300 font-light">
