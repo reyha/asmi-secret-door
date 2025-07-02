@@ -1,6 +1,5 @@
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronDown } from 'lucide-react';
 import InteractiveHeroSection from './sections/InteractiveHeroSection';
 import MorningBriefDemo from './sections/MorningBriefDemo';
 import MeetingContextDemo from './sections/MeetingContextDemo';
@@ -10,7 +9,7 @@ import MemoryEngineSection from './sections/MemoryEngineSection';
 import TeamSection from './sections/TeamSection';
 import TractionSection from './sections/TractionSection';
 import RoadmapSection from './sections/RoadmapSection';
-import BusinessModelSection from './sections/BusinessModelSection';
+import TargetMarketSection from './sections/TargetMarketSection';
 import FinalCTASection from './sections/FinalCTASection';
 
 const InvestorSite = () => {
@@ -27,7 +26,7 @@ const InvestorSite = () => {
     { component: TeamSection, title: 'Team' },
     { component: TractionSection, title: 'Traction' },
     { component: RoadmapSection, title: 'Roadmap' },
-    { component: BusinessModelSection, title: 'Business Model' },
+    { component: TargetMarketSection, title: 'Target Market' },
     { component: FinalCTASection, title: 'CTA' },
   ];
 

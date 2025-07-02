@@ -1,56 +1,42 @@
 
 import { useState, useEffect } from 'react';
-import { Users, Brain, Clock } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 const MeetingContextDemo = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [showContext, setShowContext] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState(0);
+  const [isTyping, setIsTyping] = useState(false);
 
-  const steps = [
-    { 
-      type: 'user', 
-      text: 'Prep me for my call with Raj',
-      delay: 0
-    },
+  const messages = [
+    { type: 'user', text: 'Who am I meeting at 3?', delay: 500 },
     { 
       type: 'asmi', 
-      text: 'Your 2 PM with Raj from Accel:',
-      delay: 1000
-    },
-    { 
-      type: 'context', 
-      items: [
-        '💡 Last discussed: User retention metrics',
-        '📊 He asked about monthly churn rates',
-        '🎯 Follow up: API partnership timeline'
-      ],
-      delay: 2000
-    },
-    { 
-      type: 'insight', 
-      text: 'I pulled your latest retention dashboard - 92% monthly retention to share.',
-      delay: 3500
+      text: 'Sarah Chen from Accel Partners. Last discussed user growth metrics. She asked about retention - I pulled your latest dashboard numbers.',
+      delay: 2000 
     }
   ];
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (currentStep < steps.length - 1) {
-        setCurrentStep(currentStep + 1);
+      if (currentMessage < messages.length) {
+        if (messages[currentMessage].type === 'asmi') {
+          setIsTyping(true);
+          setTimeout(() => {
+            setIsTyping(false);
+            setCurrentMessage(prev => prev + 1);
+          }, 1500);
+        } else {
+          setCurrentMessage(prev => prev + 1);
+        }
       }
-    }, steps[currentStep]?.delay || 1000);
-
-    if (currentStep === 2) {
-      setTimeout(() => setShowContext(true), 500);
-    }
+    }, messages[currentMessage]?.delay || 1000);
 
     return () => clearTimeout(timer);
-  }, [currentStep]);
+  }, [currentMessage]);
 
   useEffect(() => {
     const resetTimer = setTimeout(() => {
-      setCurrentStep(0);
-      setShowContext(false);
+      setCurrentMessage(0);
+      setIsTyping(false);
     }, 100);
 
     return () => clearTimeout(resetTimer);
@@ -61,7 +47,7 @@ const MeetingContextDemo = () => {
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <Users className="text-blue-400 mx-auto mb-4 animate-pulse" size={32} />
+          <Calendar className="text-blue-400 mx-auto mb-4" size={32} />
           <h2 className="text-2xl font-light text-white mb-2">Win every meeting.</h2>
         </div>
 
@@ -74,69 +60,52 @@ const MeetingContextDemo = () => {
             </div>
             <div>
               <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <p className="text-gray-400 text-xs">15 min until your call</p>
+              <p className="text-gray-400 text-xs">Meeting context ready</p>
+            </div>
+            <div className="ml-auto">
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
             </div>
           </div>
 
           {/* Messages */}
           <div className="p-4 space-y-4 bg-black min-h-[300px]">
             {/* User message */}
-            {currentStep >= 0 && (
+            {currentMessage >= 1 && (
               <div className="flex justify-end animate-fade-in">
-                <div className="bg-green-600 px-4 py-2 rounded-2xl max-w-xs">
-                  <span className="text-white text-sm font-light">{steps[0].text}</span>
+                <div className="bg-green-600 px-4 py-3 rounded-2xl max-w-xs">
+                  <span className="text-white text-sm font-light">{messages[0].text}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Typing indicator */}
+            {isTyping && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-gray-800/80 px-4 py-3 rounded-2xl">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
                 </div>
               </div>
             )}
 
             {/* Asmi response */}
-            {currentStep >= 1 && (
+            {currentMessage >= 2 && (
               <div className="flex justify-start animate-fade-in">
-                <div className="bg-gray-800/80 px-4 py-2 rounded-2xl max-w-xs border border-white/10">
-                  <span className="text-white text-sm font-light">{steps[1].text}</span>
-                </div>
-              </div>
-            )}
-
-            {/* Context items */}
-            {currentStep >= 2 && showContext && (
-              <div className="flex justify-start animate-fade-in">
-                <div className="bg-blue-500/20 border border-blue-400/30 px-4 py-3 rounded-2xl max-w-xs">
-                  <div className="space-y-2">
-                    {steps[2].items.map((item, index) => (
-                      <div 
-                        key={index} 
-                        className="animate-fade-in"
-                        style={{ animationDelay: `${index * 400}ms` }}
-                      >
-                        <span className="text-blue-200 text-xs font-light">{item}</span>
-                      </div>
-                    ))}
+                <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10 max-w-sm">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="w-6 h-6 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-bold text-black">A</span>
+                    </div>
+                    <span className="text-xs text-blue-400 font-light">Asmi</span>
                   </div>
-                </div>
-              </div>
-            )}
-
-            {/* Insight */}
-            {currentStep >= 3 && (
-              <div className="flex justify-start animate-scale-in">
-                <div className="bg-green-500/20 border border-green-400/30 px-4 py-2 rounded-2xl max-w-xs">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <Brain size={12} className="text-green-400" />
-                    <span className="text-green-400 text-xs font-medium">Smart Brief</span>
-                  </div>
-                  <span className="text-green-200 text-xs font-light">{steps[3].text}</span>
+                  <span className="text-sm font-light leading-relaxed">{messages[1].text}</span>
                 </div>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Bottom insight */}
-        <div className="text-center mt-6 animate-fade-in" style={{ animationDelay: '4s' }}>
-          <p className="text-gray-400 text-sm font-light">
-            Context from 3 weeks ago automatically surfaced
-          </p>
         </div>
       </div>
     </div>

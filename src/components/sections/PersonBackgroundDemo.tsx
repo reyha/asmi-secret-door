@@ -1,52 +1,42 @@
 
 import { useState, useEffect } from 'react';
-import { User, Building, Briefcase } from 'lucide-react';
+import { User } from 'lucide-react';
 
 const PersonBackgroundDemo = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentMessage, setCurrentMessage] = useState(0);
+  const [isTyping, setIsTyping] = useState(false);
 
-  const steps = [
-    { 
-      type: 'user', 
-      text: 'Who\'s Karan again?',
-      delay: 0
-    },
+  const messages = [
+    { type: 'user', text: 'Quick brief before my call', delay: 500 },
     { 
       type: 'asmi', 
-      text: 'Karan Mehta - Partner at Lightspeed Ventures',
-      delay: 1000
-    },
-    { 
-      type: 'profile', 
-      data: {
-        name: 'Karan Mehta',
-        role: 'Partner @ Lightspeed',
-        background: 'Ex-Facebook, Stanford MBA',
-        interests: 'AI/ML, Enterprise SaaS',
-        lastInteraction: 'Coffee chat about Series A trends (2 weeks ago)'
-      },
-      delay: 2000
-    },
-    { 
-      type: 'insight', 
-      text: 'Prefers crisp, data-heavy decks. Usually asks about unit economics first.',
-      delay: 3500
+      text: 'Your 3 PM with Sarah: Key topics - Q4 metrics, user retention at 85%, new feature adoption. 3 talking points ready.',
+      delay: 2000 
     }
   ];
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (currentStep < steps.length - 1) {
-        setCurrentStep(currentStep + 1);
+      if (currentMessage < messages.length) {
+        if (messages[currentMessage].type === 'asmi') {
+          setIsTyping(true);
+          setTimeout(() => {
+            setIsTyping(false);
+            setCurrentMessage(prev => prev + 1);
+          }, 1500);
+        } else {
+          setCurrentMessage(prev => prev + 1);
+        }
       }
-    }, steps[currentStep]?.delay || 1000);
+    }, messages[currentMessage]?.delay || 1000);
 
     return () => clearTimeout(timer);
-  }, [currentStep]);
+  }, [currentMessage]);
 
   useEffect(() => {
     const resetTimer = setTimeout(() => {
-      setCurrentStep(0);
+      setCurrentMessage(0);
+      setIsTyping(false);
     }, 100);
 
     return () => clearTimeout(resetTimer);
@@ -57,7 +47,7 @@ const PersonBackgroundDemo = () => {
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <User className="text-purple-400 mx-auto mb-4 animate-pulse" size={32} />
+          <User className="text-purple-400 mx-auto mb-4" size={32} />
           <h2 className="text-2xl font-light text-white mb-2">Know who you're meeting.</h2>
         </div>
 
@@ -70,82 +60,52 @@ const PersonBackgroundDemo = () => {
             </div>
             <div>
               <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <p className="text-gray-400 text-xs">Quick lookup</p>
+              <p className="text-gray-400 text-xs">Research mode</p>
+            </div>
+            <div className="ml-auto">
+              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="p-4 space-y-4 bg-black min-h-[350px]">
+          <div className="p-4 space-y-4 bg-black min-h-[300px]">
             {/* User message */}
-            {currentStep >= 0 && (
+            {currentMessage >= 1 && (
               <div className="flex justify-end animate-fade-in">
-                <div className="bg-green-600 px-4 py-2 rounded-2xl max-w-xs">
-                  <span className="text-white text-sm font-light">{steps[0].text}</span>
+                <div className="bg-green-600 px-4 py-3 rounded-2xl max-w-xs">
+                  <span className="text-white text-sm font-light">{messages[0].text}</span>
                 </div>
               </div>
             )}
 
-            {/* Asmi response */}
-            {currentStep >= 1 && (
+            {/* Typing indicator */}
+            {isTyping && (
               <div className="flex justify-start animate-fade-in">
-                <div className="bg-gray-800/80 px-4 py-2 rounded-2xl max-w-xs border border-white/10">
-                  <span className="text-white text-sm font-light">{steps[1].text}</span>
-                </div>
-              </div>
-            )}
-
-            {/* Profile card */}
-            {currentStep >= 2 && (
-              <div className="flex justify-start animate-scale-in">
-                <div className="bg-purple-500/20 border border-purple-400/30 px-4 py-3 rounded-2xl max-w-xs">
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center">
-                        <span className="text-black font-bold text-xs">K</span>
-                      </div>
-                      <div>
-                        <div className="text-white text-sm font-medium">{steps[2].data.name}</div>
-                        <div className="text-purple-200 text-xs">{steps[2].data.role}</div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-1 text-xs">
-                      <div className="flex items-center space-x-2">
-                        <Building size={10} className="text-purple-400" />
-                        <span className="text-purple-200">{steps[2].data.background}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Briefcase size={10} className="text-purple-400" />
-                        <span className="text-purple-200">{steps[2].data.interests}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-purple-400/20 rounded-lg p-2 mt-2">
-                      <span className="text-purple-100 text-xs font-light">
-                        Last: {steps[2].data.lastInteraction}
-                      </span>
-                    </div>
+                <div className="bg-gray-800/80 px-4 py-3 rounded-2xl">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Insight */}
-            {currentStep >= 3 && (
+            {/* Asmi response */}
+            {currentMessage >= 2 && (
               <div className="flex justify-start animate-fade-in">
-                <div className="bg-yellow-500/20 border border-yellow-400/30 px-4 py-2 rounded-2xl max-w-xs">
-                  <div className="text-yellow-200 text-xs font-light">{steps[3].text}</div>
+                <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10 max-w-sm">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-bold text-black">A</span>
+                    </div>
+                    <span className="text-xs text-purple-400 font-light">Asmi</span>
+                  </div>
+                  <span className="text-sm font-light leading-relaxed">{messages[1].text}</span>
                 </div>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Bottom insight */}
-        <div className="text-center mt-6 animate-fade-in" style={{ animationDelay: '4s' }}>
-          <p className="text-gray-400 text-sm font-light">
-            Social graph + interaction history = perfect context
-          </p>
         </div>
       </div>
     </div>
