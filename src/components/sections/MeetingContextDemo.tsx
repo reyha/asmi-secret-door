@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Calendar } from 'lucide-react';
+import { Users, Lightbulb, BarChart, Target } from 'lucide-react';
 
 const MeetingContextDemo = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
@@ -8,20 +8,29 @@ const MeetingContextDemo = () => {
   const [hasStarted, setHasStarted] = useState(false);
 
   const messages = [
-    { type: 'user', text: 'Who am I meeting at 3?', delay: 500 },
+    { type: 'user', text: 'Prep me for my call with Raj', delay: 1000 },
+    { type: 'typing', delay: 500 },
+    { type: 'asmi', text: 'Your 2 PM with Raj from Accel:', delay: 1000 },
     { 
-      type: 'asmi', 
-      text: 'Sarah Chen from Accel Partners. Last discussed user growth metrics. She asked about retention - I pulled your latest dashboard numbers.',
-      delay: 2000 
+      type: 'context', 
+      items: [
+        { icon: Lightbulb, text: 'Last discussed: User retention metrics', color: 'text-yellow-400' },
+        { icon: BarChart, text: 'He asked about monthly churn rates', color: 'text-blue-400' },
+        { icon: Target, text: 'Follow up: API partnership timeline', color: 'text-red-400' }
+      ],
+      delay: 800
+    },
+    { 
+      type: 'smart-brief', 
+      text: 'I pulled your latest retention dashboard - 92% monthly retention to share.',
+      delay: 1200
     }
   ];
 
   useEffect(() => {
-    // Start animation when component mounts
     const startTimer = setTimeout(() => {
       setHasStarted(true);
     }, 500);
-
     return () => clearTimeout(startTimer);
   }, []);
 
@@ -30,7 +39,9 @@ const MeetingContextDemo = () => {
 
     const timer = setTimeout(() => {
       if (currentMessage < messages.length) {
-        if (messages[currentMessage].type === 'asmi') {
+        const currentMsg = messages[currentMessage];
+        
+        if (currentMsg.type === 'typing') {
           setIsTyping(true);
           setTimeout(() => {
             setIsTyping(false);
@@ -50,7 +61,7 @@ const MeetingContextDemo = () => {
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <Calendar className="text-blue-400 mx-auto mb-4" size={32} />
+          <Users className="text-blue-400 mx-auto mb-4" size={32} />
           <h2 className="text-2xl font-light text-white mb-2">Win every meeting.</h2>
         </div>
 
@@ -63,7 +74,7 @@ const MeetingContextDemo = () => {
             </div>
             <div>
               <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <p className="text-gray-400 text-xs">Meeting context ready</p>
+              <p className="text-gray-400 text-xs">15 min until your call</p>
             </div>
             <div className="ml-auto">
               <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
@@ -71,7 +82,7 @@ const MeetingContextDemo = () => {
           </div>
 
           {/* Messages */}
-          <div className="p-4 space-y-4 bg-black min-h-[300px]">
+          <div className="p-4 space-y-4 bg-black min-h-[400px]">
             {/* User message */}
             {currentMessage >= 1 && (
               <div className="flex justify-end animate-fade-in">
@@ -94,20 +105,61 @@ const MeetingContextDemo = () => {
               </div>
             )}
 
-            {/* Asmi response */}
-            {currentMessage >= 2 && (
+            {/* Meeting info */}
+            {currentMessage >= 3 && (
               <div className="flex justify-start animate-fade-in">
                 <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10 max-w-sm">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <div className="w-6 h-6 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-bold text-black">A</span>
-                    </div>
-                    <span className="text-xs text-blue-400 font-light">Asmi</span>
-                  </div>
-                  <span className="text-sm font-light leading-relaxed">{messages[1].text}</span>
+                  <span className="text-sm font-light">{messages[2].text}</span>
                 </div>
               </div>
             )}
+
+            {/* Context items */}
+            {currentMessage >= 4 && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10 max-w-sm">
+                  <div className="space-y-3">
+                    {messages[3].items.map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <div key={index} className="flex items-center space-x-3">
+                          <IconComponent size={16} className={item.color} />
+                          <span className="text-sm font-light text-white">{item.text}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Smart brief */}
+            {currentMessage >= 5 && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-green-900/30 border border-green-400/30 px-4 py-3 rounded-2xl max-w-sm">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-green-400 text-xs font-medium">Smart Brief</span>
+                  </div>
+                  <span className="text-green-200 text-sm font-light">{messages[4].text}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom text */}
+        <div className="text-center mt-6">
+          <p className="text-gray-400 text-sm font-light">
+            Context from 3 weeks ago automatically surfaced
+          </p>
+          <div className="flex justify-center space-x-1 mt-2">
+            {Array.from({ length: 11 }, (_, i) => (
+              <div 
+                key={i} 
+                className={`w-2 h-2 rounded-full ${i === 2 ? 'bg-green-400' : 'bg-gray-600'}`}
+              />
+            ))}
           </div>
         </div>
       </div>

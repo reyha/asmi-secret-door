@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { User } from 'lucide-react';
+import { User, Building, GraduationCap, Coffee } from 'lucide-react';
 
 const PersonBackgroundDemo = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
@@ -8,20 +8,31 @@ const PersonBackgroundDemo = () => {
   const [hasStarted, setHasStarted] = useState(false);
 
   const messages = [
-    { type: 'user', text: 'Quick brief before my call', delay: 500 },
+    { type: 'user', text: "Who's Karan again?", delay: 1000 },
+    { type: 'typing', delay: 500 },
+    { type: 'asmi', text: 'Karan Mehta - Partner at Lightspeed Ventures', delay: 1000 },
     { 
-      type: 'asmi', 
-      text: 'Your 3 PM with Sarah: Key topics - Q4 metrics, user retention at 85%, new feature adoption. 3 talking points ready.',
-      delay: 2000 
+      type: 'profile', 
+      name: 'Karan Mehta',
+      title: 'Partner @ Lightspeed',
+      details: [
+        { icon: Building, text: 'Ex-Facebook, Stanford MBA', color: 'text-blue-400' },
+        { icon: GraduationCap, text: 'AI/ML, Enterprise SaaS', color: 'text-purple-400' }
+      ],
+      lastInteraction: 'Coffee chat about Series A trends (2 weeks ago)',
+      delay: 800
+    },
+    { 
+      type: 'insight', 
+      text: 'Prefers crisp, data-heavy decks. Usually asks about unit economics first.',
+      delay: 1200
     }
   ];
 
   useEffect(() => {
-    // Start animation when component mounts
     const startTimer = setTimeout(() => {
       setHasStarted(true);
     }, 500);
-
     return () => clearTimeout(startTimer);
   }, []);
 
@@ -30,7 +41,9 @@ const PersonBackgroundDemo = () => {
 
     const timer = setTimeout(() => {
       if (currentMessage < messages.length) {
-        if (messages[currentMessage].type === 'asmi') {
+        const currentMsg = messages[currentMessage];
+        
+        if (currentMsg.type === 'typing') {
           setIsTyping(true);
           setTimeout(() => {
             setIsTyping(false);
@@ -63,7 +76,7 @@ const PersonBackgroundDemo = () => {
             </div>
             <div>
               <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <p className="text-gray-400 text-xs">Research mode</p>
+              <p className="text-gray-400 text-xs">Quick lookup</p>
             </div>
             <div className="ml-auto">
               <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
@@ -71,7 +84,7 @@ const PersonBackgroundDemo = () => {
           </div>
 
           {/* Messages */}
-          <div className="p-4 space-y-4 bg-black min-h-[300px]">
+          <div className="p-4 space-y-4 bg-black min-h-[400px]">
             {/* User message */}
             {currentMessage >= 1 && (
               <div className="flex justify-end animate-fade-in">
@@ -94,21 +107,66 @@ const PersonBackgroundDemo = () => {
               </div>
             )}
 
-            {/* Asmi response */}
-            {currentMessage >= 2 && (
+            {/* Basic info */}
+            {currentMessage >= 3 && (
               <div className="flex justify-start animate-fade-in">
                 <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10 max-w-sm">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <div className="w-6 h-6 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-bold text-black">A</span>
+                  <span className="text-sm font-light">{messages[2].text}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Profile card */}
+            {currentMessage >= 4 && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-purple-900/30 border border-purple-400/30 px-4 py-3 rounded-2xl max-w-sm">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
+                      <span className="text-black font-bold text-sm">K</span>
                     </div>
-                    <span className="text-xs text-purple-400 font-light">Asmi</span>
+                    <div>
+                      <h4 className="text-purple-200 font-medium text-sm">{messages[3].name}</h4>
+                      <p className="text-purple-300 text-xs">{messages[3].title}</p>
+                    </div>
                   </div>
-                  <span className="text-sm font-light leading-relaxed">{messages[1].text}</span>
+                  
+                  <div className="space-y-2 mb-3">
+                    {messages[3].details.map((detail, index) => {
+                      const IconComponent = detail.icon;
+                      return (
+                        <div key={index} className="flex items-center space-x-2">
+                          <IconComponent size={14} className={detail.color} />
+                          <span className="text-purple-200 text-xs">{detail.text}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="bg-purple-800/40 rounded-lg p-2">
+                    <span className="text-purple-200 text-xs">
+                      Last: {messages[3].lastInteraction}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Insight */}
+            {currentMessage >= 5 && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-yellow-900/30 border border-yellow-400/30 px-4 py-3 rounded-2xl max-w-sm">
+                  <span className="text-yellow-200 text-sm font-light">{messages[4].text}</span>
                 </div>
               </div>
             )}
           </div>
+        </div>
+
+        {/* Bottom text */}
+        <div className="text-center mt-6">
+          <p className="text-gray-400 text-sm font-light">
+            Social graph + interaction history = perfect context
+          </p>
         </div>
       </div>
     </div>

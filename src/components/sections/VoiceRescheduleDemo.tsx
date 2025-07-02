@@ -11,17 +11,17 @@ const VoiceRescheduleDemo = () => {
     { 
       type: 'voice', 
       text: 'Move Eric call to 6PM',
-      delay: 0
+      delay: 1000
     },
     { 
       type: 'processing', 
       text: 'Got it. Checking Eric\'s availability...',
-      delay: 2000
+      delay: 1500
     },
     { 
       type: 'confirmation', 
       text: 'Done! Eric\'s team confirmed. Updated your calendar and sent new invite.',
-      delay: 3500
+      delay: 1200
     },
     { 
       type: 'details', 
@@ -30,16 +30,14 @@ const VoiceRescheduleDemo = () => {
         new: '6:00 PM - 7:00 PM',
         attendees: 'You, Eric Chen, Sarah Kim'
       },
-      delay: 4500
+      delay: 800
     }
   ];
 
   useEffect(() => {
-    // Start animation when component mounts
     const startTimer = setTimeout(() => {
       setHasStarted(true);
     }, 500);
-
     return () => clearTimeout(startTimer);
   }, []);
 
@@ -48,7 +46,7 @@ const VoiceRescheduleDemo = () => {
 
     if (currentStep === 0) {
       setIsRecording(true);
-      setTimeout(() => setIsRecording(false), 1500);
+      setTimeout(() => setIsRecording(false), 2000);
     }
 
     const timer = setTimeout(() => {
@@ -88,7 +86,7 @@ const VoiceRescheduleDemo = () => {
           </div>
 
           {/* Messages */}
-          <div className="p-4 space-y-4 bg-black min-h-[320px]">
+          <div className="p-4 space-y-4 bg-black min-h-[400px]">
             {/* Voice message */}
             {currentStep >= 0 && (
               <div className="flex justify-end animate-fade-in">
@@ -156,7 +154,7 @@ const VoiceRescheduleDemo = () => {
         </div>
 
         {/* Bottom insight */}
-        <div className="text-center mt-6 animate-fade-in" style={{ animationDelay: '5s' }}>
+        <div className="text-center mt-6">
           <p className="text-gray-400 text-sm font-light">
             Voice → Understanding → Action in seconds
           </p>

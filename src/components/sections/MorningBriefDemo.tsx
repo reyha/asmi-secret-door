@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Calendar, User, Gift } from 'lucide-react';
 
 const MorningBriefDemo = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
@@ -8,20 +8,29 @@ const MorningBriefDemo = () => {
   const [hasStarted, setHasStarted] = useState(false);
 
   const messages = [
-    { type: 'user', text: 'Good morning Asmi', delay: 500 },
+    { type: 'user', text: 'Good morning Asmi', delay: 1000 },
+    { type: 'typing', delay: 500 },
+    { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 1000 },
     { 
-      type: 'asmi', 
-      text: 'Good morning! Today: 3 meetings, 2 deadlines. Your 2 PM with Sarah moved to 3 PM. Weather is 72°F - perfect for lunch walk.',
-      delay: 2000 
+      type: 'schedule', 
+      items: [
+        { icon: Calendar, text: '9 AM: Board meeting prep', color: 'text-blue-400' },
+        { icon: User, text: '2 PM: 1:1 with Sarah', color: 'text-green-400' },
+        { icon: Calendar, text: '4 PM: Investor call', color: 'text-purple-400' }
+      ],
+      delay: 800
+    },
+    { 
+      type: 'birthday', 
+      text: 'Also, it\'s Ria\'s birthday today! 🎂',
+      delay: 1200
     }
   ];
 
   useEffect(() => {
-    // Start animation when component mounts
     const startTimer = setTimeout(() => {
       setHasStarted(true);
     }, 500);
-
     return () => clearTimeout(startTimer);
   }, []);
 
@@ -30,7 +39,9 @@ const MorningBriefDemo = () => {
 
     const timer = setTimeout(() => {
       if (currentMessage < messages.length) {
-        if (messages[currentMessage].type === 'asmi') {
+        const currentMsg = messages[currentMessage];
+        
+        if (currentMsg.type === 'typing') {
           setIsTyping(true);
           setTimeout(() => {
             setIsTyping(false);
@@ -50,7 +61,7 @@ const MorningBriefDemo = () => {
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <MessageCircle className="text-green-400 mx-auto mb-4" size={32} />
+          <div className="text-yellow-400 mx-auto mb-4 text-4xl">☀️</div>
           <h2 className="text-2xl font-light text-white mb-2">Start your day smart.</h2>
         </div>
 
@@ -71,7 +82,7 @@ const MorningBriefDemo = () => {
           </div>
 
           {/* Messages */}
-          <div className="p-4 space-y-4 bg-black min-h-[300px]">
+          <div className="p-4 space-y-4 bg-black min-h-[400px]">
             {/* User message */}
             {currentMessage >= 1 && (
               <div className="flex justify-end animate-fade-in">
@@ -94,21 +105,54 @@ const MorningBriefDemo = () => {
               </div>
             )}
 
-            {/* Asmi response */}
-            {currentMessage >= 2 && (
+            {/* Asmi greeting */}
+            {currentMessage >= 3 && (
               <div className="flex justify-start animate-fade-in">
                 <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10 max-w-sm">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <div className="w-6 h-6 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-bold text-black">A</span>
-                    </div>
-                    <span className="text-xs text-green-400 font-light">Asmi</span>
+                  <span className="text-sm font-light">{messages[2].text}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Schedule items */}
+            {currentMessage >= 4 && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10 max-w-sm">
+                  <div className="space-y-3">
+                    {messages[3].items.map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <div key={index} className="flex items-center space-x-3">
+                          <IconComponent size={16} className={item.color} />
+                          <span className="text-sm font-light text-white">{item.text}</span>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <span className="text-sm font-light leading-relaxed">{messages[1].text}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Birthday message */}
+            {currentMessage >= 5 && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-red-900/30 border border-red-400/30 px-4 py-3 rounded-2xl max-w-sm">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Gift size={12} className="text-red-400" />
+                    <span className="text-red-400 text-xs font-medium">Birthday Reminder</span>
+                  </div>
+                  <span className="text-red-200 text-sm font-light">{messages[4].text}</span>
                 </div>
               </div>
             )}
           </div>
+        </div>
+
+        {/* Bottom text */}
+        <div className="text-center mt-6">
+          <p className="text-gray-400 text-sm font-light">
+            Asmi remembered Ria's birthday from last month's conversation
+          </p>
         </div>
       </div>
     </div>
