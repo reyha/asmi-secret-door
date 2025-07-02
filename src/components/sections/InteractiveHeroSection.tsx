@@ -1,16 +1,15 @@
 
-import { useState, useEffect, useRef } from 'react';
-import { ChevronDown, Eye, ArrowUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronDown, ArrowUp } from 'lucide-react';
 import NeuralBloomBackground from '../NeuralBloomBackground';
 
 const InteractiveHeroSection = () => {
-  const [currentInsight, setCurrentInsight] = useState(0);
-  const [isTyping, setIsTyping] = useState(false);
-  const [typedText, setTypedText] = useState('');
   const [showWelcome, setShowWelcome] = useState(false);
   const [showInsights, setShowInsights] = useState(false);
+  const [currentInsight, setCurrentInsight] = useState(0);
+  const [typedText, setTypedText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
-  const [allInsightsShown, setAllInsightsShown] = useState(false);
 
   // Personalized data
   const personalizedData = {
@@ -24,49 +23,60 @@ const InteractiveHeroSection = () => {
     ]
   };
 
-  // Show welcome message first
+  // Initial welcome sequence
   useEffect(() => {
+    console.log('Starting welcome sequence');
     const timer = setTimeout(() => {
       setShowWelcome(true);
-      setTimeout(() => setShowInsights(true), 1500);
+      setTimeout(() => {
+        console.log('Starting insights sequence');
+        setShowInsights(true);
+      }, 1500);
     }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle insight typing animation
+  // Handle typewriter effect for current insight
   useEffect(() => {
     if (!showInsights || currentInsight >= personalizedData.insights.length) {
-      if (currentInsight >= personalizedData.insights.length && !allInsightsShown) {
-        setAllInsightsShown(true);
-        setTimeout(() => setShowCTA(true), 1000);
-      }
       return;
     }
 
+    console.log(`Starting typewriter for insight ${currentInsight}`);
     const insight = personalizedData.insights[currentInsight];
-    let charIndex = 0;
-    setIsTyping(true);
+    
+    // Reset state for new insight
     setTypedText('');
-
-    // Typing animation
+    setIsTyping(true);
+    
+    let charIndex = 0;
+    
     const typingInterval = setInterval(() => {
       if (charIndex <= insight.length) {
         setTypedText(insight.slice(0, charIndex));
         charIndex++;
       } else {
+        // Finished typing this insight
         clearInterval(typingInterval);
         setIsTyping(false);
+        console.log(`Finished typing insight ${currentInsight}`);
         
-        // Move to next insight after pause
+        // Wait before moving to next insight
         setTimeout(() => {
-          setCurrentInsight(prev => prev + 1);
+          if (currentInsight < personalizedData.insights.length - 1) {
+            setCurrentInsight(prev => prev + 1);
+          } else {
+            // All insights done, show CTA
+            console.log('All insights completed, showing CTA');
+            setTimeout(() => setShowCTA(true), 1000);
+          }
         }, 1500);
       }
     }, 50);
 
     return () => clearInterval(typingInterval);
-  }, [showInsights, currentInsight, personalizedData.insights, allInsightsShown]);
+  }, [showInsights, currentInsight, personalizedData.insights.length]);
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
@@ -120,7 +130,7 @@ const InteractiveHeroSection = () => {
                 <div className="bg-black/40 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-green-400/20 max-w-2xl mx-auto">
                   <div className="min-h-[4rem] md:min-h-[5rem] flex items-center justify-center">
                     <div className="text-center">
-                      {/* Typing indicator */}
+                      {/* Typing indicator when starting new insight */}
                       {isTyping && typedText === '' && (
                         <div className="flex items-center justify-center space-x-1 mb-4">
                           <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
@@ -130,12 +140,14 @@ const InteractiveHeroSection = () => {
                       )}
                       
                       {/* Typed text */}
-                      <p className="text-lg md:text-xl text-green-400 font-inter font-medium">
-                        {typedText}
-                        {isTyping && typedText !== '' && (
-                          <span className="animate-pulse">|</span>
-                        )}
-                      </p>
+                      {typedText && (
+                        <p className="text-lg md:text-xl text-green-400 font-inter font-medium">
+                          {typedText}
+                          {isTyping && (
+                            <span className="animate-pulse">|</span>
+                          )}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
