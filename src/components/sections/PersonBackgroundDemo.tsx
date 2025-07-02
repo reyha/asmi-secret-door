@@ -1,16 +1,19 @@
 
 import { useState, useEffect } from 'react';
-import { User, Building, GraduationCap, Coffee } from 'lucide-react';
+import { User, Building, GraduationCap, Coffee, Search, Play, Pause } from 'lucide-react';
 
 const PersonBackgroundDemo = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const messages = [
     { type: 'user', text: "Who's Karan again?", delay: 1000 },
-    { type: 'typing', delay: 500 },
-    { type: 'asmi', text: 'Karan Mehta - Partner at Lightspeed Ventures', delay: 1000 },
+    { type: 'typing', delay: 800 },
+    { type: 'asmi', text: 'Karan Mehta - Partner at Lightspeed Ventures', delay: 1200 },
+    { type: 'typing', delay: 600 },
     { 
       type: 'profile', 
       name: 'Karan Mehta',
@@ -20,24 +23,41 @@ const PersonBackgroundDemo = () => {
         { icon: GraduationCap, text: 'AI/ML, Enterprise SaaS', color: 'text-purple-400' }
       ],
       lastInteraction: 'Coffee chat about Series A trends (2 weeks ago)',
-      delay: 800
+      delay: 1000
     },
+    { type: 'typing', delay: 800 },
     { 
       type: 'insight', 
       text: 'Prefers crisp, data-heavy decks. Usually asks about unit economics first.',
-      delay: 1200
+      delay: 1500
     }
   ];
 
   useEffect(() => {
+    if (!isPlaying) return;
+    
     const startTimer = setTimeout(() => {
       setHasStarted(true);
     }, 500);
     return () => clearTimeout(startTimer);
-  }, []);
+  }, [isPlaying]);
 
   useEffect(() => {
-    if (!hasStarted) return;
+    if (!hasStarted || !isPlaying) return;
+
+    // Simulate typing the search query
+    if (currentMessage === 0) {
+      let i = 0;
+      const query = "Who's Karan again?";
+      const typeInterval = setInterval(() => {
+        if (i < query.length) {
+          setSearchQuery(query.substring(0, i + 1));
+          i++;
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, 100);
+    }
 
     const timer = setTimeout(() => {
       if (currentMessage < messages.length) {
@@ -52,43 +72,93 @@ const PersonBackgroundDemo = () => {
         } else {
           setCurrentMessage(prev => prev + 1);
         }
+      } else {
+        // Reset after completion
+        setTimeout(() => {
+          setCurrentMessage(0);
+          setHasStarted(false);
+          setIsTyping(false);
+          setSearchQuery('');
+        }, 3000);
       }
     }, messages[currentMessage]?.delay || 1000);
 
     return () => clearTimeout(timer);
-  }, [currentMessage, hasStarted]);
+  }, [currentMessage, hasStarted, isPlaying]);
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+    if (!isPlaying) {
+      setHasStarted(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <User className="text-purple-400 mx-auto mb-4" size={32} />
+          <User className="text-purple-400 mx-auto mb-4 animate-pulse" size={32} />
           <h2 className="text-2xl font-light text-white mb-2">Know who you're meeting.</h2>
+          
+          {/* Play/Pause Control */}
+          <button
+            onClick={handlePlayPause}
+            className="mt-4 flex items-center space-x-2 mx-auto px-4 py-2 bg-white/10 border border-white/20 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all duration-300"
+          >
+            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+            <span className="text-sm font-light">{isPlaying ? 'Pause' : 'Play'} Demo</span>
+          </button>
         </div>
 
         {/* Phone mockup */}
-        <div className="bg-black/60 backdrop-blur-sm rounded-3xl border border-green-400/20 overflow-hidden shadow-2xl">
-          {/* Header */}
-          <div className="bg-green-800/30 px-4 py-3 flex items-center space-x-3 border-b border-white/10">
-            <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center">
-              <span className="text-black font-bold text-xs">A</span>
-            </div>
-            <div>
-              <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <p className="text-gray-400 text-xs">Quick lookup</p>
-            </div>
-            <div className="ml-auto">
-              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+        <div className="bg-black/80 backdrop-blur-sm rounded-3xl border border-purple-400/20 overflow-hidden shadow-2xl relative">
+          {/* Status bar */}
+          <div className="bg-black px-4 py-2 flex justify-between items-center text-xs text-white/70">
+            <span>3:22</span>
+            <div className="flex items-center space-x-2">
+              <Search size={10} className="text-purple-400" />
+              <span className="text-purple-400 text-xs">Quick lookup</span>
             </div>
           </div>
 
+          {/* Search bar */}
+          <div className="bg-gray-900/80 px-4 py-3 border-b border-white/10">
+            <div className="flex items-center space-x-2 bg-gray-800/60 rounded-full px-4 py-2">
+              <Search size={16} className="text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                readOnly
+                placeholder="Ask about anyone..."
+                className="bg-transparent text-white text-sm flex-1 outline-none placeholder-gray-500"
+              />
+            </div>
+          </div>
+
+          {/* Header */}
+          <div className="bg-gradient-to-r from-purple-800/40 to-purple-900/40 px-4 py-4 flex items-center space-x-3 border-b border-white/10 backdrop-blur-sm">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-black font-bold text-sm">A</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-white font-medium text-sm">Asmi</h3>
+              <p className="text-gray-400 text-xs flex items-center space-x-1">
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                <span>Person lookup</span>
+              </p>
+            </div>
+            {isTyping && (
+              <div className="text-gray-400 text-xs animate-pulse">searching...</div>
+            )}
+          </div>
+
           {/* Messages */}
-          <div className="p-4 space-y-4 bg-black min-h-[400px]">
+          <div className="p-4 space-y-4 bg-gradient-to-b from-gray-900 to-black min-h-[450px] relative">
             {/* User message */}
             {currentMessage >= 1 && (
-              <div className="flex justify-end animate-fade-in">
-                <div className="bg-green-600 px-4 py-3 rounded-2xl max-w-xs">
+              <div className="flex justify-end animate-slide-in-right">
+                <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-3 rounded-2xl rounded-tr-sm max-w-xs shadow-lg">
                   <span className="text-white text-sm font-light">{messages[0].text}</span>
                 </div>
               </div>
@@ -97,7 +167,7 @@ const PersonBackgroundDemo = () => {
             {/* Typing indicator */}
             {isTyping && (
               <div className="flex justify-start animate-fade-in">
-                <div className="bg-gray-800/80 px-4 py-3 rounded-2xl">
+                <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm border border-white/10">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -109,42 +179,48 @@ const PersonBackgroundDemo = () => {
 
             {/* Basic info */}
             {currentMessage >= 3 && (
-              <div className="flex justify-start animate-fade-in">
-                <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-3 rounded-2xl text-white border border-white/10 max-w-sm">
+              <div className="flex justify-start animate-scale-in">
+                <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm text-white border border-white/10 max-w-sm shadow-lg">
                   <span className="text-sm font-light">{messages[2].text}</span>
                 </div>
               </div>
             )}
 
             {/* Profile card */}
-            {currentMessage >= 4 && (
-              <div className="flex justify-start animate-fade-in">
-                <div className="bg-purple-900/30 border border-purple-400/30 px-4 py-3 rounded-2xl max-w-sm">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center">
-                      <span className="text-black font-bold text-sm">K</span>
+            {currentMessage >= 5 && (
+              <div className="flex justify-start animate-scale-in" style={{ animationDelay: '0.3s' }}>
+                <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-400/40 px-4 py-4 rounded-2xl max-w-sm shadow-lg backdrop-blur-sm">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                      <span className="text-black font-bold text-base">K</span>
                     </div>
                     <div>
-                      <h4 className="text-purple-200 font-medium text-sm">{messages[3].name}</h4>
-                      <p className="text-purple-300 text-xs">{messages[3].title}</p>
+                      <h4 className="text-purple-200 font-medium text-base">{messages[4].name}</h4>
+                      <p className="text-purple-300 text-sm">{messages[4].title}</p>
                     </div>
                   </div>
                   
-                  <div className="space-y-2 mb-3">
-                    {messages[3].details.map((detail, index) => {
+                  <div className="space-y-3 mb-4">
+                    {messages[4].details.map((detail, index) => {
                       const IconComponent = detail.icon;
                       return (
-                        <div key={index} className="flex items-center space-x-2">
-                          <IconComponent size={14} className={detail.color} />
-                          <span className="text-purple-200 text-xs">{detail.text}</span>
+                        <div key={index} className="flex items-center space-x-3 p-2 rounded-lg bg-black/20 animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                          <div className="p-1.5 rounded-lg bg-black/30">
+                            <IconComponent size={14} className={detail.color} />
+                          </div>
+                          <span className="text-purple-200 text-sm">{detail.text}</span>
                         </div>
                       );
                     })}
                   </div>
 
-                  <div className="bg-purple-800/40 rounded-lg p-2">
-                    <span className="text-purple-200 text-xs">
-                      Last: {messages[3].lastInteraction}
+                  <div className="bg-purple-800/40 rounded-lg p-3 border border-purple-400/20">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <Coffee size={12} className="text-purple-400" />
+                      <span className="text-purple-400 text-xs font-medium">Last Interaction</span>
+                    </div>
+                    <span className="text-purple-200 text-sm">
+                      {messages[4].lastInteraction}
                     </span>
                   </div>
                 </div>
@@ -152,10 +228,23 @@ const PersonBackgroundDemo = () => {
             )}
 
             {/* Insight */}
-            {currentMessage >= 5 && (
-              <div className="flex justify-start animate-fade-in">
-                <div className="bg-yellow-900/30 border border-yellow-400/30 px-4 py-3 rounded-2xl max-w-sm">
-                  <span className="text-yellow-200 text-sm font-light">{messages[4].text}</span>
+            {currentMessage >= 7 && (
+              <div className="flex justify-start animate-scale-in">
+                <div className="bg-gradient-to-r from-yellow-900/40 to-orange-900/40 border border-yellow-400/40 px-4 py-3 rounded-2xl max-w-sm shadow-lg backdrop-blur-sm">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+                    <span className="text-yellow-400 text-xs font-medium">AI Insight</span>
+                  </div>
+                  <span className="text-yellow-200 text-sm font-light">{messages[6].text}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Floating search indicator */}
+            {currentMessage >= 3 && (
+              <div className="absolute bottom-4 right-4">
+                <div className="bg-purple-500/20 border border-purple-400/40 rounded-full p-2 animate-pulse">
+                  <User size={12} className="text-purple-400" />
                 </div>
               </div>
             )}
@@ -164,9 +253,19 @@ const PersonBackgroundDemo = () => {
 
         {/* Bottom text */}
         <div className="text-center mt-6">
-          <p className="text-gray-400 text-sm font-light">
+          <p className="text-gray-400 text-sm font-light animate-fade-in">
             Social graph + interaction history = perfect context
           </p>
+          <div className="flex justify-center space-x-1 mt-3">
+            {Array.from({ length: 6 }, (_, i) => (
+              <div 
+                key={i} 
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  i <= Math.floor((currentMessage / messages.length) * 5) ? 'bg-purple-400' : 'bg-gray-600'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
