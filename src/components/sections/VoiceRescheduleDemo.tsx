@@ -1,6 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { Mic, Calendar, CheckCircle, Phone } from 'lucide-react';
+import { Mic, Phone } from 'lucide-react';
+import PhoneStatusBar from './voice-reschedule-demo/PhoneStatusBar';
+import ChatHeader from './voice-reschedule-demo/ChatHeader';
+import VoiceMessage from './voice-reschedule-demo/VoiceMessage';
+import ProcessingMessage from './voice-reschedule-demo/ProcessingMessage';
+import MeetingDetails from './voice-reschedule-demo/MeetingDetails';
+import TypingIndicator from './voice-reschedule-demo/TypingIndicator';
 
 const VoiceRescheduleDemo = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -109,130 +115,36 @@ const VoiceRescheduleDemo = () => {
 
         {/* Phone mockup */}
         <div className="bg-black/80 backdrop-blur-sm rounded-3xl border border-red-400/20 overflow-hidden shadow-2xl relative">
-          {/* Status bar */}
-          <div className="bg-black px-4 py-2 flex justify-between items-center text-xs text-white/70">
-            <span>2:47</span>
-            <div className="flex items-center space-x-2">
-              {isRecording && <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
-                <span className="text-red-400 text-xs">Recording</span>
-              </div>}
-              <div className="w-4 h-2 border border-white/50 rounded-sm">
-                <div className="w-2/3 h-full bg-yellow-400 rounded-sm"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Header */}
-          <div className="bg-gradient-to-r from-red-800/40 to-red-900/40 px-4 py-4 flex items-center space-x-3 border-b border-white/10 backdrop-blur-sm">
-            <div className="w-10 h-10 bg-gradient-to-r from-red-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-black font-bold text-sm">A</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <div className="text-gray-400 text-xs flex items-center space-x-1">
-                <Mic size={10} />
-                <span>Voice assistant</span>
-              </div>
-            </div>
-            {isRecording && (
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
-                <span className="text-red-400 text-xs">Listening</span>
-              </div>
-            )}
-          </div>
+          <PhoneStatusBar isRecording={isRecording} />
+          <ChatHeader isRecording={isRecording} />
 
           {/* Messages */}
           <div className="p-4 space-y-4 bg-gradient-to-b from-gray-900 to-black min-h-[450px] relative">
-            {/* Voice message */}
-            {currentStep >= 0 && (
-              <div className="flex justify-end animate-slide-in-right">
-                <div className="bg-gradient-to-r from-red-500/40 to-red-600/40 border border-red-400/60 px-4 py-4 rounded-2xl rounded-tr-sm max-w-xs shadow-lg backdrop-blur-sm">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <Mic size={16} className={`text-red-400 ${isRecording ? 'animate-pulse' : ''}`} />
-                    <span className="text-red-200 text-sm font-light">{steps[0].text}</span>
-                  </div>
-                  {isRecording && (
-                    <div className="flex items-center space-x-1 mt-3">
-                      {audioWaves.map((height, index) => (
-                        <div
-                          key={index}
-                          className="w-1 bg-red-400 rounded transition-all duration-150"
-                          style={{ height: `${height * 4}px` }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+            <VoiceMessage 
+              text={steps[0].text}
+              isRecording={isRecording}
+              audioWaves={audioWaves}
+              isVisible={currentStep >= 0}
+            />
 
-            {/* Typing indicator */}
-            {(currentStep === 1 || currentStep === 3) && (
-              <div className="flex justify-start animate-fade-in">
-                <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm border border-white/10">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
+            <TypingIndicator isVisible={(currentStep === 1 || currentStep === 3)} />
 
-            {/* Processing */}
-            {currentStep >= 2 && (
-              <div className="flex justify-start animate-scale-in">
-                <div className="bg-blue-900/40 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm max-w-xs border border-blue-400/30 shadow-lg">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-                    <span className="text-blue-400 text-xs font-medium">Processing</span>
-                  </div>
-                  <span className="text-blue-200 text-sm font-light">{steps[2].text}</span>
-                </div>
-              </div>
-            )}
+            <ProcessingMessage 
+              type="processing"
+              text={steps[2].text}
+              isVisible={currentStep >= 2}
+            />
 
-            {/* Confirmation */}
-            {currentStep >= 4 && (
-              <div className="flex justify-start animate-scale-in">
-                <div className="bg-gradient-to-r from-green-500/30 to-green-600/30 border border-green-400/40 px-4 py-3 rounded-2xl rounded-tl-sm max-w-xs shadow-lg backdrop-blur-sm">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <CheckCircle size={14} className="text-green-400" />
-                    <span className="text-green-400 text-xs font-medium">Success</span>
-                  </div>
-                  <span className="text-green-200 text-sm font-light">{steps[4].text}</span>
-                </div>
-              </div>
-            )}
+            <ProcessingMessage 
+              type="confirmation"
+              text={steps[4].text}
+              isVisible={currentStep >= 4}
+            />
 
-            {/* Details */}
-            {currentStep >= 5 && (
-              <div className="flex justify-start animate-scale-in">
-                <div className="bg-purple-900/30 border border-purple-400/30 px-4 py-4 rounded-2xl max-w-xs shadow-lg backdrop-blur-sm">
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2">
-                      <Calendar size={14} className="text-purple-400" />
-                      <span className="text-purple-200 text-xs font-medium">Meeting Updated</span>
-                    </div>
-                    <div className="space-y-2 text-xs">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-gray-400">Was:</span>
-                        <span className="text-gray-400 line-through">{steps[5].data.original}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-purple-200">Now:</span>
-                        <span className="text-purple-200 font-medium">{steps[5].data.new}</span>
-                      </div>
-                      <div className="pt-2 border-t border-purple-400/20">
-                        <span className="text-purple-300 text-xs">{steps[5].data.attendees}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+            <MeetingDetails 
+              data={steps[5].data}
+              isVisible={currentStep >= 5}
+            />
 
             {/* Floating indicators */}
             {currentStep >= 2 && (
