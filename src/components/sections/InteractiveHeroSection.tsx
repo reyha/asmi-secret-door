@@ -14,7 +14,7 @@ const InteractiveHeroSection = () => {
   }, []);
 
   return (
-    <div className="h-[50vh] flex items-center justify-center relative overflow-hidden">
+    <div className="h-[40vh] flex items-center justify-center relative overflow-hidden">
       {/* Minimal background */}
       <div className="absolute inset-0 bg-black">
         <div className="absolute inset-0 opacity-20">

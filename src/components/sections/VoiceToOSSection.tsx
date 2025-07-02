@@ -3,10 +3,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Mic, Zap, Brain } from 'lucide-react';
 
 const VoiceToOSSection = () => {
-  const [visibleSteps, setVisibleSteps] = useState([]);
+  const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
   const [showHighlight, setShowHighlight] = useState(false);
-  const sectionRef = useRef(null);
-  const stepRefs = useRef([]);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const steps = [
     {
@@ -29,13 +29,16 @@ const VoiceToOSSection = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting && !visibleSteps.includes(index)) {
-            setVisibleSteps(prev => [...prev, index]);
-            
-            if (index === steps.length - 1) {
-              setTimeout(() => setShowHighlight(true), 500);
-            }
+        entries.forEach((entry) => {
+          const index = stepRefs.current.findIndex(ref => ref === entry.target);
+          if (index !== -1 && entry.isIntersecting && !visibleSteps.includes(index)) {
+            setVisibleSteps(prev => {
+              const newVisible = [...prev, index].sort((a, b) => a - b);
+              if (newVisible.length === steps.length) {
+                setTimeout(() => setShowHighlight(true), 500);
+              }
+              return newVisible;
+            });
           }
         });
       },
@@ -47,7 +50,7 @@ const VoiceToOSSection = () => {
     });
 
     return () => observer.disconnect();
-  }, [visibleSteps]);
+  }, [visibleSteps, steps.length]);
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
@@ -58,32 +61,8 @@ const VoiceToOSSection = () => {
         </h2>
 
         <div className="flex">
-          {/* Timeline line */}
-          <div className="flex flex-col items-center mr-8">
-            <div className="w-1 h-96 bg-gray-800 relative">
-              <div 
-                className="w-1 bg-gradient-to-b from-green-400 via-blue-400 to-purple-400 absolute top-0 transition-all duration-1000"
-                style={{ height: `${(visibleSteps.length / steps.length) * 100}%` }}
-              />
-            </div>
-            
-            {steps.map((_, index) => (
-              <div
-                key={index}
-                className={`absolute w-4 h-4 rounded-full border-2 bg-black transition-all duration-500 ${
-                  visibleSteps.includes(index) ? 'border-green-400' : 'border-gray-600'
-                }`}
-                style={{ top: `${120 + (index * 120)}px` }}
-              >
-                {visibleSteps.includes(index) && (
-                  <div className="w-full h-full rounded-full bg-green-400 animate-pulse" />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Content */}
-          <div className="flex-1 space-y-16">
+          {/* Timeline line on the right */}
+          <div className="flex-1 space-y-16 mr-8">
             {steps.map((step, index) => (
               <div
                 key={index}
@@ -105,6 +84,30 @@ const VoiceToOSSection = () => {
                     </p>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Timeline line */}
+          <div className="flex flex-col items-center ml-8">
+            <div className="w-1 h-96 bg-gray-800 relative">
+              <div 
+                className="w-1 bg-gradient-to-b from-green-400 via-blue-400 to-purple-400 absolute top-0 transition-all duration-1000"
+                style={{ height: `${(visibleSteps.length / steps.length) * 100}%` }}
+              />
+            </div>
+            
+            {steps.map((_, index) => (
+              <div
+                key={index}
+                className={`absolute w-4 h-4 rounded-full border-2 bg-black transition-all duration-500 ${
+                  visibleSteps.includes(index) ? 'border-green-400' : 'border-gray-600'
+                }`}
+                style={{ top: `${120 + (index * 120)}px` }}
+              >
+                {visibleSteps.includes(index) && (
+                  <div className="w-full h-full rounded-full bg-green-400 animate-pulse" />
+                )}
               </div>
             ))}
           </div>
