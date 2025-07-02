@@ -13,25 +13,25 @@ const VoiceRescheduleDemo = () => {
     { 
       type: 'voice', 
       text: 'Move Eric call to 6PM',
-      delay: 600
-    },
-    { 
-      type: 'typing', 
-      delay: 400
-    },
-    { 
-      type: 'processing', 
-      text: 'Got it. Checking Eric\'s availability...',
       delay: 800
     },
     { 
       type: 'typing', 
-      delay: 500
+      delay: 600
+    },
+    { 
+      type: 'processing', 
+      text: 'Got it. Checking Eric\'s availability...',
+      delay: 1000
+    },
+    { 
+      type: 'typing', 
+      delay: 600
     },
     { 
       type: 'confirmation', 
       text: 'Done! Eric\'s team confirmed. Updated your calendar and sent new invite.',
-      delay: 600
+      delay: 800
     },
     { 
       type: 'details', 
@@ -40,7 +40,7 @@ const VoiceRescheduleDemo = () => {
         new: '6:00 PM - 7:00 PM',
         attendees: 'You, Eric Chen, Sarah Kim'
       },
-      delay: 500
+      delay: 600
     }
   ];
 
@@ -79,7 +79,7 @@ const VoiceRescheduleDemo = () => {
 
     if (currentStep === 0) {
       setIsRecording(true);
-      setTimeout(() => setIsRecording(false), 1500);
+      setTimeout(() => setIsRecording(false), 1200);
     }
 
     const timer = setTimeout(() => {

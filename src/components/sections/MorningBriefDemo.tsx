@@ -9,10 +9,10 @@ const MorningBriefDemo = () => {
   const [isComplete, setIsComplete] = useState(false);
 
   const messages = [
-    { type: 'user', text: 'Good morning Asmi', delay: 500 },
+    { type: 'user', text: 'Good morning Asmi', delay: 600 },
+    { type: 'typing', delay: 500 },
+    { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 700 },
     { type: 'typing', delay: 400 },
-    { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 600 },
-    { type: 'typing', delay: 300 },
     { 
       type: 'schedule', 
       items: [
@@ -20,13 +20,13 @@ const MorningBriefDemo = () => {
         { icon: User, text: '2 PM: 1:1 with Sarah', color: 'text-green-400' },
         { icon: Calendar, text: '4 PM: Investor call', color: 'text-purple-400' }
       ],
-      delay: 500
+      delay: 600
     },
-    { type: 'typing', delay: 400 },
+    { type: 'typing', delay: 500 },
     { 
       type: 'birthday', 
       text: 'Also, it\'s Ria\'s birthday today! 🎂',
-      delay: 600
+      delay: 700
     }
   ];
 
@@ -62,7 +62,7 @@ const MorningBriefDemo = () => {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessage(prev => prev + 1);
-          }, 800);
+          }, 600);
         } else {
           setCurrentMessage(prev => prev + 1);
         }

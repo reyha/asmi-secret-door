@@ -10,10 +10,10 @@ const PersonBackgroundDemo = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const messages = [
-    { type: 'user', text: "Who's Karan again?", delay: 500 },
+    { type: 'user', text: "Who's Karan again?", delay: 600 },
+    { type: 'typing', delay: 500 },
+    { type: 'asmi', text: 'Karan Mehta - Partner at Lightspeed Ventures', delay: 700 },
     { type: 'typing', delay: 400 },
-    { type: 'asmi', text: 'Karan Mehta - Partner at Lightspeed Ventures', delay: 600 },
-    { type: 'typing', delay: 300 },
     { 
       type: 'profile', 
       name: 'Karan Mehta',
@@ -23,13 +23,13 @@ const PersonBackgroundDemo = () => {
         { icon: GraduationCap, text: 'AI/ML, Enterprise SaaS', color: 'text-purple-400' }
       ],
       lastInteraction: 'Coffee chat about Series A trends (2 weeks ago)',
-      delay: 500
+      delay: 600
     },
-    { type: 'typing', delay: 400 },
+    { type: 'typing', delay: 500 },
     { 
       type: 'insight', 
       text: 'Prefers crisp, data-heavy decks. Usually asks about unit economics first.',
-      delay: 600
+      delay: 700
     }
   ];
 
@@ -79,7 +79,7 @@ const PersonBackgroundDemo = () => {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessage(prev => prev + 1);
-          }, 800);
+          }, 600);
         } else {
           setCurrentMessage(prev => prev + 1);
         }

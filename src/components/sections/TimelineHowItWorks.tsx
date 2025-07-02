@@ -126,7 +126,7 @@ const TimelineHowItWorks = () => {
                 }`}
               >
                 <div className="flex items-start space-x-4">
-                  <div className="p-3 dark-card rounded-xl flex-shrink-0">
+                  <div className="p-3 bg-black/50 border border-white/20 rounded-xl flex-shrink-0">
                     {step.icon}
                   </div>
                   <div className="flex-1">

@@ -82,7 +82,7 @@ const VoiceToOSSection = () => {
       <div className="max-w-4xl mx-auto px-6">
         <h2 className="text-4xl md:text-5xl font-space font-bold text-white mb-16 text-center">
           Starting with Personal OS.<br />
-          Will end up with universal layer for everything.
+          Will end up with universal layer.
         </h2>
 
         <div className="flex">

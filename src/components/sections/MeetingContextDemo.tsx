@@ -9,10 +9,10 @@ const MeetingContextDemo = () => {
   const [isComplete, setIsComplete] = useState(false);
 
   const messages = [
-    { type: 'user', text: 'Prep me for my call with Raj', delay: 500 },
+    { type: 'user', text: 'Prep me for my call with Raj', delay: 600 },
+    { type: 'typing', delay: 500 },
+    { type: 'asmi', text: 'Your 2 PM with Raj from Accel:', delay: 700 },
     { type: 'typing', delay: 400 },
-    { type: 'asmi', text: 'Your 2 PM with Raj from Accel:', delay: 600 },
-    { type: 'typing', delay: 300 },
     { 
       type: 'context', 
       items: [
@@ -20,13 +20,13 @@ const MeetingContextDemo = () => {
         { icon: BarChart, text: 'He asked about monthly churn rates', color: 'text-blue-400', date: '3 weeks ago' },
         { icon: Target, text: 'Follow up: API partnership timeline', color: 'text-red-400', date: '2 weeks ago' }
       ],
-      delay: 500
+      delay: 600
     },
-    { type: 'typing', delay: 400 },
+    { type: 'typing', delay: 500 },
     { 
       type: 'smart-brief', 
       text: 'I pulled your latest retention dashboard - 92% monthly retention to share.',
-      delay: 600
+      delay: 700
     }
   ];
 
@@ -62,7 +62,7 @@ const MeetingContextDemo = () => {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessage(prev => prev + 1);
-          }, 800);
+          }, 600);
         } else {
           setCurrentMessage(prev => prev + 1);
         }
