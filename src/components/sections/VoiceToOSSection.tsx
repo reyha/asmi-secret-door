@@ -81,7 +81,7 @@ const VoiceToOSSection = () => {
     <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
       <div className="max-w-4xl mx-auto px-6">
         <h2 className="text-4xl md:text-5xl font-space font-bold text-white mb-16 text-center">
-          Starting with Personal OS.<br />
+          Starting with personal OS.<br />
           Will end up with universal layer.
         </h2>
 

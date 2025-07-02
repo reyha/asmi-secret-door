@@ -7,7 +7,7 @@ const FounderSection = () => {
 
   const founders = [
     {
-      name: 'Rishi Patel',
+      name: 'Rishi Rathore',
       role: 'Co-Founder & CEO',
       avatar: 'R',
       gradient: 'from-blue-500 to-purple-600',
@@ -29,11 +29,11 @@ const FounderSection = () => {
           description: 'Ex-Flipkart, deep experience in consumer-scale products'
         }
       ],
-      quote: "I've built consumer products for millions. Now I want to build the OS for human memory.",
+      quote: "I've built consumer products for millions. Now I am building a single interface to Get Things Done",
       credibility: "This isn't his first rodeo. Rishi has the track record of building and scaling massive consumer products."
     },
     {
-      name: 'Satwik Kolhe',
+      name: 'Satwik Kottur',
       role: 'Co-Founder & CTO',
       avatar: 'S',
       gradient: 'from-purple-500 to-pink-600',

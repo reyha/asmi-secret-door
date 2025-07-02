@@ -89,7 +89,7 @@ const FounderSectionNew = () => {
               <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
                 R
               </div>
-              <h3 className="text-2xl font-space font-bold text-white">Rishi Patel</h3>
+              <h3 className="text-2xl font-space font-bold text-white">Rishi Rathore</h3>
               <p className="text-green-400 font-inter">Co-Founder & CEO</p>
             </div>
 
@@ -109,7 +109,7 @@ const FounderSectionNew = () => {
             </div>
 
             <blockquote className="text-gray-300 italic mt-6 border-l-4 border-green-400/50 pl-4 font-inter">
-              "I've built consumer products for millions. Now I want to build the OS for human memory."
+              "I've built consumer products for millions. Now I am building a single interface to Get Things Done"
             </blockquote>
           </div>
 
@@ -119,7 +119,7 @@ const FounderSectionNew = () => {
               <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
                 S
               </div>
-              <h3 className="text-2xl font-space font-bold text-white">Satwik Kolhe</h3>
+              <h3 className="text-2xl font-space font-bold text-white">Satwik Kottur</h3>
               <p className="text-green-400 font-inter">Co-Founder & CTO</p>
             </div>
 

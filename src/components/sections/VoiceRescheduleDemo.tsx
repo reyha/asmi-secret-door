@@ -23,7 +23,7 @@ const VoiceRescheduleDemo = () => {
     },
     { 
       type: 'typing', 
-      delay: 600
+      delay: 800
     },
     { 
       type: 'processing', 
@@ -32,7 +32,7 @@ const VoiceRescheduleDemo = () => {
     },
     { 
       type: 'typing', 
-      delay: 600
+      delay: 800
     },
     { 
       type: 'confirmation', 
@@ -110,7 +110,7 @@ const VoiceRescheduleDemo = () => {
               <div className="absolute inset-0 rounded-full bg-red-400/20 animate-ping"></div>
             )}
           </div>
-          <h2 className="text-2xl font-light text-white mb-2">Just speak. It's done.</h2>
+          <h2 className="text-2xl font-light text-white mb-2 transform-none">Just speak. It's done.</h2>
         </div>
 
         {/* Phone mockup */}
@@ -127,13 +127,15 @@ const VoiceRescheduleDemo = () => {
               isVisible={currentStep >= 0}
             />
 
-            <TypingIndicator isVisible={(currentStep === 1 || currentStep === 3)} />
+            <TypingIndicator isVisible={currentStep === 1} />
 
             <ProcessingMessage 
               type="processing"
               text={steps[2].text}
               isVisible={currentStep >= 2}
             />
+
+            <TypingIndicator isVisible={currentStep === 3} />
 
             <ProcessingMessage 
               type="confirmation"

@@ -10,9 +10,9 @@ const MeetingContextDemo = () => {
 
   const messages = [
     { type: 'user', text: 'Prep me for my call with Raj', delay: 600 },
-    { type: 'typing', delay: 500 },
+    { type: 'typing', delay: 800 },
     { type: 'asmi', text: 'Your 2 PM with Raj from Accel:', delay: 700 },
-    { type: 'typing', delay: 400 },
+    { type: 'typing', delay: 800 },
     { 
       type: 'context', 
       items: [
@@ -22,7 +22,7 @@ const MeetingContextDemo = () => {
       ],
       delay: 600
     },
-    { type: 'typing', delay: 500 },
+    { type: 'typing', delay: 800 },
     { 
       type: 'smart-brief', 
       text: 'I pulled your latest retention dashboard - 92% monthly retention to share.',
@@ -62,7 +62,7 @@ const MeetingContextDemo = () => {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessage(prev => prev + 1);
-          }, 600);
+          }, 1000);
         } else {
           setCurrentMessage(prev => prev + 1);
         }
@@ -123,7 +123,7 @@ const MeetingContextDemo = () => {
             )}
 
             {/* Typing indicator */}
-            {isTyping && (
+            {isTyping && currentMessage >= 1 && currentMessage < 3 && (
               <div className="flex justify-start animate-fade-in">
                 <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm border border-white/10">
                   <div className="flex space-x-1">
@@ -140,6 +140,19 @@ const MeetingContextDemo = () => {
               <div className="flex justify-start animate-scale-in">
                 <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm text-white border border-white/10 max-w-sm shadow-lg">
                   <span className="text-sm font-light">{messages[2].text}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Typing indicator for context */}
+            {isTyping && currentMessage >= 3 && currentMessage < 5 && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm border border-white/10">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
                 </div>
               </div>
             )}
@@ -165,6 +178,19 @@ const MeetingContextDemo = () => {
                         </div>
                       );
                     })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Typing indicator for smart brief */}
+            {isTyping && currentMessage >= 5 && currentMessage < 7 && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm border border-white/10">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>

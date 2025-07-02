@@ -15,9 +15,9 @@ const MorningBriefDemo = () => {
 
   const messages = [
     { type: 'user', text: 'Good morning Asmi', delay: 600 },
-    { type: 'typing', delay: 500 },
+    { type: 'typing', delay: 800 },
     { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 700 },
-    { type: 'typing', delay: 400 },
+    { type: 'typing', delay: 800 },
     { 
       type: 'schedule', 
       items: [
@@ -27,7 +27,7 @@ const MorningBriefDemo = () => {
       ],
       delay: 600
     },
-    { type: 'typing', delay: 500 },
+    { type: 'typing', delay: 800 },
     { 
       type: 'birthday', 
       text: 'Also, it\'s Ria\'s birthday today! 🎂',
@@ -67,7 +67,7 @@ const MorningBriefDemo = () => {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessage(prev => prev + 1);
-          }, 600);
+          }, 1000);
         } else {
           setCurrentMessage(prev => prev + 1);
         }
@@ -100,7 +100,7 @@ const MorningBriefDemo = () => {
               isVisible={currentMessage >= 1} 
             />
 
-            <TypingIndicator isVisible={isTyping} />
+            <TypingIndicator isVisible={isTyping && currentMessage >= 1 && currentMessage < 3} />
 
             <ChatMessage 
               type="asmi" 
@@ -108,10 +108,14 @@ const MorningBriefDemo = () => {
               isVisible={currentMessage >= 3} 
             />
 
+            <TypingIndicator isVisible={isTyping && currentMessage >= 3 && currentMessage < 5} />
+
             <ScheduleCard 
               items={messages[4].items} 
               isVisible={currentMessage >= 5} 
             />
+
+            <TypingIndicator isVisible={isTyping && currentMessage >= 5 && currentMessage < 7} />
 
             <BirthdayCard 
               text={messages[6].text} 
