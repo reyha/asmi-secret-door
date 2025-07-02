@@ -1,6 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { MessageCircle, Calendar, User, Gift } from 'lucide-react';
+import { MessageCircle, Calendar, User } from 'lucide-react';
+import PhoneHeader from './morning-brief-demo/PhoneHeader';
+import ChatMessage from './morning-brief-demo/ChatMessage';
+import ScheduleCard from './morning-brief-demo/ScheduleCard';
+import BirthdayCard from './morning-brief-demo/BirthdayCard';
+import TypingIndicator from './morning-brief-demo/TypingIndicator';
 
 const MorningBriefDemo = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
@@ -85,99 +90,33 @@ const MorningBriefDemo = () => {
 
         {/* Phone mockup */}
         <div className="bg-black/80 backdrop-blur-sm rounded-3xl border border-green-400/30 overflow-hidden shadow-2xl relative">
-          {/* Status bar */}
-          <div className="bg-black px-4 py-2 flex justify-between items-center text-xs text-white/70">
-            <span>9:41</span>
-            <div className="flex space-x-1">
-              <div className="w-4 h-2 border border-white/50 rounded-sm">
-                <div className="w-3/4 h-full bg-green-400 rounded-sm"></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Header */}
-          <div className="bg-gradient-to-r from-green-800/40 to-green-900/40 px-4 py-4 flex items-center space-x-3 border-b border-white/10 backdrop-blur-sm">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-black font-bold text-sm">A</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <div className="text-gray-400 text-xs flex items-center space-x-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span>Your AI Chief of Staff</span>
-              </div>
-            </div>
-            {isTyping && (
-              <div className="text-gray-400 text-xs animate-pulse">typing...</div>
-            )}
-          </div>
+          <PhoneHeader isTyping={isTyping} />
 
           {/* Messages */}
           <div className="p-4 space-y-4 bg-gradient-to-b from-gray-900 to-black min-h-[450px] relative">
-            {/* User message */}
-            {currentMessage >= 1 && (
-              <div className="flex justify-end animate-slide-in-right">
-                <div className="bg-gradient-to-r from-green-500 to-green-600 px-4 py-3 rounded-2xl rounded-tr-sm max-w-xs shadow-lg">
-                  <span className="text-white text-sm font-light">{messages[0].text}</span>
-                </div>
-              </div>
-            )}
+            <ChatMessage 
+              type="user" 
+              text={messages[0].text} 
+              isVisible={currentMessage >= 1} 
+            />
 
-            {/* Typing indicator */}
-            {isTyping && (
-              <div className="flex justify-start animate-fade-in">
-                <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm border border-white/10">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
+            <TypingIndicator isVisible={isTyping} />
 
-            {/* Asmi greeting */}
-            {currentMessage >= 3 && (
-              <div className="flex justify-start animate-scale-in">
-                <div className="bg-gray-800/90 backdrop-blur-sm px-4 py-3 rounded-2xl rounded-tl-sm text-white border border-white/10 max-w-sm shadow-lg">
-                  <span className="text-sm font-light">{messages[2].text}</span>
-                </div>
-              </div>
-            )}
+            <ChatMessage 
+              type="asmi" 
+              text={messages[2].text} 
+              isVisible={currentMessage >= 3} 
+            />
 
-            {/* Schedule items */}
-            {currentMessage >= 5 && (
-              <div className="flex justify-start animate-scale-in">
-                <div className="bg-blue-900/40 backdrop-blur-sm px-4 py-4 rounded-2xl text-white border border-blue-400/30 max-w-sm shadow-lg">
-                  <div className="space-y-3">
-                    {messages[4].items.map((item, index) => {
-                      const IconComponent = item.icon;
-                      return (
-                        <div key={index} className="flex items-center space-x-3">
-                          <div className="p-1.5 rounded-lg bg-black/30">
-                            <IconComponent size={14} className={item.color} />
-                          </div>
-                          <span className="text-sm font-light text-white">{item.text}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
+            <ScheduleCard 
+              items={messages[4].items} 
+              isVisible={currentMessage >= 5} 
+            />
 
-            {/* Birthday message */}
-            {currentMessage >= 7 && (
-              <div className="flex justify-start animate-scale-in">
-                <div className="bg-gradient-to-r from-red-900/40 to-pink-900/40 border border-red-400/40 px-4 py-3 rounded-2xl max-w-sm shadow-lg backdrop-blur-sm">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Gift size={14} className="text-red-400" />
-                    <span className="text-red-400 text-xs font-medium">Birthday Reminder</span>
-                  </div>
-                  <span className="text-red-200 text-sm font-light">{messages[6].text}</span>
-                </div>
-              </div>
-            )}
+            <BirthdayCard 
+              text={messages[6].text} 
+              isVisible={currentMessage >= 7} 
+            />
 
             {/* Floating action indicators */}
             {currentMessage >= 3 && (
