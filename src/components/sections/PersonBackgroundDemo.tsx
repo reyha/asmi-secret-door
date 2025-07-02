@@ -1,19 +1,19 @@
 
 import { useState, useEffect } from 'react';
-import { User, Building, GraduationCap, Coffee, Search, Play, Pause } from 'lucide-react';
+import { User, Building, GraduationCap, Coffee, Search } from 'lucide-react';
 
 const PersonBackgroundDemo = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isComplete, setIsComplete] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const messages = [
-    { type: 'user', text: "Who's Karan again?", delay: 1000 },
-    { type: 'typing', delay: 800 },
-    { type: 'asmi', text: 'Karan Mehta - Partner at Lightspeed Ventures', delay: 1200 },
-    { type: 'typing', delay: 600 },
+    { type: 'user', text: "Who's Karan again?", delay: 500 },
+    { type: 'typing', delay: 400 },
+    { type: 'asmi', text: 'Karan Mehta - Partner at Lightspeed Ventures', delay: 600 },
+    { type: 'typing', delay: 300 },
     { 
       type: 'profile', 
       name: 'Karan Mehta',
@@ -23,27 +23,38 @@ const PersonBackgroundDemo = () => {
         { icon: GraduationCap, text: 'AI/ML, Enterprise SaaS', color: 'text-purple-400' }
       ],
       lastInteraction: 'Coffee chat about Series A trends (2 weeks ago)',
-      delay: 1000
+      delay: 500
     },
-    { type: 'typing', delay: 800 },
+    { type: 'typing', delay: 400 },
     { 
       type: 'insight', 
       text: 'Prefers crisp, data-heavy decks. Usually asks about unit economics first.',
-      delay: 1500
+      delay: 600
     }
   ];
 
   useEffect(() => {
-    if (!isPlaying) return;
-    
-    const startTimer = setTimeout(() => {
-      setHasStarted(true);
-    }, 500);
-    return () => clearTimeout(startTimer);
-  }, [isPlaying]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasStarted) {
+            setHasStarted(true);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const currentElement = document.getElementById('person-background-demo');
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
+
+    return () => observer.disconnect();
+  }, [hasStarted]);
 
   useEffect(() => {
-    if (!hasStarted || !isPlaying) return;
+    if (!hasStarted || isComplete) return;
 
     // Simulate typing the search query
     if (currentMessage === 0) {
@@ -56,7 +67,7 @@ const PersonBackgroundDemo = () => {
         } else {
           clearInterval(typeInterval);
         }
-      }, 100);
+      }, 80);
     }
 
     const timer = setTimeout(() => {
@@ -68,47 +79,25 @@ const PersonBackgroundDemo = () => {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessage(prev => prev + 1);
-          }, 1500);
+          }, 800);
         } else {
           setCurrentMessage(prev => prev + 1);
         }
       } else {
-        // Reset after completion
-        setTimeout(() => {
-          setCurrentMessage(0);
-          setHasStarted(false);
-          setIsTyping(false);
-          setSearchQuery('');
-        }, 3000);
+        setIsComplete(true);
       }
-    }, messages[currentMessage]?.delay || 1000);
+    }, messages[currentMessage]?.delay || 500);
 
     return () => clearTimeout(timer);
-  }, [currentMessage, hasStarted, isPlaying]);
-
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-    if (!isPlaying) {
-      setHasStarted(true);
-    }
-  };
+  }, [currentMessage, hasStarted, isComplete]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
+    <div id="person-background-demo" className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <User className="text-purple-400 mx-auto mb-4 animate-pulse" size={32} />
+          <User className="text-purple-400 mx-auto mb-4" size={32} />
           <h2 className="text-2xl font-light text-white mb-2">Know who you're meeting.</h2>
-          
-          {/* Play/Pause Control */}
-          <button
-            onClick={handlePlayPause}
-            className="mt-4 flex items-center space-x-2 mx-auto px-4 py-2 bg-white/10 border border-white/20 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all duration-300"
-          >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-            <span className="text-sm font-light">{isPlaying ? 'Pause' : 'Play'} Demo</span>
-          </button>
         </div>
 
         {/* Phone mockup */}
@@ -143,10 +132,10 @@ const PersonBackgroundDemo = () => {
             </div>
             <div className="flex-1">
               <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <p className="text-gray-400 text-xs flex items-center space-x-1">
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+              <div className="text-gray-400 text-xs flex items-center space-x-1">
+                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
                 <span>Person lookup</span>
-              </p>
+              </div>
             </div>
             {isTyping && (
               <div className="text-gray-400 text-xs animate-pulse">searching...</div>
@@ -188,7 +177,7 @@ const PersonBackgroundDemo = () => {
 
             {/* Profile card */}
             {currentMessage >= 5 && (
-              <div className="flex justify-start animate-scale-in" style={{ animationDelay: '0.3s' }}>
+              <div className="flex justify-start animate-scale-in">
                 <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-400/40 px-4 py-4 rounded-2xl max-w-sm shadow-lg backdrop-blur-sm">
                   <div className="flex items-center space-x-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
@@ -196,7 +185,7 @@ const PersonBackgroundDemo = () => {
                     </div>
                     <div>
                       <h4 className="text-purple-200 font-medium text-base">{messages[4].name}</h4>
-                      <p className="text-purple-300 text-sm">{messages[4].title}</p>
+                      <span className="text-purple-300 text-sm">{messages[4].title}</span>
                     </div>
                   </div>
                   
@@ -204,7 +193,7 @@ const PersonBackgroundDemo = () => {
                     {messages[4].details.map((detail, index) => {
                       const IconComponent = detail.icon;
                       return (
-                        <div key={index} className="flex items-center space-x-3 p-2 rounded-lg bg-black/20 animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                        <div key={index} className="flex items-center space-x-3 p-2 rounded-lg bg-black/20">
                           <div className="p-1.5 rounded-lg bg-black/30">
                             <IconComponent size={14} className={detail.color} />
                           </div>
@@ -232,7 +221,7 @@ const PersonBackgroundDemo = () => {
               <div className="flex justify-start animate-scale-in">
                 <div className="bg-gradient-to-r from-yellow-900/40 to-orange-900/40 border border-yellow-400/40 px-4 py-3 rounded-2xl max-w-sm shadow-lg backdrop-blur-sm">
                   <div className="flex items-center space-x-2 mb-2">
-                    <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                     <span className="text-yellow-400 text-xs font-medium">AI Insight</span>
                   </div>
                   <span className="text-yellow-200 text-sm font-light">{messages[6].text}</span>
@@ -243,7 +232,7 @@ const PersonBackgroundDemo = () => {
             {/* Floating search indicator */}
             {currentMessage >= 3 && (
               <div className="absolute bottom-4 right-4">
-                <div className="bg-purple-500/20 border border-purple-400/40 rounded-full p-2 animate-pulse">
+                <div className="bg-purple-500/20 border border-purple-400/40 rounded-full p-2">
                   <User size={12} className="text-purple-400" />
                 </div>
               </div>
@@ -253,19 +242,9 @@ const PersonBackgroundDemo = () => {
 
         {/* Bottom text */}
         <div className="text-center mt-6">
-          <p className="text-gray-400 text-sm font-light animate-fade-in">
+          <span className="text-gray-400 text-sm font-light">
             Social graph + interaction history = perfect context
-          </p>
-          <div className="flex justify-center space-x-1 mt-3">
-            {Array.from({ length: 6 }, (_, i) => (
-              <div 
-                key={i} 
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i <= Math.floor((currentMessage / messages.length) * 5) ? 'bg-purple-400' : 'bg-gray-600'
-                }`}
-              />
-            ))}
-          </div>
+          </span>
         </div>
       </div>
     </div>

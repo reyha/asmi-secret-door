@@ -1,18 +1,18 @@
 
 import { useState, useEffect } from 'react';
-import { MessageCircle, Calendar, User, Gift, Play, Pause } from 'lucide-react';
+import { MessageCircle, Calendar, User, Gift } from 'lucide-react';
 
 const MorningBriefDemo = () => {
   const [currentMessage, setCurrentMessage] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isComplete, setIsComplete] = useState(false);
 
   const messages = [
-    { type: 'user', text: 'Good morning Asmi', delay: 1000 },
-    { type: 'typing', delay: 800 },
-    { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 1200 },
-    { type: 'typing', delay: 600 },
+    { type: 'user', text: 'Good morning Asmi', delay: 500 },
+    { type: 'typing', delay: 400 },
+    { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 600 },
+    { type: 'typing', delay: 300 },
     { 
       type: 'schedule', 
       items: [
@@ -20,27 +20,38 @@ const MorningBriefDemo = () => {
         { icon: User, text: '2 PM: 1:1 with Sarah', color: 'text-green-400' },
         { icon: Calendar, text: '4 PM: Investor call', color: 'text-purple-400' }
       ],
-      delay: 1000
+      delay: 500
     },
-    { type: 'typing', delay: 800 },
+    { type: 'typing', delay: 400 },
     { 
       type: 'birthday', 
       text: 'Also, it\'s Ria\'s birthday today! 🎂',
-      delay: 1500
+      delay: 600
     }
   ];
 
   useEffect(() => {
-    if (!isPlaying) return;
-    
-    const startTimer = setTimeout(() => {
-      setHasStarted(true);
-    }, 500);
-    return () => clearTimeout(startTimer);
-  }, [isPlaying]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasStarted) {
+            setHasStarted(true);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const currentElement = document.getElementById('morning-brief-demo');
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
+
+    return () => observer.disconnect();
+  }, [hasStarted]);
 
   useEffect(() => {
-    if (!hasStarted || !isPlaying) return;
+    if (!hasStarted || isComplete) return;
 
     const timer = setTimeout(() => {
       if (currentMessage < messages.length) {
@@ -51,46 +62,25 @@ const MorningBriefDemo = () => {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessage(prev => prev + 1);
-          }, 1500);
+          }, 800);
         } else {
           setCurrentMessage(prev => prev + 1);
         }
       } else {
-        // Reset after completion
-        setTimeout(() => {
-          setCurrentMessage(0);
-          setHasStarted(false);
-          setIsTyping(false);
-        }, 2000);
+        setIsComplete(true);
       }
-    }, messages[currentMessage]?.delay || 1000);
+    }, messages[currentMessage]?.delay || 500);
 
     return () => clearTimeout(timer);
-  }, [currentMessage, hasStarted, isPlaying]);
-
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-    if (!isPlaying) {
-      setHasStarted(true);
-    }
-  };
+  }, [currentMessage, hasStarted, isComplete]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
+    <div id="morning-brief-demo" className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="text-yellow-400 mx-auto mb-4 text-4xl animate-pulse">☀️</div>
+          <div className="text-yellow-400 mx-auto mb-4 text-4xl">☀️</div>
           <h2 className="text-2xl font-light text-white mb-2">Start your day smart.</h2>
-          
-          {/* Play/Pause Control */}
-          <button
-            onClick={handlePlayPause}
-            className="mt-4 flex items-center space-x-2 mx-auto px-4 py-2 bg-white/10 border border-white/20 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all duration-300"
-          >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-            <span className="text-sm font-light">{isPlaying ? 'Pause' : 'Play'} Demo</span>
-          </button>
         </div>
 
         {/* Phone mockup */}
@@ -112,10 +102,10 @@ const MorningBriefDemo = () => {
             </div>
             <div className="flex-1">
               <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <p className="text-gray-400 text-xs flex items-center space-x-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <div className="text-gray-400 text-xs flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                 <span>Your AI Chief of Staff</span>
-              </p>
+              </div>
             </div>
             {isTyping && (
               <div className="text-gray-400 text-xs animate-pulse">typing...</div>
@@ -157,13 +147,13 @@ const MorningBriefDemo = () => {
 
             {/* Schedule items */}
             {currentMessage >= 5 && (
-              <div className="flex justify-start animate-scale-in" style={{ animationDelay: '0.2s' }}>
+              <div className="flex justify-start animate-scale-in">
                 <div className="bg-blue-900/40 backdrop-blur-sm px-4 py-4 rounded-2xl text-white border border-blue-400/30 max-w-sm shadow-lg">
                   <div className="space-y-3">
                     {messages[4].items.map((item, index) => {
                       const IconComponent = item.icon;
                       return (
-                        <div key={index} className="flex items-center space-x-3 animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                        <div key={index} className="flex items-center space-x-3">
                           <div className="p-1.5 rounded-lg bg-black/30">
                             <IconComponent size={14} className={item.color} />
                           </div>
@@ -192,7 +182,7 @@ const MorningBriefDemo = () => {
             {/* Floating action indicators */}
             {currentMessage >= 3 && (
               <div className="absolute bottom-4 right-4 space-y-2">
-                <div className="bg-green-500/20 border border-green-400/40 rounded-full p-2 animate-pulse">
+                <div className="bg-green-500/20 border border-green-400/40 rounded-full p-2">
                   <MessageCircle size={12} className="text-green-400" />
                 </div>
               </div>
@@ -202,19 +192,9 @@ const MorningBriefDemo = () => {
 
         {/* Bottom text */}
         <div className="text-center mt-6">
-          <p className="text-gray-400 text-sm font-light animate-fade-in">
+          <span className="text-gray-400 text-sm font-light">
             Asmi remembered Ria's birthday from last month's conversation
-          </p>
-          <div className="flex justify-center space-x-1 mt-3">
-            {Array.from({ length: 5 }, (_, i) => (
-              <div 
-                key={i} 
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i <= Math.floor((currentMessage / messages.length) * 4) ? 'bg-green-400' : 'bg-gray-600'
-                }`}
-              />
-            ))}
-          </div>
+          </span>
         </div>
       </div>
     </div>

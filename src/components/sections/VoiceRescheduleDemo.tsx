@@ -1,37 +1,37 @@
 
 import { useState, useEffect } from 'react';
-import { Mic, Calendar, CheckCircle, Phone, Play, Pause } from 'lucide-react';
+import { Mic, Calendar, CheckCircle, Phone } from 'lucide-react';
 
 const VoiceRescheduleDemo = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isComplete, setIsComplete] = useState(false);
   const [audioWaves, setAudioWaves] = useState(Array(8).fill(0));
 
   const steps = [
     { 
       type: 'voice', 
       text: 'Move Eric call to 6PM',
-      delay: 1200
+      delay: 600
     },
     { 
       type: 'typing', 
-      delay: 800
+      delay: 400
     },
     { 
       type: 'processing', 
       text: 'Got it. Checking Eric\'s availability...',
-      delay: 1800
+      delay: 800
     },
     { 
       type: 'typing', 
-      delay: 1000
+      delay: 500
     },
     { 
       type: 'confirmation', 
       text: 'Done! Eric\'s team confirmed. Updated your calendar and sent new invite.',
-      delay: 1500
+      delay: 600
     },
     { 
       type: 'details', 
@@ -40,7 +40,7 @@ const VoiceRescheduleDemo = () => {
         new: '6:00 PM - 7:00 PM',
         attendees: 'You, Eric Chen, Sarah Kim'
       },
-      delay: 1000
+      delay: 500
     }
   ];
 
@@ -55,66 +55,56 @@ const VoiceRescheduleDemo = () => {
   }, [isRecording]);
 
   useEffect(() => {
-    if (!isPlaying) return;
-    
-    const startTimer = setTimeout(() => {
-      setHasStarted(true);
-    }, 500);
-    return () => clearTimeout(startTimer);
-  }, [isPlaying]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasStarted) {
+            setHasStarted(true);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const currentElement = document.getElementById('voice-reschedule-demo');
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
+
+    return () => observer.disconnect();
+  }, [hasStarted]);
 
   useEffect(() => {
-    if (!hasStarted || !isPlaying) return;
+    if (!hasStarted || isComplete) return;
 
     if (currentStep === 0) {
       setIsRecording(true);
-      setTimeout(() => setIsRecording(false), 2500);
+      setTimeout(() => setIsRecording(false), 1500);
     }
 
     const timer = setTimeout(() => {
       if (currentStep < steps.length - 1) {
         setCurrentStep(currentStep + 1);
       } else {
-        // Reset after completion
-        setTimeout(() => {
-          setCurrentStep(0);
-          setHasStarted(false);
-          setIsRecording(false);
-        }, 3000);
+        setIsComplete(true);
       }
-    }, steps[currentStep]?.delay || 1000);
+    }, steps[currentStep]?.delay || 500);
 
-    return () => clearInterval(timer);
-  }, [currentStep, hasStarted, isPlaying]);
-
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-    if (!isPlaying) {
-      setHasStarted(true);
-    }
-  };
+    return () => clearTimeout(timer);
+  }, [currentStep, hasStarted, isComplete]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
+    <div id="voice-reschedule-demo" className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
       <div className="max-w-sm mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="relative mb-4">
-            <Mic className={`text-red-400 mx-auto transition-all duration-300 ${isRecording ? 'animate-pulse scale-110' : ''}`} size={32} />
+            <Mic className={`text-red-400 mx-auto transition-all duration-300 ${isRecording ? 'scale-110' : ''}`} size={32} />
             {isRecording && (
               <div className="absolute inset-0 rounded-full bg-red-400/20 animate-ping"></div>
             )}
           </div>
           <h2 className="text-2xl font-light text-white mb-2">Just speak. It's done.</h2>
-          
-          {/* Play/Pause Control */}
-          <button
-            onClick={handlePlayPause}
-            className="mt-4 flex items-center space-x-2 mx-auto px-4 py-2 bg-white/10 border border-white/20 rounded-full backdrop-blur-sm hover:bg-white/20 transition-all duration-300"
-          >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-            <span className="text-sm font-light">{isPlaying ? 'Pause' : 'Play'} Demo</span>
-          </button>
         </div>
 
         {/* Phone mockup */}
@@ -140,10 +130,10 @@ const VoiceRescheduleDemo = () => {
             </div>
             <div className="flex-1">
               <h3 className="text-white font-medium text-sm">Asmi</h3>
-              <p className="text-gray-400 text-xs flex items-center space-x-1">
+              <div className="text-gray-400 text-xs flex items-center space-x-1">
                 <Mic size={10} />
                 <span>Voice assistant</span>
-              </p>
+              </div>
             </div>
             {isRecording && (
               <div className="flex items-center space-x-2">
@@ -219,7 +209,7 @@ const VoiceRescheduleDemo = () => {
 
             {/* Details */}
             {currentStep >= 5 && (
-              <div className="flex justify-start animate-scale-in" style={{ animationDelay: '0.3s' }}>
+              <div className="flex justify-start animate-scale-in">
                 <div className="bg-purple-900/30 border border-purple-400/30 px-4 py-4 rounded-2xl max-w-xs shadow-lg backdrop-blur-sm">
                   <div className="space-y-3">
                     <div className="flex items-center space-x-2">
@@ -247,7 +237,7 @@ const VoiceRescheduleDemo = () => {
             {/* Floating indicators */}
             {currentStep >= 2 && (
               <div className="absolute bottom-4 right-4 space-y-2">
-                <div className="bg-blue-500/20 border border-blue-400/40 rounded-full p-2 animate-pulse">
+                <div className="bg-blue-500/20 border border-blue-400/40 rounded-full p-2">
                   <Phone size={12} className="text-blue-400" />
                 </div>
               </div>
@@ -257,19 +247,9 @@ const VoiceRescheduleDemo = () => {
 
         {/* Bottom insight */}
         <div className="text-center mt-6">
-          <p className="text-gray-400 text-sm font-light animate-fade-in">
+          <span className="text-gray-400 text-sm font-light">
             Voice → Understanding → Action in seconds
-          </p>
-          <div className="flex justify-center space-x-1 mt-3">
-            {Array.from({ length: 4 }, (_, i) => (
-              <div 
-                key={i} 
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i <= Math.floor((currentStep / steps.length) * 3) ? 'bg-red-400' : 'bg-gray-600'
-                }`}
-              />
-            ))}
-          </div>
+          </span>
         </div>
       </div>
     </div>
