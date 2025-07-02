@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Brain, Sparkles, Eye, Target } from 'lucide-react';
 
@@ -153,7 +152,7 @@ const PersonalizedWelcome = () => {
             <div className="flex items-center justify-center space-x-3 mb-6">
               <Eye className="text-green-400" size={32} />
               <h2 className="text-4xl md:text-5xl font-space font-bold text-white">
-                Hello, <span className="text-green-400">{personalizedData.name}</span>
+                Welcome, <span className="text-green-400">{personalizedData.name}</span>
               </h2>
             </div>
             

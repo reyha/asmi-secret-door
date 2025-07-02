@@ -4,9 +4,11 @@ import { Brain, Mic, MessageCircle } from 'lucide-react';
 
 const TimelineHowItWorks = () => {
   const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
-  const [typedText, setTypedText] = useState('');
+  const [typedCompoundingText, setTypedCompoundingText] = useState('');
+  const [typedHighlightText, setTypedHighlightText] = useState('');
   const [showHighlight, setShowHighlight] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
+  const [isTypingCompounding, setIsTypingCompounding] = useState(false);
+  const [isTypingHighlight, setIsTypingHighlight] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -31,6 +33,7 @@ const TimelineHowItWorks = () => {
     }
   ];
 
+  const compoundingText = "Compounding always wins!";
   const highlightText = "From messages... to personal OS";
 
   useEffect(() => {
@@ -66,22 +69,44 @@ const TimelineHowItWorks = () => {
     return () => observer.disconnect();
   }, [visibleSteps, showHighlight]);
 
+  // Typewriter effect for compounding text
   useEffect(() => {
-    if (showHighlight && !isTyping) {
-      setIsTyping(true);
+    if (showHighlight && !isTypingCompounding) {
+      setIsTypingCompounding(true);
       let i = 0;
       const typeInterval = setInterval(() => {
-        if (i < highlightText.length) {
-          setTypedText(highlightText.substring(0, i + 1));
+        if (i < compoundingText.length) {
+          setTypedCompoundingText(compoundingText.substring(0, i + 1));
           i++;
         } else {
           clearInterval(typeInterval);
-          setIsTyping(false);
+          setIsTypingCompounding(false);
+          // Start typing the highlight text after compounding text is done
+          setTimeout(() => {
+            setIsTypingHighlight(true);
+          }, 500);
+        }
+      }, 80);
+      return () => clearInterval(typeInterval);
+    }
+  }, [showHighlight, isTypingCompounding]);
+
+  // Typewriter effect for highlight text
+  useEffect(() => {
+    if (isTypingHighlight && !isTypingCompounding) {
+      let i = 0;
+      const typeInterval = setInterval(() => {
+        if (i < highlightText.length) {
+          setTypedHighlightText(highlightText.substring(0, i + 1));
+          i++;
+        } else {
+          clearInterval(typeInterval);
+          setIsTypingHighlight(false);
         }
       }, 60);
       return () => clearInterval(typeInterval);
     }
-  }, [showHighlight, isTyping]);
+  }, [isTypingHighlight, isTypingCompounding]);
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
@@ -145,9 +170,13 @@ const TimelineHowItWorks = () => {
             {showHighlight && (
               <div className="mt-12 p-8 bg-black rounded-3xl border-2 border-green-400/30 animate-fade-in">
                 <h2 className="text-3xl font-space font-bold text-green-400 mb-4">
-                  {typedText}
-                  {isTyping && <span className="animate-pulse">|</span>}
+                  {typedCompoundingText}
+                  {isTypingCompounding && <span className="animate-pulse">|</span>}
                 </h2>
+                <h3 className="text-2xl font-space font-bold text-green-400 mb-4">
+                  {typedHighlightText}
+                  {isTypingHighlight && <span className="animate-pulse">|</span>}
+                </h3>
                 <p className="text-lg text-gray-400 font-inter">
                   Asmi compounds each day to become super-intelligent, high agency version of yourself.
                 </p>
