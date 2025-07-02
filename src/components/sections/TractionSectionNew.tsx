@@ -85,22 +85,22 @@ const TractionSectionNew = () => {
   }, [currentTestimonial, isVisible]);
 
   return (
-    <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
-      <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-4xl md:text-5xl font-space font-bold text-white mb-16 text-center">
+    <div ref={sectionRef} className="min-h-screen bg-black py-12 md:py-20 flex items-center">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-white mb-12 md:mb-16 text-center leading-tight">
           Built. Shipped. Growing.
         </h2>
 
         {/* Split Screen - Stats and Testimonials */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16">
           {/* Left: Stats Carousel */}
-          <div className="bg-black/80 border border-white/20 rounded-3xl p-8 text-center">
-            <div className="h-32 flex items-center justify-center">
+          <div className="bg-black/80 border border-white/20 rounded-3xl p-6 md:p-8 text-center">
+            <div className="h-24 md:h-32 flex items-center justify-center">
               <div className="animate-fade-in" key={currentStat}>
-                <div className="text-4xl md:text-5xl font-space font-bold text-green-400 mb-2">
+                <div className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-green-400 mb-2">
                   {stats[currentStat].number}
                 </div>
-                <div className="text-xl text-white font-inter">
+                <div className="text-lg md:text-xl text-white font-inter">
                   {stats[currentStat].label}
                 </div>
               </div>
@@ -108,28 +108,59 @@ const TractionSectionNew = () => {
           </div>
 
           {/* Right: Testimonial with typing */}
-          <div className="bg-black/80 border border-white/20 rounded-3xl p-8">
+          <div className="bg-black/80 border border-white/20 rounded-3xl p-6 md:p-8">
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex-shrink-0"></div>
-              <div className="flex-1">
-                <p className="text-lg text-white font-inter mb-2 min-h-[3rem]">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex-shrink-0"></div>
+              <div className="flex-1 min-w-0">
+                <p className="text-base md:text-lg text-white font-inter mb-2 min-h-[3rem] md:min-h-[4rem] break-words">
                   "{typedText}"
                   {typedText.length < testimonials[currentTestimonial].length && <span className="animate-pulse">|</span>}
                 </p>
-                <p className="text-gray-400 font-inter">— Beta User</p>
+                <p className="text-gray-400 font-inter text-sm md:text-base">— Beta User</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Next 100 Days Roadmap */}
-        <div className="text-center mb-8">
-          <h3 className="text-2xl font-space font-medium text-white mb-8">
+        <div className="text-center">
+          <h3 className="text-xl md:text-2xl font-space font-medium text-white mb-6 md:mb-8">
             Next 100 Days
           </h3>
 
           <div className="relative">
-            <div className="flex items-center justify-center space-x-4 overflow-hidden">
+            {/* Mobile: Single card view */}
+            <div className="block md:hidden">
+              <div className="flex items-center justify-center space-x-4">
+                <button
+                  onClick={() => setCurrentRoadmapCard(Math.max(0, currentRoadmapCard - 1))}
+                  className="p-2 text-gray-400 hover:text-white transition-colors"
+                  disabled={currentRoadmapCard === 0}
+                >
+                  <ChevronLeft size={20} />
+                </button>
+
+                <div className="bg-black/80 border border-white/20 rounded-2xl p-4 min-w-[200px] max-w-[250px]">
+                  <div className={`${roadmapCards[currentRoadmapCard].color} text-black px-3 py-1 rounded-full text-sm font-medium mb-3 inline-block`}>
+                    {roadmapCards[currentRoadmapCard].status}
+                  </div>
+                  <div className="text-white font-inter font-medium">
+                    {roadmapCards[currentRoadmapCard].title}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setCurrentRoadmapCard(Math.min(roadmapCards.length - 1, currentRoadmapCard + 1))}
+                  className="p-2 text-gray-400 hover:text-white transition-colors"
+                  disabled={currentRoadmapCard >= roadmapCards.length - 1}
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop: Two card view */}
+            <div className="hidden md:flex items-center justify-center space-x-4">
               <button
                 onClick={() => setCurrentRoadmapCard(Math.max(0, currentRoadmapCard - 1))}
                 className="p-2 text-gray-400 hover:text-white transition-colors"
@@ -138,7 +169,7 @@ const TractionSectionNew = () => {
                 <ChevronLeft size={24} />
               </button>
 
-              <div className="flex space-x-4 min-w-0">
+              <div className="flex space-x-4">
                 {roadmapCards.slice(currentRoadmapCard, currentRoadmapCard + 2).map((card, index) => (
                   <div key={index} className="bg-black/80 border border-white/20 rounded-2xl p-6 min-w-[200px]">
                     <div className={`${card.color} text-black px-3 py-1 rounded-full text-sm font-medium mb-3 inline-block`}>
@@ -162,7 +193,7 @@ const TractionSectionNew = () => {
 
             {/* Dots indicator */}
             <div className="flex justify-center mt-4 space-x-2">
-              {[...Array(Math.max(1, roadmapCards.length - 1))].map((_, index) => (
+              {[...Array(Math.max(1, roadmapCards.length - (window.innerWidth >= 768 ? 1 : 0)))].map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentRoadmapCard(index)}

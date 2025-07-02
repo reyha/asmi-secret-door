@@ -42,13 +42,6 @@ UTM: investor-site-form
     window.location.href = `mailto:rishi@asmi.ai?subject=${subject}&body=${body}`;
   };
 
-  const handleWantIn = () => {
-    const subject = encodeURIComponent('Investment Interest - Asmi');
-    const body = encodeURIComponent('I want to invest in Asmi. Let\'s discuss.\n\nUTM: investor-site-cta');
-    
-    window.location.href = `mailto:rishi@asmi.ai?subject=${subject}&body=${body}`;
-  };
-
   if (showForm) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center px-4">
@@ -161,23 +154,14 @@ UTM: investor-site-form
           ))}
         </div>
 
-        {/* CTA Button with pulse */}
+        {/* CTA Button with pulse - directly opens form */}
         <button
-          onClick={handleWantIn}
+          onClick={() => setShowForm(true)}
           className="bg-green-400 text-black px-12 py-4 rounded-full text-xl font-medium hover:bg-green-500 transition-all duration-300 hover:scale-105 font-inter relative overflow-hidden"
         >
           <span className="relative z-10">I want in</span>
           <div className="absolute inset-0 bg-green-300 opacity-50 animate-pulse"></div>
         </button>
-
-        <div className="mt-4">
-          <button
-            onClick={() => setShowForm(true)}
-            className="text-gray-400 hover:text-white transition-colors text-sm font-inter underline"
-          >
-            Or fill detailed form
-          </button>
-        </div>
       </div>
     </div>
   );

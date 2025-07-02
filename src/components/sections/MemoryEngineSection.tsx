@@ -1,25 +1,23 @@
-
 import { useState, useEffect, useRef } from 'react';
-import { Brain, Mail, Calendar, MessageCircle, Mic, FileText, User } from 'lucide-react';
 
 const MemoryEngineSection = () => {
-  const [memoryPoints, setMemoryPoints] = useState([]);
-  const [dataSources, setDataSources] = useState([]);
-  const [selectedDataSource, setSelectedDataSource] = useState(null);
-  const [graphProgress, setGraphProgress] = useState(0);
+  const [visibleNodes, setVisibleNodes] = useState<number[]>([]);
+  const [connectionProgress, setConnectionProgress] = useState(0);
+  const [typedText, setTypedText] = useState('');
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  
+  const fullText = "Your memory, working for you. Every conversation, meeting, and thought—connected and accessible when you need it most.";
 
-  const dataSourceIcons = [
-    { icon: <Mic className="text-red-400" size={16} />, label: 'Voice Notes', color: '#f87171', bgColor: 'bg-red-500/20', borderColor: 'border-red-400/30' },
-    { icon: <Mail className="text-blue-400" size={16} />, label: 'Emails', color: '#60a5fa', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-400/30' },
-    { icon: <Calendar className="text-green-400" size={16} />, label: 'Calendar', color: '#4ade80', bgColor: 'bg-green-500/20', borderColor: 'border-green-400/30' },
-    { icon: <MessageCircle className="text-purple-400" size={16} />, label: 'Messages', color: '#c084fc', bgColor: 'bg-purple-500/20', borderColor: 'border-purple-400/30' },
-    { icon: <FileText className="text-yellow-400" size={16} />, label: 'Documents', color: '#facc15', bgColor: 'bg-yellow-500/20', borderColor: 'border-yellow-400/30' },
-    { icon: <User className="text-pink-400" size={16} />, label: 'Contacts', color: '#f472b6', bgColor: 'bg-pink-500/20', borderColor: 'border-pink-400/30' }
+  const memoryNodes = [
+    { id: 1, x: 20, y: 30, label: 'Meetings', color: 'bg-green-400' },
+    { id: 2, x: 70, y: 20, label: 'People', color: 'bg-blue-400' },
+    { id: 3, x: 15, y: 70, label: 'Ideas', color: 'bg-purple-400' },
+    { id: 4, x: 60, y: 75, label: 'Tasks', color: 'bg-orange-400' },
+    { id: 5, x: 45, y: 45, label: 'Context', color: 'bg-pink-400' },
+    { id: 6, x: 85, y: 60, label: 'Notes', color: 'bg-cyan-400' }
   ];
 
-  // Intersection Observer for scroll-based animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -37,199 +35,154 @@ const MemoryEngineSection = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Typewriter effect
   useEffect(() => {
     if (!isVisible) return;
-
-    // Animate graph progress
-    const progressInterval = setInterval(() => {
-      setGraphProgress(prev => {
-        if (prev >= 100) return 100;
-        return prev + 1;
-      });
+    
+    let i = 0;
+    const typeInterval = setInterval(() => {
+      if (i < fullText.length) {
+        setTypedText(fullText.substring(0, i + 1));
+        i++;
+      } else {
+        clearInterval(typeInterval);
+      }
     }, 50);
 
-    // Add memory points progressively with fixed positions
-    const pointInterval = setInterval(() => {
-      setMemoryPoints(prev => {
-        if (prev.length >= 30) return prev;
-        const randomDataSource = dataSourceIcons[Math.floor(Math.random() * dataSourceIcons.length)];
-        const baseX = Math.random() * 80 + 10;
-        const baseY = Math.random() * 60 + 20;
-        return [...prev, {
-          id: Date.now() + Math.random(),
-          baseX,
-          baseY,
-          x: baseX,
-          y: baseY,
-          time: Date.now(),
-          color: randomDataSource.color,
-          sourceIndex: dataSourceIcons.indexOf(randomDataSource)
-        }];
-      });
-    }, 200);
+    return () => clearInterval(typeInterval);
+  }, [isVisible, fullText]);
 
-    // Show data sources
-    const sourceInterval = setInterval(() => {
-      setDataSources(prev => {
-        if (prev.length >= dataSourceIcons.length) return prev;
-        return [...prev, dataSourceIcons[prev.length]];
-      });
-    }, 600);
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    const intervals: NodeJS.Timeout[] = [];
+    
+    memoryNodes.forEach((_, index) => {
+      const timeout = setTimeout(() => {
+        setVisibleNodes(prev => [...prev, index]);
+      }, index * 300);
+      intervals.push(timeout);
+    });
 
-    // Slight movement animation for dots
-    const moveInterval = setInterval(() => {
-      setMemoryPoints(prev => prev.map(point => ({
-        ...point,
-        x: point.baseX + (Math.sin(Date.now() * 0.001 + point.id) * 2),
-        y: point.baseY + (Math.cos(Date.now() * 0.001 + point.id) * 2)
-      })));
-    }, 100);
+    const connectionTimeout = setTimeout(() => {
+      const progressInterval = setInterval(() => {
+        setConnectionProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(progressInterval);
+            return 100;
+          }
+          return prev + 2;
+        });
+      }, 50);
+      intervals.push(progressInterval);
+    }, memoryNodes.length * 300 + 500);
 
-    return () => {
-      clearInterval(progressInterval);
-      clearInterval(pointInterval);
-      clearInterval(sourceInterval);
-      clearInterval(moveInterval);
-    };
+    return () => intervals.forEach(clearTimeout);
   }, [isVisible]);
 
-  const handleDataSourceClick = (index) => {
-    setSelectedDataSource(selectedDataSource === index ? null : index);
-  };
-
-  const filteredMemoryPoints = selectedDataSource !== null 
-    ? memoryPoints.filter(point => point.sourceIndex === selectedDataSource)
-    : memoryPoints;
-
-  // Generate exponential curve path
-  const generateExponentialPath = (progress) => {
-    let path = "M 50 230";
-    const steps = Math.floor(progress);
-    
-    for (let i = 0; i <= steps; i++) {
-      const x = 50 + (i / 100) * 300;
-      const y = 230 - Math.pow(i / 100, 2) * 180; // Exponential curve going up
-      path += ` L ${x} ${y}`;
-    }
-    
-    return path;
-  };
-
   return (
-    <div ref={sectionRef} className="min-h-screen bg-black py-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-space font-bold mb-6 text-white">
-            Asmi doesn't forget.
-          </h2>
-          <p className="text-xl text-gray-400 font-inter">
-            Context compounds. Intelligence scales.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Memory Graph */}
-          <div className="dark-card rounded-3xl p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-space font-semibold text-white">Contextual Intelligence Graph</h3>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full live-indicator"></div>
-                <span className="text-green-400 text-sm font-inter">Learning</span>
-              </div>
-            </div>
+    <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left: Text Content */}
+          <div>
+            <h2 className="text-4xl md:text-5xl font-space font-bold text-white mb-8 leading-tight">
+              Memory that scales.
+            </h2>
             
-            <div className="relative w-full h-80">
-              <svg className="w-full h-full" viewBox="0 0 400 280">
-                {/* Grid */}
-                <defs>
-                  <pattern id="grid" width="40" height="28" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 28" fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="1"/>
-                  </pattern>
-                </defs>
-                <rect width="400" height="280" fill="url(#grid)" />
-                
-                {/* Axes */}
-                <line x1="50" y1="230" x2="370" y2="230" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" />
-                <line x1="50" y1="230" x2="50" y2="30" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" />
-                
-                {/* Exponential curve */}
-                <path 
-                  d={generateExponentialPath(graphProgress)}
-                  fill="none" 
-                  stroke="url(#memoryGradient)" 
-                  strokeWidth="3"
-                />
-                
-                {/* Memory points */}
-                {filteredMemoryPoints.map((point, index) => (
-                  <circle
-                    key={point.id}
-                    cx={50 + (point.x / 100) * 300}
-                    cy={230 - (point.y / 100) * 200}
-                    r="4"
-                    fill={point.color}
-                    opacity="0.8"
-                  />
-                ))}
-                
-                <defs>
-                  <linearGradient id="memoryGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#10b981" />
-                    <stop offset="50%" stopColor="#3b82f6" />
-                    <stop offset="100%" stopColor="#8b5cf6" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              
-              {/* Axis labels */}
-              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 font-inter">
-                Time (Days)
-              </div>
-              <div className="absolute top-1/2 left-2 transform -translate-y-1/2 -rotate-90 text-xs text-gray-400 font-inter origin-center">
-                Contextual Intelligence
-              </div>
-            </div>
+            <p className="text-xl text-gray-300 font-inter leading-relaxed mb-8 min-h-[4rem]">
+              {typedText}
+              {typedText.length < fullText.length && <span className="animate-pulse text-green-400">|</span>}
+            </p>
 
-            {/* Data Sources */}
-            <div className="mt-6 border-t border-white/10 pt-6">
-              <h4 className="text-sm font-inter font-medium mb-4 text-gray-300">Data Sources</h4>
-              <div className="grid grid-cols-3 gap-3">
-                {dataSources.map((source, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleDataSourceClick(index)}
-                    className={`flex items-center space-x-2 p-3 rounded-xl transition-all duration-300 dark-card-hover ${
-                      selectedDataSource === index 
-                        ? `${source.bgColor} ${source.borderColor} border-2` 
-                        : 'dark-card border-transparent'
-                    }`}
-                    style={{ animationDelay: `${index * 200}ms` }}
-                  >
-                    {source.icon}
-                    <span className={`text-xs font-inter ${selectedDataSource === index ? 'text-white font-medium' : 'text-gray-300'}`}>
-                      {source.label}
-                    </span>
-                  </button>
-                ))}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-gray-300 font-inter">Real-time context awareness</span>
               </div>
-              {selectedDataSource !== null && (
-                <div className="mt-3 text-xs text-gray-400 font-inter">
-                  Showing {filteredMemoryPoints.length} memories from {dataSourceIcons[selectedDataSource].label}
-                </div>
-              )}
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <span className="text-gray-300 font-inter">Intelligent connection mapping</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+                <span className="text-gray-300 font-inter">Predictive assistance</span>
+              </div>
             </div>
           </div>
 
-          {/* Right side content */}
-          <div className="space-y-8">
-            <div className="dark-card rounded-3xl p-8">
-              <h3 className="text-2xl font-space font-bold text-white mb-4">
-                Memory that scales
-              </h3>
-              <p className="text-gray-300 font-inter leading-relaxed">
-                Every conversation, every document, every voice note becomes part of your expanding intelligence network. 
-                The more you use Asmi, the smarter it becomes about you.
-              </p>
+          {/* Right: Memory Graph Visualization */}
+          <div className="relative h-96 bg-black/50 rounded-3xl border border-white/10 overflow-hidden">
+            {/* Background grid */}
+            <div className="absolute inset-0 opacity-20">
+              <svg className="w-full h-full">
+                <defs>
+                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#333" strokeWidth="1"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+              </svg>
+            </div>
+
+            {/* Memory nodes */}
+            {memoryNodes.map((node, index) => (
+              <div
+                key={node.id}
+                className={`absolute transition-all duration-700 ${
+                  visibleNodes.includes(index) ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+                }`}
+                style={{
+                  left: `${node.x}%`,
+                  top: `${node.y}%`,
+                  transform: 'translate(-50%, -50%)',
+                  animationDelay: `${index * 200}ms`
+                }}
+              >
+                <div className={`${node.color} rounded-full p-3 shadow-lg relative animate-pulse`}>
+                  <div className="w-6 h-6 bg-white/20 rounded-full"></div>
+                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-white font-medium whitespace-nowrap">
+                    {node.label}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Connection lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              <defs>
+                <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.8"/>
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.4"/>
+                </linearGradient>
+              </defs>
+              
+              {visibleNodes.length > 1 && memoryNodes.slice(0, visibleNodes.length).map((node, index) => 
+                memoryNodes.slice(index + 1, visibleNodes.length).map((targetNode) => (
+                  <line
+                    key={`${node.id}-${targetNode.id}`}
+                    x1={`${node.x}%`}
+                    y1={`${node.y}%`}
+                    x2={`${targetNode.x}%`}
+                    y2={`${targetNode.y}%`}
+                    stroke="url(#connectionGradient)"
+                    strokeWidth="2"
+                    strokeDasharray="5,5"
+                    opacity={connectionProgress / 100}
+                    className="animate-pulse"
+                    style={{
+                      strokeDashoffset: `${20 - (connectionProgress / 5)}`,
+                      transition: 'all 0.5s ease-in-out'
+                    }}
+                  />
+                ))
+              )}
+            </svg>
+
+            {/* Central pulse effect */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className="w-20 h-20 bg-green-400/10 rounded-full animate-ping"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-green-400/20 rounded-full animate-pulse"></div>
             </div>
           </div>
         </div>

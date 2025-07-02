@@ -31,21 +31,38 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Meteor Shower Background */}
+      {/* Meteor Lights Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black">
-          {[...Array(8)].map((_, i) => (
+          {/* Left side meteors */}
+          {[...Array(3)].map((_, i) => (
             <div
-              key={i}
-              className="absolute w-1 h-20 bg-gradient-to-b from-transparent via-white to-transparent opacity-70"
+              key={`left-${i}`}
+              className="absolute w-0.5 h-32 bg-gradient-to-b from-transparent via-white to-transparent opacity-60"
               style={{
-                left: `${Math.random() * 100}%`,
-                animationName: 'meteor',
-                animationDuration: `${0.5 + Math.random() * 0.5}s`,
-                animationDelay: `${Math.random() * 3}s`,
+                left: `${10 + i * 15}%`,
+                animationName: 'meteorFall',
+                animationDuration: '4s',
+                animationDelay: `${i * 1.5}s`,
                 animationIterationCount: 'infinite',
                 animationTimingFunction: 'linear',
-                transform: 'rotate(45deg)',
+                transform: 'rotate(15deg)',
+              }}
+            />
+          ))}
+          {/* Right side meteors */}
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={`right-${i}`}
+              className="absolute w-0.5 h-32 bg-gradient-to-b from-transparent via-white to-transparent opacity-60"
+              style={{
+                right: `${10 + i * 15}%`,
+                animationName: 'meteorFall',
+                animationDuration: '4s',
+                animationDelay: `${i * 1.5 + 2}s`,
+                animationIterationCount: 'infinite',
+                animationTimingFunction: 'linear',
+                transform: 'rotate(-15deg)',
               }}
             />
           ))}
@@ -105,15 +122,15 @@ const Index = () => {
 
             <button
               type="submit"
-              className="mt-8 px-12 py-4 bg-gradient-to-r from-green-500 to-blue-600 rounded-full text-white font-medium hover:from-green-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 text-lg font-inter"
+              className="mt-8 px-12 py-4 bg-green-500 rounded-full text-white font-medium hover:bg-green-600 transition-all duration-300 hover:scale-105 text-lg font-inter shadow-lg"
             >
-              Enter
+              Enter our world
             </button>
           </form>
 
           {/* Contact */}
           <div className="text-gray-500">
-            <p className="mb-2 font-light font-inter">If you're here without a password, reach out to</p>
+            <p className="mb-2 font-light font-inter text-sm">If you're here without a password, reach out to</p>
             <a 
               href="mailto:rishi@asmi.ai" 
               className="text-green-400 hover:text-green-300 transition-colors text-lg hover:underline font-medium font-inter"

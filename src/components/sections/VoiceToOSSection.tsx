@@ -30,19 +30,21 @@ const VoiceToOSSection = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const index = stepRefs.current.findIndex(ref => ref === entry.target);
-          if (index !== -1 && entry.isIntersecting && !visibleSteps.includes(index)) {
-            setVisibleSteps(prev => {
-              const newVisible = [...prev, index].sort((a, b) => a - b);
-              if (newVisible.length === steps.length) {
-                setTimeout(() => setShowHighlight(true), 500);
-              }
-              return newVisible;
-            });
+          if (entry.isIntersecting) {
+            const index = stepRefs.current.findIndex(ref => ref === entry.target);
+            if (index !== -1 && !visibleSteps.includes(index)) {
+              setVisibleSteps(prev => {
+                const newVisible = [...prev, index].sort((a, b) => a - b);
+                if (newVisible.length === steps.length) {
+                  setTimeout(() => setShowHighlight(true), 1000);
+                }
+                return newVisible;
+              });
+            }
           }
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.7, rootMargin: '-50px 0px' }
     );
 
     stepRefs.current.forEach((ref) => {
@@ -50,7 +52,7 @@ const VoiceToOSSection = () => {
     });
 
     return () => observer.disconnect();
-  }, [visibleSteps, steps.length]);
+  }, [steps.length]);
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
@@ -61,25 +63,27 @@ const VoiceToOSSection = () => {
         </h2>
 
         <div className="flex">
-          {/* Timeline line on the right */}
-          <div className="flex-1 space-y-16 mr-8">
+          {/* Timeline content */}
+          <div className="flex-1 space-y-24 mr-8">
             {steps.map((step, index) => (
               <div
                 key={index}
                 ref={(el) => (stepRefs.current[index] = el)}
-                className={`transition-all duration-700 ${
-                  visibleSteps.includes(index) ? 'opacity-100 translate-x-0' : 'opacity-30 translate-x-8'
+                className={`transition-all duration-700 transform ${
+                  visibleSteps.includes(index) 
+                    ? 'opacity-100 translate-x-0' 
+                    : 'opacity-30 translate-x-8'
                 }`}
               >
                 <div className="flex items-start space-x-4">
-                  <div className="p-2 bg-black/50 rounded-lg border border-white/20">
+                  <div className="p-3 bg-black/50 rounded-lg border border-white/20 flex-shrink-0">
                     {step.icon}
                   </div>
                   <div>
                     <h3 className="text-xl font-space font-bold text-white mb-2">
                       {step.year}
                     </h3>
-                    <p className="text-gray-300 font-inter">
+                    <p className="text-gray-300 font-inter text-lg">
                       {step.description}
                     </p>
                   </div>
@@ -89,21 +93,24 @@ const VoiceToOSSection = () => {
           </div>
 
           {/* Timeline line */}
-          <div className="flex flex-col items-center ml-8">
-            <div className="w-1 h-96 bg-gray-800 relative">
+          <div className="flex flex-col items-center ml-8 relative">
+            <div className="w-1 bg-gray-800 relative" style={{ height: '400px' }}>
               <div 
-                className="w-1 bg-gradient-to-b from-green-400 via-blue-400 to-purple-400 absolute top-0 transition-all duration-1000"
-                style={{ height: `${(visibleSteps.length / steps.length) * 100}%` }}
+                className="w-1 bg-gradient-to-b from-green-400 via-blue-400 to-purple-400 absolute top-0 transition-all duration-1000 ease-out"
+                style={{ 
+                  height: visibleSteps.length > 0 ? `${(visibleSteps.length / steps.length) * 100}%` : '0%'
+                }}
               />
             </div>
             
+            {/* Timeline dots */}
             {steps.map((_, index) => (
               <div
                 key={index}
                 className={`absolute w-4 h-4 rounded-full border-2 bg-black transition-all duration-500 ${
                   visibleSteps.includes(index) ? 'border-green-400' : 'border-gray-600'
                 }`}
-                style={{ top: `${120 + (index * 120)}px` }}
+                style={{ top: `${30 + (index * 133)}px` }}
               >
                 {visibleSteps.includes(index) && (
                   <div className="w-full h-full rounded-full bg-green-400 animate-pulse" />
