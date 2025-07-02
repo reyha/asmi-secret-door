@@ -33,20 +33,20 @@ const InteractiveHeroSection = () => {
         </div>
 
         {/* Main heading */}
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-light mb-12 tracking-tight opacity-0 animate-fade-in text-green-400" style={{ animationDelay: '0.5s' }}>
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-light mb-12 tracking-tight opacity-0 animate-fade-in text-green-400" style={{ animationDelay: '0.5s' }}>
           Get Things Done.
         </h1>
         
         {/* Platform switcher */}
-        <div className="text-2xl md:text-3xl lg:text-4xl text-gray-300 mb-16 font-light opacity-0 animate-fade-in h-16 flex items-center justify-center" style={{ animationDelay: '1s' }}>
+        <div className="text-xl md:text-2xl lg:text-3xl text-gray-300 mb-16 font-light opacity-0 animate-fade-in h-12 flex items-center justify-center" style={{ animationDelay: '1s' }}>
           <span>On </span>
-          <div className="mx-2 relative w-48 overflow-hidden">
+          <div className="mx-2 relative w-40 overflow-hidden">
             <div 
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateY(-${currentPlatform * 100}%)` }}
             >
               {platforms.map((platform, index) => (
-                <div key={index} className="w-full flex-shrink-0 h-16 flex items-center justify-center">
+                <div key={index} className="w-full flex-shrink-0 h-12 flex items-center justify-center">
                   <span className={`font-medium ${
                     platform === 'WhatsApp' ? 'text-green-400' : 'text-blue-400'
                   }`}>
@@ -57,12 +57,6 @@ const InteractiveHeroSection = () => {
             </div>
           </div>
         </div>
-
-        {/* CTA */}
-        <button className="group bg-gradient-to-r from-green-400 to-green-500 px-8 py-4 rounded-full text-lg font-medium hover:from-green-500 hover:to-green-600 transition-all duration-300 hover:scale-105 text-black shadow-lg shadow-green-400/25 opacity-0 animate-fade-in" style={{ animationDelay: '1.5s' }}>
-          See how it works
-          <div className="inline-block ml-2 group-hover:translate-y-1 transition-transform">↓</div>
-        </button>
       </div>
     </div>
   );

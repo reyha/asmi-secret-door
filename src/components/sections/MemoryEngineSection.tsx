@@ -7,14 +7,16 @@ const MemoryEngineSection = () => {
   const [memoryPoints, setMemoryPoints] = useState([]);
   const [dataSources, setDataSources] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedDataSource, setSelectedDataSource] = useState(null);
+  const [typedText, setTypedText] = useState('');
 
   const dataSourceIcons = [
-    { icon: <Mic className="text-red-400" size={16} />, label: 'Voice Notes', color: 'text-red-400' },
-    { icon: <Mail className="text-blue-400" size={16} />, label: 'Emails', color: 'text-blue-400' },
-    { icon: <Calendar className="text-green-400" size={16} />, label: 'Calendar', color: 'text-green-400' },
-    { icon: <MessageCircle className="text-purple-400" size={16} />, label: 'Messages', color: 'text-purple-400' },
-    { icon: <FileText className="text-yellow-400" size={16} />, label: 'Documents', color: 'text-yellow-400' },
-    { icon: <User className="text-pink-400" size={16} />, label: 'Contacts', color: 'text-pink-400' }
+    { icon: <Mic className="text-red-400" size={16} />, label: 'Voice Notes', color: '#f87171', bgColor: 'bg-red-500/20', borderColor: 'border-red-400/30' },
+    { icon: <Mail className="text-blue-400" size={16} />, label: 'Emails', color: '#60a5fa', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-400/30' },
+    { icon: <Calendar className="text-green-400" size={16} />, label: 'Calendar', color: '#4ade80', bgColor: 'bg-green-500/20', borderColor: 'border-green-400/30' },
+    { icon: <MessageCircle className="text-purple-400" size={16} />, label: 'Messages', color: '#c084fc', bgColor: 'bg-purple-500/20', borderColor: 'border-purple-400/30' },
+    { icon: <FileText className="text-yellow-400" size={16} />, label: 'Documents', color: '#facc15', bgColor: 'bg-yellow-500/20', borderColor: 'border-yellow-400/30' },
+    { icon: <User className="text-pink-400" size={16} />, label: 'Contacts', color: '#f472b6', bgColor: 'bg-pink-500/20', borderColor: 'border-pink-400/30' }
   ];
 
   const steps = [
@@ -39,21 +41,26 @@ const MemoryEngineSection = () => {
     }
   ];
 
+  const highlightText = "Compounding always wins!";
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowDemo(true);
     }, 1000);
 
-    // Generate memory points over time
+    // Generate memory points with random colors
     const pointInterval = setInterval(() => {
       setMemoryPoints(prev => {
         if (prev.length >= 25) return prev;
+        const randomDataSource = dataSourceIcons[Math.floor(Math.random() * dataSourceIcons.length)];
         return [...prev, {
           id: Date.now(),
           x: Math.random() * 100,
           y: Math.random() * 80 + 10,
           time: Date.now(),
-          opacity: 1
+          opacity: 1,
+          color: randomDataSource.color,
+          sourceIndex: dataSourceIcons.indexOf(randomDataSource)
         }];
       });
     }, 200);
@@ -66,7 +73,7 @@ const MemoryEngineSection = () => {
       });
     }, 800);
 
-    // Progress through steps
+    // Progress through steps with smoother animation
     const stepInterval = setInterval(() => {
       setCurrentStep(prev => (prev + 1) % steps.length);
     }, 4000);
@@ -78,6 +85,30 @@ const MemoryEngineSection = () => {
       clearInterval(stepInterval);
     };
   }, []);
+
+  // Typewriter effect for highlight text
+  useEffect(() => {
+    if (currentStep === 2 && showDemo) {
+      let i = 0;
+      const typeInterval = setInterval(() => {
+        if (i < highlightText.length) {
+          setTypedText(highlightText.substring(0, i + 1));
+          i++;
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, 80);
+      return () => clearInterval(typeInterval);
+    }
+  }, [currentStep, showDemo]);
+
+  const handleDataSourceClick = (index) => {
+    setSelectedDataSource(selectedDataSource === index ? null : index);
+  };
+
+  const filteredMemoryPoints = selectedDataSource !== null 
+    ? memoryPoints.filter(point => point.sourceIndex === selectedDataSource)
+    : memoryPoints;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black py-12 md:py-20">
@@ -126,19 +157,19 @@ const MemoryEngineSection = () => {
                         className="animate-pulse" />
                   
                   {/* Memory points */}
-                  {memoryPoints.map((point, index) => (
+                  {filteredMemoryPoints.map((point, index) => (
                     <circle
                       key={point.id}
                       cx={40 + (point.x / 100) * 340}
                       cy={260 - (point.y / 100) * 240}
-                      r="2"
-                      fill="#10b981"
+                      r="3"
+                      fill={point.color}
                       opacity={point.opacity}
                       className="animate-fade-in"
                     >
                       <animate
                         attributeName="r"
-                        values="2;4;2"
+                        values="3;5;3"
                         dur="2s"
                         repeatCount="indefinite"
                       />
@@ -154,30 +185,42 @@ const MemoryEngineSection = () => {
                   </defs>
                 </svg>
                 
-                {/* Axis labels */}
+                {/* Axis labels - Fixed positioning */}
                 <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400">
                   Time (Days)
                 </div>
-                <div className="absolute top-1/2 left-2 transform -translate-y-1/2 -rotate-90 text-xs text-gray-400 origin-center">
+                <div className="absolute top-1/2 left-1 transform -translate-y-1/2 -rotate-90 text-xs text-gray-400 origin-center">
                   Contextual Intelligence
                 </div>
               </div>
 
-              {/* Data sources */}
+              {/* Interactive data sources */}
               <div className="mt-6 border-t border-white/10 pt-6">
                 <h4 className="text-sm font-medium mb-4 text-gray-300">Data Sources</h4>
                 <div className="grid grid-cols-3 gap-3">
                   {dataSources.map((source, index) => (
-                    <div
+                    <button
                       key={index}
-                      className="flex items-center space-x-2 p-2 bg-white/5 rounded-lg animate-scale-in"
+                      onClick={() => handleDataSourceClick(index)}
+                      className={`flex items-center space-x-2 p-2 rounded-lg animate-scale-in transition-all duration-300 ${
+                        selectedDataSource === index 
+                          ? `${source.bgColor} ${source.borderColor} border-2 scale-105` 
+                          : 'bg-white/5 hover:bg-white/10 border border-transparent'
+                      }`}
                       style={{ animationDelay: `${index * 200}ms` }}
                     >
                       {source.icon}
-                      <span className={`text-xs ${source.color}`}>{source.label}</span>
-                    </div>
+                      <span className={`text-xs ${selectedDataSource === index ? 'text-white font-medium' : source.color}`}>
+                        {source.label}
+                      </span>
+                    </button>
                   ))}
                 </div>
+                {selectedDataSource !== null && (
+                  <div className="mt-3 text-xs text-gray-400">
+                    Showing {filteredMemoryPoints.length} memories from {dataSourceIcons[selectedDataSource].label}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -189,12 +232,12 @@ const MemoryEngineSection = () => {
             {steps.map((step, index) => (
               <div
                 key={index}
-                className={`transition-all duration-1000 ${
-                  currentStep >= index ? 'opacity-100 translate-x-0' : 'opacity-30 translate-x-8'
+                className={`transition-all duration-700 ease-out ${
+                  currentStep >= index ? 'opacity-100 translate-x-0 scale-100' : 'opacity-40 translate-x-4 scale-95'
                 }`}
-                style={{ transitionDelay: `${index * 500}ms` }}
+                style={{ transitionDelay: `${index * 200}ms` }}
               >
-                <div className={`p-6 bg-gradient-to-r ${step.color} border border-white/20 rounded-2xl backdrop-blur-sm`}>
+                <div className={`p-6 bg-gradient-to-r ${step.color} border border-white/20 rounded-2xl backdrop-blur-sm transform transition-all duration-500`}>
                   <div className="flex items-start space-x-4">
                     <div className="p-2 bg-white/10 rounded-xl flex-shrink-0">
                       {step.icon}
@@ -205,8 +248,8 @@ const MemoryEngineSection = () => {
                         {currentStep >= index && (
                           <>
                             <span className="font-medium text-white animate-fade-in">{step.title.split(' → ')[0]}</span>
-                            <span className="text-gray-400 animate-fade-in" style={{ animationDelay: '300ms' }}>→</span>
-                            <span className="font-medium text-white animate-fade-in" style={{ animationDelay: '600ms' }}>{step.title.split(' → ')[1]}</span>
+                            <span className="text-gray-400 animate-fade-in" style={{ animationDelay: '200ms' }}>→</span>
+                            <span className="font-medium text-white animate-fade-in" style={{ animationDelay: '400ms' }}>{step.title.split(' → ')[1]}</span>
                           </>
                         )}
                       </div>
@@ -214,11 +257,11 @@ const MemoryEngineSection = () => {
                       {/* Animated description */}
                       {currentStep >= index && (
                         <div className="space-y-2">
-                          <p className="text-gray-300 text-sm font-light leading-relaxed animate-fade-in" style={{ animationDelay: '900ms' }}>
+                          <p className="text-gray-300 text-sm font-light leading-relaxed animate-fade-in" style={{ animationDelay: '600ms' }}>
                             {step.description}
                           </p>
                           {step.subtext && (
-                            <p className="text-gray-500 text-xs animate-fade-in" style={{ animationDelay: '1200ms' }}>
+                            <p className="text-gray-500 text-xs animate-fade-in" style={{ animationDelay: '800ms' }}>
                               {step.subtext}
                             </p>
                           )}
@@ -230,12 +273,17 @@ const MemoryEngineSection = () => {
               </div>
             ))}
 
-            {/* Key insight */}
-            <div className={`transition-all duration-1000 delay-1500 ${showDemo ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-              <div className="p-8 bg-gradient-to-r from-green-400/30 to-blue-400/20 border-2 border-green-400/40 rounded-3xl backdrop-blur-sm text-center">
-                <h4 className="text-3xl font-bold mb-4 text-green-400">Compounding always wins!</h4>
-                <p className="text-gray-200 text-lg font-light leading-relaxed">
-                  It compounds each day to become super-intelligent, high agency version of yourself.
+            {/* Key insight with typewriter effect */}
+            <div className={`transition-all duration-1000 delay-1000 ${showDemo ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
+              <div className="p-8 bg-gradient-to-r from-green-400/40 to-blue-400/30 border-2 border-green-400/50 rounded-3xl backdrop-blur-sm text-center shadow-2xl shadow-green-400/20">
+                <h4 className="text-4xl font-bold mb-4 text-green-400 min-h-[3rem] flex items-center justify-center">
+                  {typedText}
+                  {typedText.length < highlightText.length && (
+                    <span className="animate-pulse">|</span>
+                  )}
+                </h4>
+                <p className="text-gray-300 text-base font-light leading-relaxed">
+                  Asmi compounds each day to become super-intelligent, high agency version of yourself.
                 </p>
               </div>
             </div>
