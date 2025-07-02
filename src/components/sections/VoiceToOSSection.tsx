@@ -5,6 +5,8 @@ import { Mic, Zap, Brain } from 'lucide-react';
 const VoiceToOSSection = () => {
   const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
   const [showHighlight, setShowHighlight] = useState(false);
+  const [typedText, setTypedText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -26,6 +28,8 @@ const VoiceToOSSection = () => {
     }
   ];
 
+  const highlightText = "Asmi becomes the interface for your digital life. The OS for how everything gets done, without you asking.";
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -35,8 +39,10 @@ const VoiceToOSSection = () => {
             if (index !== -1 && !visibleSteps.includes(index)) {
               setVisibleSteps(prev => {
                 const newVisible = [...prev, index].sort((a, b) => a - b);
-                if (newVisible.length === steps.length) {
-                  setTimeout(() => setShowHighlight(true), 1000);
+                if (newVisible.length === steps.length && !showHighlight) {
+                  setTimeout(() => {
+                    setShowHighlight(true);
+                  }, 1000);
                 }
                 return newVisible;
               });
@@ -52,14 +58,31 @@ const VoiceToOSSection = () => {
     });
 
     return () => observer.disconnect();
-  }, [steps.length]);
+  }, [visibleSteps, showHighlight]);
+
+  useEffect(() => {
+    if (showHighlight && !isTyping) {
+      setIsTyping(true);
+      let i = 0;
+      const typeInterval = setInterval(() => {
+        if (i < highlightText.length) {
+          setTypedText(highlightText.substring(0, i + 1));
+          i++;
+        } else {
+          clearInterval(typeInterval);
+          setIsTyping(false);
+        }
+      }, 30);
+      return () => clearInterval(typeInterval);
+    }
+  }, [showHighlight, isTyping]);
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
       <div className="max-w-4xl mx-auto px-6">
         <h2 className="text-4xl md:text-5xl font-space font-bold text-white mb-16 text-center">
-          You start with voice.<br />
-          You end up with an OS.
+          Starting with Personal OS.<br />
+          Will end up with universal layer for everything.
         </h2>
 
         <div className="flex">
@@ -124,7 +147,8 @@ const VoiceToOSSection = () => {
         {showHighlight && (
           <div className="mt-16 bg-black border border-white/20 rounded-3xl p-8 text-center animate-fade-in">
             <h3 className="text-2xl font-space font-bold text-white mb-4">
-              AI becomes the interface for your digital life. The OS for how you live, think, and act.
+              {typedText}
+              {isTyping && <span className="animate-pulse text-green-400">|</span>}
             </h3>
           </div>
         )}

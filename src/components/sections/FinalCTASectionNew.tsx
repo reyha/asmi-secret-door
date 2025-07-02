@@ -133,7 +133,7 @@ UTM: investor-site-form
     <div className="min-h-screen bg-black py-20 flex items-center">
       <div className="max-w-4xl mx-auto px-6 text-center">
         <h2 className="text-4xl md:text-5xl font-space font-bold text-white mb-16 leading-tight">
-          Back the memory OS of the future.
+          Back the personal OS of the future.
         </h2>
 
         {/* Three key points - tap to reveal */}
@@ -159,7 +159,7 @@ UTM: investor-site-form
           onClick={() => setShowForm(true)}
           className="bg-green-400 text-black px-12 py-4 rounded-full text-xl font-medium hover:bg-green-500 transition-all duration-300 hover:scale-105 font-inter relative overflow-hidden"
         >
-          <span className="relative z-10">I want in</span>
+          <span className="relative z-10">Lead our $5M seed</span>
           <div className="absolute inset-0 bg-green-300 opacity-50 animate-pulse"></div>
         </button>
       </div>

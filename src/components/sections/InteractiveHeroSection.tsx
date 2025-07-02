@@ -158,7 +158,7 @@ const InteractiveHeroSection = () => {
             {showCTA && (
               <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
                 <p className="text-xl md:text-2xl text-white font-space font-light mb-8 md:mb-12">
-                  We know you. Now, <span className="font-medium">experience Asmi</span>.
+                  We know you. Now, <span className="font-medium">time to know us!</span>
                 </p>
                 
                 <div className="flex flex-col items-center">

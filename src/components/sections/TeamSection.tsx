@@ -49,7 +49,7 @@ const TeamSection = () => {
               
               {/* Founder details */}
               <div className="flex-1 text-left">
-                <h3 className="text-2xl font-medium text-white mb-4">Rishi</h3>
+                <h3 className="text-2xl font-medium text-white mb-4">Rishi Rathore</h3>
                 <div className="space-y-3">
                   <div className="bg-gradient-to-r from-orange-500/20 to-orange-400/10 p-3 rounded-xl border border-orange-400/20">
                     <div className="text-orange-400 font-bold text-lg">Built Arzooo</div>
@@ -61,6 +61,9 @@ const TeamSection = () => {
                   </div>
                   <div className="bg-gradient-to-r from-blue-500/20 to-blue-400/10 p-3 rounded-xl border border-blue-400/20">
                     <div className="text-blue-400 text-sm">Tony Xu (DoorDash) • Eric Yuan (Zoom)</div>
+                  </div>
+                  <div className="bg-gradient-to-r from-purple-500/20 to-purple-400/10 p-3 rounded-xl border border-purple-400/20">
+                    <div className="text-purple-400 text-sm">"I've built consumer products for millions. Now I am building a single interface to Get Things Done"</div>
                   </div>
                 </div>
               </div>
@@ -81,7 +84,7 @@ const TeamSection = () => {
               
               {/* Founder details */}
               <div className="flex-1 text-left">
-                <h3 className="text-2xl font-medium text-white mb-4">Satwik</h3>
+                <h3 className="text-2xl font-medium text-white mb-4">Satwik Kottur</h3>
                 <div className="space-y-3">
                   <div className="bg-gradient-to-r from-red-500/20 to-red-400/10 p-3 rounded-xl border border-red-400/20">
                     <div className="text-red-400 font-bold">Meta AI</div>

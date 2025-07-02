@@ -3,11 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { Brain, Mic, MessageCircle } from 'lucide-react';
 
 const TimelineHowItWorks = () => {
-  const [visibleSteps, setVisibleSteps] = useState([]);
+  const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
   const [typedText, setTypedText] = useState('');
   const [showHighlight, setShowHighlight] = useState(false);
-  const sectionRef = useRef(null);
-  const stepRefs = useRef([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const steps = [
     {
@@ -30,36 +31,44 @@ const TimelineHowItWorks = () => {
     }
   ];
 
-  const highlightText = "Compounding Always Wins!";
+  const highlightText = "From messages... to personal OS";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting && !visibleSteps.includes(index)) {
-            setVisibleSteps(prev => [...prev, index]);
-            
-            // Show highlight card after all steps are visible
-            if (index === steps.length - 1) {
-              setTimeout(() => {
-                setShowHighlight(true);
-              }, 500);
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = stepRefs.current.findIndex(ref => ref === entry.target);
+            if (index !== -1 && !visibleSteps.includes(index)) {
+              setVisibleSteps(prev => {
+                const newVisible = [...prev, index].sort((a, b) => a - b);
+                
+                // Show highlight card after all steps are visible
+                if (newVisible.length === steps.length && !showHighlight) {
+                  setTimeout(() => {
+                    setShowHighlight(true);
+                  }, 500);
+                }
+                
+                return newVisible;
+              });
             }
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.5, rootMargin: '-50px' }
     );
 
-    stepRefs.current.forEach((ref, index) => {
+    stepRefs.current.forEach((ref) => {
       if (ref) observer.observe(ref);
     });
 
     return () => observer.disconnect();
-  }, [visibleSteps]);
+  }, [visibleSteps, showHighlight]);
 
   useEffect(() => {
-    if (showHighlight) {
+    if (showHighlight && !isTyping) {
+      setIsTyping(true);
       let i = 0;
       const typeInterval = setInterval(() => {
         if (i < highlightText.length) {
@@ -67,11 +76,12 @@ const TimelineHowItWorks = () => {
           i++;
         } else {
           clearInterval(typeInterval);
+          setIsTyping(false);
         }
       }, 60);
       return () => clearInterval(typeInterval);
     }
-  }, [showHighlight]);
+  }, [showHighlight, isTyping]);
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
@@ -82,7 +92,9 @@ const TimelineHowItWorks = () => {
             <div className="w-1 h-96 bg-gray-800 relative">
               <div 
                 className="w-1 bg-gradient-to-b from-green-400 via-blue-400 to-purple-400 absolute top-0 transition-all duration-1000"
-                style={{ height: `${(visibleSteps.length / steps.length) * 100}%` }}
+                style={{ 
+                  height: visibleSteps.length > 0 ? `${(visibleSteps.length / steps.length) * 100}%` : '0%'
+                }}
               />
             </div>
             
@@ -134,7 +146,7 @@ const TimelineHowItWorks = () => {
               <div className="mt-12 p-8 bg-black rounded-3xl border-2 border-green-400/30 animate-fade-in">
                 <h2 className="text-3xl font-space font-bold text-green-400 mb-4">
                   {typedText}
-                  {typedText.length < highlightText.length && <span className="animate-pulse">|</span>}
+                  {isTyping && <span className="animate-pulse">|</span>}
                 </h2>
                 <p className="text-lg text-gray-400 font-inter">
                   Asmi compounds each day to become super-intelligent, high agency version of yourself.
