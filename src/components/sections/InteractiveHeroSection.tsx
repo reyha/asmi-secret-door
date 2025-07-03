@@ -83,72 +83,68 @@ const InteractiveHeroSection = () => {
       {/* Neural Bloom Background */}
       <NeuralBloomBackground />
 
-      <div className="relative z-10 min-h-screen flex flex-col">
+      <div className="relative z-10 min-h-screen flex flex-col px-4 py-8">
         {/* Header */}
-        <div className="pt-8 md:pt-12 pb-8 px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-space font-light mb-4 md:mb-6 tracking-tight leading-tight text-white">
-              Get Things Done
-            </h1>
-            
-            <p className="text-lg md:text-xl text-gray-300 font-light mb-3 md:mb-4">
-              Built for investors, founders, and fast-moving teams
-            </p>
-            
-            <div className="flex items-center justify-center space-x-2 text-green-400">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-inter">Live on WhatsApp & iMessage</span>
-            </div>
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-space font-light mb-3 tracking-tight leading-tight text-white">
+            Get Things Done
+          </h1>
+          
+          <p className="text-base text-gray-300 font-light mb-3">
+            Built for investors, founders, and fast-moving teams
+          </p>
+          
+          <div className="flex items-center justify-center space-x-2 text-green-400">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm font-inter">Live on WhatsApp & iMessage</span>
           </div>
         </div>
 
         {/* Personalized Welcome Section */}
-        <div className="flex-1 flex items-center justify-center px-4">
-          <div className="text-center max-w-3xl mx-auto">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center max-w-sm mx-auto">
             {/* Welcome Message */}
             {showWelcome && (
-              <div className="mb-8 md:mb-12 animate-fade-in">
-                <div className="flex items-center justify-center mb-6 md:mb-8">
+              <div className="mb-8 animate-fade-in">
+                <div className="flex items-center justify-center mb-6">
                   {/* Investor Avatar */}
                   <div className="relative">
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center text-black font-space font-bold text-xl md:text-2xl">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center text-black font-space font-bold text-xl">
                       {personalizedData.initials}
                     </div>
                     <div className="absolute inset-0 rounded-full bg-green-400/20 animate-ping"></div>
                   </div>
                 </div>
                 
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-light text-white mb-2">
+                <h2 className="text-2xl font-space font-light text-white mb-4">
                   Welcome back, <span className="font-medium">{personalizedData.name}</span>.
                 </h2>
               </div>
             )}
 
-            {/* Insights Reveal */}
+            {/* Insights Reveal - Simplified without background box */}
             {showInsights && (
-              <div className="mb-8 md:mb-12">
-                <div className="bg-black/40 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-green-400/20 max-w-2xl mx-auto">
-                  <div className="min-h-[4rem] md:min-h-[5rem] flex items-center justify-center">
-                    <div className="text-center">
-                      {/* Typing indicator when starting new insight */}
-                      {isTyping && typedText === '' && (
-                        <div className="flex items-center justify-center space-x-1 mb-4">
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-100"></div>
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-200"></div>
-                        </div>
-                      )}
-                      
-                      {/* Typed text */}
-                      {typedText && (
-                        <p className="text-lg md:text-xl text-green-400 font-inter font-medium">
-                          {typedText}
-                          {isTyping && (
-                            <span className="animate-pulse">|</span>
-                          )}
-                        </p>
-                      )}
-                    </div>
+              <div className="mb-8">
+                <div className="min-h-[3rem] flex items-center justify-center">
+                  <div className="text-center">
+                    {/* Typing indicator when starting new insight */}
+                    {isTyping && typedText === '' && (
+                      <div className="flex items-center justify-center space-x-1 mb-4">
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-100"></div>
+                        <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-200"></div>
+                      </div>
+                    )}
+                    
+                    {/* Typed text */}
+                    {typedText && (
+                      <p className="text-lg text-green-400 font-inter font-medium">
+                        {typedText}
+                        {isTyping && (
+                          <span className="animate-pulse">|</span>
+                        )}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -157,14 +153,14 @@ const InteractiveHeroSection = () => {
             {/* Final CTA */}
             {showCTA && (
               <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
-                <p className="text-xl md:text-2xl text-white font-space font-light mb-8 md:mb-12">
+                <p className="text-xl text-white font-space font-light mb-8">
                   We know you. Now, <span className="font-medium">time to know us!</span>
                 </p>
                 
                 <div className="flex flex-col items-center">
                   <div className="flex items-center space-x-2 text-green-400 animate-pulse">
-                    <ArrowUp size={24} className="transform rotate-180" />
-                    <span className="text-base md:text-lg font-inter">
+                    <ArrowUp size={20} className="transform rotate-180" />
+                    <span className="text-base font-inter">
                       Swipe up to know more about Asmi
                     </span>
                   </div>
@@ -176,8 +172,8 @@ const InteractiveHeroSection = () => {
 
         {/* Scroll indicator */}
         {showCTA && (
-          <div className="relative z-10 text-center pb-6 md:pb-8">
-            <ChevronDown className="text-green-400 mx-auto animate-bounce" size={24} />
+          <div className="text-center">
+            <ChevronDown className="text-green-400 mx-auto animate-bounce" size={20} />
           </div>
         )}
       </div>
