@@ -7,8 +7,8 @@ const TimelineHowItWorks = () => {
   const [typedCompoundingText, setTypedCompoundingText] = useState('');
   const [typedHighlightText, setTypedHighlightText] = useState('');
   const [showHighlight, setShowHighlight] = useState(false);
-  const [isTypingCompounding, setIsTypingCompounding] = useState(false);
-  const [isTypingHighlight, setIsTypingHighlight] = useState(false);
+  const [startTypingCompounding, setStartTypingCompounding] = useState(false);
+  const [startTypingHighlight, setStartTypingHighlight] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -43,14 +43,20 @@ const TimelineHowItWorks = () => {
           if (entry.isIntersecting) {
             const index = stepRefs.current.findIndex(ref => ref === entry.target);
             if (index !== -1 && !visibleSteps.includes(index)) {
+              console.log('Timeline step visible:', index);
               setVisibleSteps(prev => {
                 const newVisible = [...prev, index].sort((a, b) => a - b);
+                console.log('Timeline new visible steps:', newVisible);
                 
                 // Show highlight card after all steps are visible
                 if (newVisible.length === steps.length && !showHighlight) {
+                  console.log('All timeline steps visible, showing highlight');
                   setTimeout(() => {
                     setShowHighlight(true);
-                  }, 500);
+                    setTimeout(() => {
+                      setStartTypingCompounding(true);
+                    }, 300);
+                  }, 800);
                 }
                 
                 return newVisible;
@@ -59,7 +65,7 @@ const TimelineHowItWorks = () => {
           }
         });
       },
-      { threshold: 0.5, rootMargin: '-50px' }
+      { threshold: 0.4, rootMargin: '-20px' }
     );
 
     stepRefs.current.forEach((ref) => {
@@ -71,42 +77,43 @@ const TimelineHowItWorks = () => {
 
   // Typewriter effect for compounding text
   useEffect(() => {
-    if (showHighlight && !isTypingCompounding) {
-      setIsTypingCompounding(true);
+    if (startTypingCompounding) {
+      console.log('Starting compounding typewriter');
       let i = 0;
       const typeInterval = setInterval(() => {
-        if (i < compoundingText.length) {
-          setTypedCompoundingText(compoundingText.substring(0, i + 1));
+        if (i <= compoundingText.length) {
+          setTypedCompoundingText(compoundingText.substring(0, i));
           i++;
         } else {
           clearInterval(typeInterval);
-          setIsTypingCompounding(false);
+          console.log('Compounding typewriter complete');
           // Start typing the highlight text after compounding text is done
           setTimeout(() => {
-            setIsTypingHighlight(true);
-          }, 500);
+            setStartTypingHighlight(true);
+          }, 600);
         }
       }, 80);
       return () => clearInterval(typeInterval);
     }
-  }, [showHighlight, isTypingCompounding]);
+  }, [startTypingCompounding]);
 
   // Typewriter effect for highlight text
   useEffect(() => {
-    if (isTypingHighlight && !isTypingCompounding) {
+    if (startTypingHighlight) {
+      console.log('Starting highlight typewriter');
       let i = 0;
       const typeInterval = setInterval(() => {
-        if (i < highlightText.length) {
-          setTypedHighlightText(highlightText.substring(0, i + 1));
+        if (i <= highlightText.length) {
+          setTypedHighlightText(highlightText.substring(0, i));
           i++;
         } else {
           clearInterval(typeInterval);
-          setIsTypingHighlight(false);
+          console.log('Highlight typewriter complete');
         }
       }, 60);
       return () => clearInterval(typeInterval);
     }
-  }, [isTypingHighlight, isTypingCompounding]);
+  }, [startTypingHighlight]);
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
@@ -171,11 +178,11 @@ const TimelineHowItWorks = () => {
               <div className="mt-12 p-8 bg-black rounded-3xl border-2 border-green-400/30 animate-fade-in">
                 <h2 className="text-3xl font-space font-bold text-green-400 mb-4">
                   {typedCompoundingText}
-                  {isTypingCompounding && <span className="animate-pulse">|</span>}
+                  {startTypingCompounding && typedCompoundingText.length < compoundingText.length && <span className="animate-pulse">|</span>}
                 </h2>
                 <h3 className="text-2xl font-space font-bold text-green-400 mb-4">
                   {typedHighlightText}
-                  {isTypingHighlight && <span className="animate-pulse">|</span>}
+                  {startTypingHighlight && typedHighlightText.length < highlightText.length && <span className="animate-pulse">|</span>}
                 </h3>
                 <p className="text-lg text-gray-400 font-inter">
                   Asmi compounds each day to become super-intelligent, high agency version of yourself.
