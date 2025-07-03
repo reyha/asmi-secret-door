@@ -1,185 +1,170 @@
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, ArrowUp } from 'lucide-react';
-import NeuralBloomBackground from '../NeuralBloomBackground';
+import { MessageCircle, Calendar, User } from 'lucide-react';
 
 const InteractiveHeroSection = () => {
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [showInsights, setShowInsights] = useState(false);
-  const [currentInsight, setCurrentInsight] = useState(0);
-  const [typedText, setTypedText] = useState('');
+  const [currentMessage, setCurrentMessage] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
-  const [showCTA, setShowCTA] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
-  // Personalized data
-  const personalizedData = {
-    name: "Alex",
-    initials: "AS",
-    insights: [
-      "Backed Notion at Series A → 5× exit.",
-      "Early bet on consumer AI: Anthropic.",
-      "Advised on $50M deal with Lightspeed.",
-      "Published on AI trends in TechCrunch."
-    ]
-  };
+  const messages = [
+    { type: 'user', text: 'Good morning Asmi', delay: 300 },
+    { type: 'typing', delay: 400 },
+    { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 400 },
+    { type: 'typing', delay: 400 },
+    { 
+      type: 'schedule', 
+      items: [
+        { icon: Calendar, text: '9 AM: Board meeting prep', color: 'text-blue-400' },
+        { icon: User, text: '2 PM: 1:1 with Sarah', color: 'text-green-400' },
+        { icon: Calendar, text: '4 PM: Investor call', color: 'text-purple-400' }
+      ],
+      delay: 300
+    },
+    { type: 'typing', delay: 400 },
+    { 
+      type: 'birthday', 
+      text: 'Also, it\'s Ria\'s birthday today! 🎂',
+      delay: 400
+    }
+  ];
 
-  // Initial welcome sequence
   useEffect(() => {
-    console.log('Starting welcome sequence');
-    const timer = setTimeout(() => {
-      setShowWelcome(true);
-      setTimeout(() => {
-        console.log('Starting insights sequence');
-        setShowInsights(true);
-      }, 1500);
-    }, 1000);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasStarted) {
+            setHasStarted(true);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Handle typewriter effect for current insight
-  useEffect(() => {
-    if (!showInsights || currentInsight >= personalizedData.insights.length) {
-      return;
+    const element = document.getElementById('hero-section');
+    if (element) {
+      observer.observe(element);
     }
 
-    console.log(`Starting typewriter for insight ${currentInsight}`);
-    const insight = personalizedData.insights[currentInsight];
-    
-    // Reset state for new insight
-    setTypedText('');
-    setIsTyping(true);
-    
-    let charIndex = 0;
-    
-    const typingInterval = setInterval(() => {
-      if (charIndex <= insight.length) {
-        setTypedText(insight.slice(0, charIndex));
-        charIndex++;
-      } else {
-        // Finished typing this insight
-        clearInterval(typingInterval);
-        setIsTyping(false);
-        console.log(`Finished typing insight ${currentInsight}`);
-        
-        // Wait before moving to next insight
-        setTimeout(() => {
-          if (currentInsight < personalizedData.insights.length - 1) {
-            setCurrentInsight(prev => prev + 1);
-          } else {
-            // All insights done, show CTA
-            console.log('All insights completed, showing CTA');
-            setTimeout(() => setShowCTA(true), 1000);
-          }
-        }, 1500);
-      }
-    }, 50);
+    return () => observer.disconnect();
+  }, [hasStarted]);
 
-    return () => clearInterval(typingInterval);
-  }, [showInsights, currentInsight, personalizedData.insights.length]);
+  useEffect(() => {
+    if (!hasStarted) return;
+
+    const timer = setTimeout(() => {
+      if (currentMessage < messages.length) {
+        const currentMsg = messages[currentMessage];
+        
+        if (currentMsg.type === 'typing') {
+          setIsTyping(true);
+          setTimeout(() => {
+            setIsTyping(false);
+            setCurrentMessage(prev => prev + 1);
+          }, 600);
+        } else {
+          setCurrentMessage(prev => prev + 1);
+        }
+      }
+    }, messages[currentMessage]?.delay || 300);
+
+    return () => clearTimeout(timer);
+  }, [currentMessage, hasStarted]);
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden">
-      {/* Neural Bloom Background */}
-      <NeuralBloomBackground />
+    <div id="hero-section" className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4 py-8">
+      <div className="max-w-6xl mx-auto text-center">
+        <div className="mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-space font-bold text-white mb-4 leading-tight">
+            Welcome, <span className="text-green-400">Alex</span>
+          </h1>
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-300 font-inter">
+            Your AI companion for a more productive day
+          </p>
+        </div>
 
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Header */}
-        <div className="pt-8 md:pt-12 pb-8 px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-space font-light mb-4 md:mb-6 tracking-tight leading-tight text-white">
-              Get Things Done
-            </h1>
-            
-            <p className="text-lg md:text-xl text-gray-300 font-light mb-3 md:mb-4">
-              Built for investors, founders, and fast-moving teams
-            </p>
-            
-            <div className="flex items-center justify-center space-x-2 text-green-400">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-inter">Live on WhatsApp & iMessage</span>
+        {/* Phone mockup */}
+        <div className="max-w-sm mx-auto">
+          <div className="bg-black/80 backdrop-blur-sm rounded-2xl border border-green-400/30 overflow-hidden shadow-2xl">
+            {/* Phone header */}
+            <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 p-3 border-b border-white/10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-white text-sm font-inter">Asmi</span>
+                </div>
+                {isTyping && (
+                  <div className="text-xs text-gray-400 font-inter">typing...</div>
+                )}
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="p-4 space-y-3 bg-gradient-to-b from-gray-900 to-black h-96 overflow-hidden">
+              {/* User message */}
+              {currentMessage >= 1 && (
+                <div className="flex justify-end animate-fade-in">
+                  <div className="bg-green-500 text-white px-4 py-2 rounded-xl rounded-br-sm max-w-xs">
+                    <p className="text-sm font-inter">{messages[0].text}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Typing indicator */}
+              {isTyping && currentMessage >= 1 && currentMessage < 3 && (
+                <div className="flex justify-start animate-fade-in">
+                  <div className="bg-gray-800/90 px-4 py-3 rounded-xl rounded-tl-sm">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Asmi response */}
+              {currentMessage >= 3 && (
+                <div className="flex justify-start animate-fade-in">
+                  <div className="bg-gray-800/90 text-white px-4 py-2 rounded-xl rounded-tl-sm max-w-xs">
+                    <p className="text-sm font-inter">{messages[2].text}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Schedule card */}
+              {currentMessage >= 5 && (
+                <div className="flex justify-start animate-fade-in">
+                  <div className="bg-gradient-to-r from-gray-800/90 to-gray-700/90 border border-white/20 rounded-xl p-3 max-w-xs">
+                    <div className="space-y-2">
+                      {messages[4].items.map((item, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <item.icon size={14} className={item.color} />
+                          <span className="text-xs text-white font-inter">{item.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Birthday message */}
+              {currentMessage >= 7 && (
+                <div className="flex justify-start animate-fade-in">
+                  <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 rounded-xl p-3 max-w-xs">
+                    <p className="text-sm text-white font-inter">{messages[6].text}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Personalized Welcome Section */}
-        <div className="flex-1 flex items-center justify-center px-4">
-          <div className="text-center max-w-3xl mx-auto">
-            {/* Welcome Message */}
-            {showWelcome && (
-              <div className="mb-8 md:mb-12 animate-fade-in">
-                <div className="flex items-center justify-center mb-6 md:mb-8">
-                  {/* Investor Avatar */}
-                  <div className="relative">
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center text-black font-space font-bold text-xl md:text-2xl">
-                      {personalizedData.initials}
-                    </div>
-                    <div className="absolute inset-0 rounded-full bg-green-400/20 animate-ping"></div>
-                  </div>
-                </div>
-                
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-light text-white mb-2">
-                  Welcome back, <span className="font-medium">{personalizedData.name}</span>.
-                </h2>
-              </div>
-            )}
-
-            {/* Insights Reveal */}
-            {showInsights && (
-              <div className="mb-8 md:mb-12">
-                <div className="bg-black/40 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-8 border border-green-400/20 max-w-2xl mx-auto">
-                  <div className="min-h-[4rem] md:min-h-[5rem] flex items-center justify-center">
-                    <div className="text-center">
-                      {/* Typing indicator when starting new insight */}
-                      {isTyping && typedText === '' && (
-                        <div className="flex items-center justify-center space-x-1 mb-4">
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-100"></div>
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-200"></div>
-                        </div>
-                      )}
-                      
-                      {/* Typed text */}
-                      {typedText && (
-                        <p className="text-lg md:text-xl text-green-400 font-inter font-medium">
-                          {typedText}
-                          {isTyping && (
-                            <span className="animate-pulse">|</span>
-                          )}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Final CTA */}
-            {showCTA && (
-              <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
-                <p className="text-xl md:text-2xl text-white font-space font-light mb-8 md:mb-12">
-                  We know you. Now, <span className="font-medium">time to know us!</span>
-                </p>
-                
-                <div className="flex flex-col items-center">
-                  <div className="flex items-center space-x-2 text-green-400 animate-pulse">
-                    <ArrowUp size={24} className="transform rotate-180" />
-                    <span className="text-base md:text-lg font-inter">
-                      Swipe up to know more about Asmi
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+        <div className="mt-6 text-center">
+          <span className="text-gray-400 text-sm font-inter">
+            Asmi remembered Ria's birthday from last month's conversation
+          </span>
         </div>
-
-        {/* Scroll indicator */}
-        {showCTA && (
-          <div className="relative z-10 text-center pb-6 md:pb-8">
-            <ChevronDown className="text-green-400 mx-auto animate-bounce" size={24} />
-          </div>
-        )}
       </div>
     </div>
   );

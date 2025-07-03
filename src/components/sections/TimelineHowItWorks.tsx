@@ -49,7 +49,7 @@ const TimelineHowItWorks = () => {
                 if (newVisible.length === steps.length && !showHighlight) {
                   setTimeout(() => {
                     setShowHighlight(true);
-                  }, 300);
+                  }, 500);
                 }
                 
                 return newVisible;
@@ -58,7 +58,7 @@ const TimelineHowItWorks = () => {
           }
         });
       },
-      { threshold: 0.3, rootMargin: '-30px' }
+      { threshold: 0.2, rootMargin: '-50px' }
     );
 
     stepRefs.current.forEach((ref) => {
@@ -74,18 +74,17 @@ const TimelineHowItWorks = () => {
       setIsTypingCompounding(true);
       let i = 0;
       const typeInterval = setInterval(() => {
-        if (i < compoundingText.length) {
-          setTypedCompoundingText(compoundingText.substring(0, i + 1));
+        if (i <= compoundingText.length) {
+          setTypedCompoundingText(compoundingText.substring(0, i));
           i++;
         } else {
           clearInterval(typeInterval);
           setIsTypingCompounding(false);
-          // Start typing the highlight text after compounding text is done
           setTimeout(() => {
             setIsTypingHighlight(true);
-          }, 200);
+          }, 300);
         }
-      }, 50);
+      }, 60);
       return () => clearInterval(typeInterval);
     }
   }, [showHighlight, isTypingCompounding]);
@@ -95,24 +94,24 @@ const TimelineHowItWorks = () => {
     if (isTypingHighlight && !isTypingCompounding) {
       let i = 0;
       const typeInterval = setInterval(() => {
-        if (i < highlightText.length) {
-          setTypedHighlightText(highlightText.substring(0, i + 1));
+        if (i <= highlightText.length) {
+          setTypedHighlightText(highlightText.substring(0, i));
           i++;
         } else {
           clearInterval(typeInterval);
           setIsTypingHighlight(false);
         }
-      }, 40);
+      }, 50);
       return () => clearInterval(typeInterval);
     }
   }, [isTypingHighlight, isTypingCompounding]);
 
   return (
-    <div ref={sectionRef} className="min-h-screen bg-black py-12 sm:py-16 md:py-20 flex items-center">
+    <div ref={sectionRef} className="min-h-screen bg-black py-8 sm:py-12 md:py-16 flex items-center">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex flex-col lg:flex-row items-center min-h-[60vh] gap-8 lg:gap-12">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
           {/* Timeline */}
-          <div className="flex lg:flex-col items-center lg:mr-12 relative order-2 lg:order-1">
+          <div className="flex lg:flex-col items-center relative order-2 lg:order-1">
             <div className="w-1 h-64 sm:h-80 lg:h-96 bg-gray-800 relative">
               <div 
                 className="w-1 bg-gradient-to-b from-green-400 via-blue-400 to-purple-400 absolute top-0 transition-all duration-1000"
@@ -140,7 +139,7 @@ const TimelineHowItWorks = () => {
           </div>
 
           {/* Content */}
-          <div className="flex-1 space-y-8 sm:space-y-10 lg:space-y-12 order-1 lg:order-2">
+          <div className="flex-1 space-y-6 sm:space-y-8 order-1 lg:order-2">
             {steps.map((step, index) => (
               <div
                 key={index}
@@ -150,11 +149,11 @@ const TimelineHowItWorks = () => {
                 }`}
               >
                 <div className="flex items-start space-x-3 sm:space-x-4">
-                  <div className="p-2 sm:p-3 bg-black/50 border border-white/20 rounded-lg sm:rounded-xl flex-shrink-0">
+                  <div className="p-2 sm:p-3 bg-black/50 border border-white/20 rounded-lg flex-shrink-0">
                     {step.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg sm:text-xl font-space font-semibold text-white mb-2 sm:mb-3">
+                    <h3 className="text-lg sm:text-xl font-space font-semibold text-white mb-2">
                       {step.title}
                     </h3>
                     <p className="text-sm sm:text-base text-gray-300 font-inter leading-relaxed">
@@ -167,12 +166,12 @@ const TimelineHowItWorks = () => {
 
             {/* Highlight Card */}
             {showHighlight && (
-              <div className="mt-8 sm:mt-10 lg:mt-12 p-4 sm:p-6 lg:p-8 bg-black rounded-2xl sm:rounded-3xl border-2 border-green-400/30 animate-fade-in">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-space font-bold text-green-400 mb-3 sm:mb-4">
+              <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-black rounded-2xl border-2 border-green-400/30 animate-fade-in">
+                <h2 className="text-xl sm:text-2xl font-space font-bold text-green-400 mb-3 sm:mb-4">
                   {typedCompoundingText}
                   {isTypingCompounding && <span className="animate-pulse">|</span>}
                 </h2>
-                <p className="text-sm sm:text-base lg:text-lg text-gray-300 font-inter leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-300 font-inter leading-relaxed">
                   {typedHighlightText}
                   {isTypingHighlight && <span className="animate-pulse text-gray-300">|</span>}
                 </p>

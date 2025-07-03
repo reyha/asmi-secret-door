@@ -36,7 +36,6 @@ const InvestorSite = () => {
   ];
 
   useEffect(() => {
-    // Smooth entrance animation
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 300);
@@ -55,7 +54,7 @@ const InvestorSite = () => {
           }
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.5 }
     );
 
     sectionRefs.current.forEach((ref) => {
@@ -68,26 +67,13 @@ const InvestorSite = () => {
   return (
     <div className={`bg-black text-white overflow-x-hidden font-inter transition-all duration-1000 ${
       isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-    }`} style={{ scrollSnapType: 'y mandatory' }}>
-      {/* Smooth entrance overlay */}
-      <div className={`fixed inset-0 bg-gradient-to-br from-green-900/20 via-black to-purple-900/20 z-50 transition-all duration-1000 pointer-events-none ${
-        isLoaded ? 'opacity-0' : 'opacity-100'
-      }`}>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-2 border-green-400 rounded-full animate-spin mb-4 mx-auto"></div>
-            <p className="text-green-400 text-lg font-light">Entering the future...</p>
-          </div>
-        </div>
-      </div>
-
+    }`}>
       {/* Sections */}
       {sections.map((Section, index) => (
         <div
           key={index}
           ref={(el) => (sectionRefs.current[index] = el)}
           className="min-h-screen"
-          style={{ scrollSnapAlign: 'start' }}
         >
           <Section.component />
         </div>

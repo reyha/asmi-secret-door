@@ -50,7 +50,7 @@ const VoiceToOSSection = () => {
           }
         });
       },
-      { threshold: 0.4, rootMargin: '-20px 0px' }
+      { threshold: 0.3, rootMargin: '-30px 0px' }
     );
 
     stepRefs.current.forEach((ref) => {
@@ -72,22 +72,22 @@ const VoiceToOSSection = () => {
           clearInterval(typeInterval);
           setIsTyping(false);
         }
-      }, 30);
+      }, 40);
       return () => clearInterval(typeInterval);
     }
   }, [showHighlight, isTyping, highlightText]);
 
   return (
-    <div ref={sectionRef} className="min-h-screen bg-black py-12 sm:py-16 md:py-20 flex items-center">
+    <div ref={sectionRef} className="min-h-screen bg-black py-8 sm:py-12 md:py-16 flex items-center">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-space font-bold text-white mb-8 sm:mb-12 md:mb-16 text-center leading-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-space font-bold text-white mb-8 sm:mb-12 text-center leading-tight">
           Starting with Personal OS.<br />
           <span className="text-green-400">Leading to a Single Interface for Everything.</span>
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Timeline content */}
-          <div className="flex-1 space-y-12 sm:space-y-16 lg:space-y-24 lg:mr-8 order-2 lg:order-1">
+          <div className="flex-1 space-y-8 sm:space-y-12 lg:space-y-16 lg:mr-8 order-2 lg:order-1">
             {steps.map((step, index) => (
               <div
                 key={index}
@@ -106,7 +106,7 @@ const VoiceToOSSection = () => {
                     <h3 className="text-lg sm:text-xl font-space font-bold text-white mb-2">
                       {step.year}
                     </h3>
-                    <p className="text-sm sm:text-base lg:text-lg text-gray-300 font-inter leading-relaxed">
+                    <p className="text-sm sm:text-base text-gray-300 font-inter leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -117,7 +117,7 @@ const VoiceToOSSection = () => {
 
           {/* Timeline line */}
           <div className="flex lg:flex-col items-center lg:ml-8 relative order-1 lg:order-2">
-            <div className="w-1 bg-gray-800 relative h-64 sm:h-80 lg:h-[400px]">
+            <div className="w-1 bg-gray-800 relative h-48 sm:h-64 lg:h-80">
               <div 
                 className="w-1 bg-gradient-to-b from-green-400 via-blue-400 to-purple-400 absolute top-0 transition-all duration-1000 ease-out"
                 style={{ 
@@ -133,7 +133,7 @@ const VoiceToOSSection = () => {
                 className={`absolute w-3 sm:w-4 h-3 sm:h-4 rounded-full border-2 bg-black transition-all duration-500 ${
                   visibleSteps.includes(index) ? 'border-green-400' : 'border-gray-600'
                 }`}
-                style={{ top: `${20 + (index * (visibleSteps.length > 0 ? 100 : 80))}px` }}
+                style={{ top: `${20 + (index * 80)}px` }}
               >
                 {visibleSteps.includes(index) && (
                   <div className="w-full h-full rounded-full bg-green-400 animate-pulse" />
@@ -143,10 +143,10 @@ const VoiceToOSSection = () => {
           </div>
         </div>
 
-        {/* AI becomes interface card */}
+        {/* Typewriter effect card */}
         {showHighlight && (
-          <div className="mt-12 sm:mt-16 bg-black border border-white/20 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 text-center animate-fade-in">
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-space font-bold text-white mb-4 leading-relaxed">
+          <div className="mt-8 sm:mt-12 bg-black border border-white/20 rounded-2xl p-4 sm:p-6 text-center animate-fade-in">
+            <h3 className="text-lg sm:text-xl font-space font-bold text-white leading-relaxed">
               {typedText}
               {isTyping && <span className="animate-pulse text-green-400">|</span>}
             </h3>
