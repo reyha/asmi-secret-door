@@ -1,7 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import InteractiveHeroSection from './sections/InteractiveHeroSection';
-import PersonalizedWelcome from './sections/PersonalizedWelcome';
 import MorningBriefDemo from './sections/MorningBriefDemo';
 import MeetingContextDemo from './sections/MeetingContextDemo';
 import PersonBackgroundDemo from './sections/PersonBackgroundDemo';
@@ -21,7 +20,6 @@ const InvestorSite = () => {
 
   const sections = [
     { component: InteractiveHeroSection, title: 'Hero' },
-    { component: PersonalizedWelcome, title: 'Welcome' },
     { component: MorningBriefDemo, title: 'Morning Brief' },
     { component: MeetingContextDemo, title: 'Meeting Context' },
     { component: PersonBackgroundDemo, title: 'Person Background' },
