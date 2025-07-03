@@ -37,12 +37,15 @@ const VoiceToOSSection = () => {
           if (entry.isIntersecting) {
             const index = stepRefs.current.findIndex(ref => ref === entry.target);
             if (index !== -1 && !visibleSteps.includes(index)) {
+              console.log('Step visible:', index); // Debug log
               setVisibleSteps(prev => {
                 const newVisible = [...prev, index].sort((a, b) => a - b);
+                console.log('New visible steps:', newVisible); // Debug log
                 if (newVisible.length === steps.length && !showHighlight) {
+                  console.log('All steps visible, showing highlight'); // Debug log
                   setTimeout(() => {
                     setShowHighlight(true);
-                  }, 1000);
+                  }, 1200); // Increased delay
                 }
                 return newVisible;
               });
@@ -50,7 +53,7 @@ const VoiceToOSSection = () => {
           }
         });
       },
-      { threshold: 0.7, rootMargin: '-50px 0px' }
+      { threshold: 0.6, rootMargin: '-30px 0px' } // Adjusted for better detection
     );
 
     stepRefs.current.forEach((ref) => {
@@ -62,20 +65,22 @@ const VoiceToOSSection = () => {
 
   useEffect(() => {
     if (showHighlight && !isTyping) {
+      console.log('Starting typewriter effect'); // Debug log
       setIsTyping(true);
       let i = 0;
       const typeInterval = setInterval(() => {
-        if (i < highlightText.length) {
-          setTypedText(highlightText.substring(0, i + 1));
+        if (i <= highlightText.length) {
+          setTypedText(highlightText.substring(0, i));
           i++;
         } else {
           clearInterval(typeInterval);
           setIsTyping(false);
+          console.log('Typewriter effect complete'); // Debug log
         }
-      }, 30);
+      }, 50); // Slowed down from 30ms to 50ms
       return () => clearInterval(typeInterval);
     }
-  }, [showHighlight, isTyping]);
+  }, [showHighlight, isTyping, highlightText]);
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
