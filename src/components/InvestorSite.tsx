@@ -13,7 +13,6 @@ import MessagingToOSSection from './sections/MessagingToOSSection';
 import VoiceToOSSection from './sections/VoiceToOSSection';
 import BuiltForEveryoneSection from './sections/BuiltForEveryoneSection';
 import FinalCTASectionNew from './sections/FinalCTASectionNew';
-import PersonalizedWelcome from './sections/PersonalizedWelcome';
 
 const InvestorSite = () => {
   const [currentSection, setCurrentSection] = useState(0);
@@ -21,7 +20,6 @@ const InvestorSite = () => {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const sections = [
-    { component: PersonalizedWelcome, title: 'Welcome' },
     { component: InteractiveHeroSection, title: 'Hero' },
     { component: MorningBriefDemo, title: 'Morning Brief' },
     { component: MeetingContextDemo, title: 'Meeting Context' },
@@ -81,14 +79,6 @@ const InvestorSite = () => {
             <p className="text-green-400 text-lg font-light">Entering the future...</p>
           </div>
         </div>
-      </div>
-
-      {/* Progress indicator - kept but made more subtle */}
-      <div className="fixed top-0 left-0 w-full h-0.5 bg-gray-900 z-40">
-        <div 
-          className="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500"
-          style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
-        />
       </div>
 
       {/* Sections */}

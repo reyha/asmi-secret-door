@@ -34,7 +34,7 @@ const TimelineHowItWorks = () => {
   ];
 
   const compoundingText = "Compounding always wins!";
-  const highlightText = "From messages... to personal OS";
+  const highlightText = "Asmi compounds each day to become super-intelligent, high agency version of yourself.";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -46,11 +46,10 @@ const TimelineHowItWorks = () => {
               setVisibleSteps(prev => {
                 const newVisible = [...prev, index].sort((a, b) => a - b);
                 
-                // Show highlight card after all steps are visible
                 if (newVisible.length === steps.length && !showHighlight) {
                   setTimeout(() => {
                     setShowHighlight(true);
-                  }, 300); // Faster
+                  }, 300);
                 }
                 
                 return newVisible;
@@ -59,7 +58,7 @@ const TimelineHowItWorks = () => {
           }
         });
       },
-      { threshold: 0.3, rootMargin: '-30px' } // More sensitive for mobile
+      { threshold: 0.3, rootMargin: '-30px' }
     );
 
     stepRefs.current.forEach((ref) => {
@@ -84,9 +83,9 @@ const TimelineHowItWorks = () => {
           // Start typing the highlight text after compounding text is done
           setTimeout(() => {
             setIsTypingHighlight(true);
-          }, 300); // Faster
+          }, 200);
         }
-      }, 60); // Faster typing
+      }, 50);
       return () => clearInterval(typeInterval);
     }
   }, [showHighlight, isTypingCompounding]);
@@ -103,7 +102,7 @@ const TimelineHowItWorks = () => {
           clearInterval(typeInterval);
           setIsTypingHighlight(false);
         }
-      }, 50); // Faster typing
+      }, 40);
       return () => clearInterval(typeInterval);
     }
   }, [isTypingHighlight, isTypingCompounding]);
@@ -173,12 +172,9 @@ const TimelineHowItWorks = () => {
                   {typedCompoundingText}
                   {isTypingCompounding && <span className="animate-pulse">|</span>}
                 </h2>
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-space font-bold text-green-400 mb-3 sm:mb-4">
+                <p className="text-sm sm:text-base lg:text-lg text-gray-300 font-inter leading-relaxed">
                   {typedHighlightText}
-                  {isTypingHighlight && <span className="animate-pulse">|</span>}
-                </h3>
-                <p className="text-sm sm:text-base lg:text-lg text-gray-400 font-inter leading-relaxed">
-                  Asmi compounds each day to become super-intelligent, high agency version of yourself.
+                  {isTypingHighlight && <span className="animate-pulse text-gray-300">|</span>}
                 </p>
               </div>
             )}

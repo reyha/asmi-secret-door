@@ -42,7 +42,7 @@ const VoiceToOSSection = () => {
                 if (newVisible.length === steps.length && !showHighlight) {
                   setTimeout(() => {
                     setShowHighlight(true);
-                  }, 800); // Faster
+                  }, 500);
                 }
                 return newVisible;
               });
@@ -50,7 +50,7 @@ const VoiceToOSSection = () => {
           }
         });
       },
-      { threshold: 0.4, rootMargin: '-20px 0px' } // Better for mobile
+      { threshold: 0.4, rootMargin: '-20px 0px' }
     );
 
     stepRefs.current.forEach((ref) => {
@@ -72,7 +72,7 @@ const VoiceToOSSection = () => {
           clearInterval(typeInterval);
           setIsTyping(false);
         }
-      }, 40); // Faster typing
+      }, 30);
       return () => clearInterval(typeInterval);
     }
   }, [showHighlight, isTyping, highlightText]);
@@ -81,8 +81,8 @@ const VoiceToOSSection = () => {
     <div ref={sectionRef} className="min-h-screen bg-black py-12 sm:py-16 md:py-20 flex items-center">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-space font-bold text-white mb-8 sm:mb-12 md:mb-16 text-center leading-tight">
-          Starting with personal OS.<br />
-          Will end up with universal layer.
+          Starting with Personal OS.<br />
+          <span className="text-green-400">Leading to a Single Interface for Everything.</span>
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-8">
