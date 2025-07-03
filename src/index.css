@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -140,9 +141,10 @@ All colors MUST be HSL.
   background-color: var(--accent-positive);
   color: var(--bg-primary);
   border-radius: 9999px;
-  padding: 16px 32px;
+  padding: 14px 28px;
   font-weight: 600;
   transition: all 0.3s ease;
+  font-size: 16px;
 }
 
 .button-primary:hover {
@@ -155,9 +157,10 @@ All colors MUST be HSL.
   color: var(--text-secondary);
   border: 1px solid var(--text-secondary);
   border-radius: 9999px;
-  padding: 16px 32px;
+  padding: 14px 28px;
   font-weight: 600;
   transition: all 0.3s ease;
+  font-size: 16px;
 }
 
 .button-secondary:hover {
@@ -184,10 +187,10 @@ All colors MUST be HSL.
   -webkit-overscroll-behavior: none;
 }
 
-/* Mobile typography scale */
+/* Mobile typography scale - optimized for readability */
 @media (max-width: 768px) {
   h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     line-height: 1.1;
   }
   
@@ -202,8 +205,24 @@ All colors MUST be HSL.
   }
   
   p {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     line-height: 1.5;
+  }
+
+  .text-lg {
+    font-size: 1rem;
+  }
+
+  .text-xl {
+    font-size: 1.125rem;
+  }
+
+  .text-2xl {
+    font-size: 1.5rem;
+  }
+
+  .text-3xl {
+    font-size: 1.75rem;
   }
 }
 
@@ -248,9 +267,9 @@ All colors MUST be HSL.
 @media (hover: none) and (pointer: coarse) {
   .button-primary,
   .button-secondary {
-    padding: 18px 36px;
-    font-size: 1.1rem;
-    min-height: 54px;
+    padding: 16px 32px;
+    font-size: 1rem;
+    min-height: 48px;
   }
   
   .touch-target {
@@ -514,5 +533,20 @@ All colors MUST be HSL.
   50% {
     opacity: 1;
     transform: scale(1.1);
+  }
+}
+
+/* Mobile optimized spacing */
+@media (max-width: 768px) {
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  .space-y-8 > * + * {
+    margin-top: 1.5rem !important;
+  }
+  
+  .space-y-12 > * + * {
+    margin-top: 2rem !important;
   }
 }

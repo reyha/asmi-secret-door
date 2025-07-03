@@ -5,17 +5,25 @@ interface MobileOptimizedSectionProps {
   children: ReactNode;
   className?: string;
   padding?: 'sm' | 'md' | 'lg';
+  maxWidth?: 'xs' | 'sm' | 'md';
 }
 
 const MobileOptimizedSection = ({ 
   children, 
   className = '', 
-  padding = 'md' 
+  padding = 'md',
+  maxWidth = 'sm'
 }: MobileOptimizedSectionProps) => {
   const paddingClasses = {
     sm: 'px-4 py-6',
-    md: 'px-6 py-8',
-    lg: 'px-8 py-12'
+    md: 'px-4 py-8',
+    lg: 'px-6 py-12'
+  };
+
+  const maxWidthClasses = {
+    xs: 'max-w-xs',
+    sm: 'max-w-sm', 
+    md: 'max-w-md'
   };
 
   return (
@@ -25,7 +33,7 @@ const MobileOptimizedSection = ({
       ${paddingClasses[padding]}
       ${className}
     `}>
-      <div className="max-w-sm mx-auto w-full space-y-6">
+      <div className={`${maxWidthClasses[maxWidth]} mx-auto w-full space-y-4`}>
         {children}
       </div>
     </div>
