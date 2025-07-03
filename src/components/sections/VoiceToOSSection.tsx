@@ -81,8 +81,8 @@ const VoiceToOSSection = () => {
     <div ref={sectionRef} className="min-h-screen bg-black py-12 sm:py-16 md:py-20 flex items-center">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-space font-bold text-white mb-8 sm:mb-12 md:mb-16 text-center leading-tight">
-          Starting with personal OS.<br />
-          Will end up with universal layer.
+          <span className="text-lg sm:text-xl md:text-2xl font-light text-gray-400 block mb-2">Starting with Personal OS.</span>
+          <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">Leading to a Single Interface for Everything.</span>
         </h2>
 
         <div className="flex flex-col lg:flex-row gap-8">

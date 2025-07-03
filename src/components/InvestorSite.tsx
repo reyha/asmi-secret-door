@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import InteractiveHeroSection from './sections/InteractiveHeroSection';
 import MorningBriefDemo from './sections/MorningBriefDemo';
@@ -13,7 +12,6 @@ import MessagingToOSSection from './sections/MessagingToOSSection';
 import VoiceToOSSection from './sections/VoiceToOSSection';
 import BuiltForEveryoneSection from './sections/BuiltForEveryoneSection';
 import FinalCTASectionNew from './sections/FinalCTASectionNew';
-import PersonalizedWelcome from './sections/PersonalizedWelcome';
 
 const InvestorSite = () => {
   const [currentSection, setCurrentSection] = useState(0);
@@ -21,7 +19,6 @@ const InvestorSite = () => {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const sections = [
-    { component: PersonalizedWelcome, title: 'Welcome' },
     { component: InteractiveHeroSection, title: 'Hero' },
     { component: MorningBriefDemo, title: 'Morning Brief' },
     { component: MeetingContextDemo, title: 'Meeting Context' },
