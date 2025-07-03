@@ -171,6 +171,94 @@ All colors MUST be HSL.
   overflow-x: hidden;
 }
 
+/* Mobile-first swipe optimizations */
+.swipe-card {
+  touch-action: pan-x;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.swipe-container {
+  overscroll-behavior: none;
+  -webkit-overscroll-behavior: none;
+}
+
+/* Mobile typography scale */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  
+  p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+/* Card animations for smooth swiping */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes card-exit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+}
+
+.card-enter {
+  animation: card-enter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.card-exit {
+  animation: card-exit 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Smooth swipe indicators */
+.swipe-indicator {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Enhanced mobile interactions */
+@media (hover: none) and (pointer: coarse) {
+  .button-primary,
+  .button-secondary {
+    padding: 18px 36px;
+    font-size: 1.1rem;
+    min-height: 54px;
+  }
+  
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
 /* Enhanced animations for sleek experience */
 @keyframes fade-in {
   from {

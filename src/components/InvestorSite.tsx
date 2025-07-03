@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import SwipeableContainer from './SwipeableContainer';
 import InteractiveHeroSection from './sections/InteractiveHeroSection';
 import MorningBriefDemo from './sections/MorningBriefDemo';
 import MeetingContextDemo from './sections/MeetingContextDemo';
@@ -16,7 +17,6 @@ import FinalCTASectionNew from './sections/FinalCTASectionNew';
 const InvestorSite = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const sections = [
     { component: InteractiveHeroSection, title: 'Hero' },
@@ -35,39 +35,20 @@ const InvestorSite = () => {
   ];
 
   useEffect(() => {
-    // Smooth entrance animation
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 300);
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = sectionRefs.current.findIndex(ref => ref === entry.target);
-            if (index !== -1) {
-              setCurrentSection(index);
-            }
-          }
-        });
-      },
-      { threshold: 0.6 }
-    );
-
-    sectionRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const handleSectionChange = (index: number) => {
+    setCurrentSection(index);
+  };
 
   return (
-    <div className={`bg-black text-white overflow-x-hidden font-inter transition-all duration-1000 ${
+    <div className={`bg-black text-white overflow-hidden font-inter transition-all duration-1000 ${
       isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-    }`} style={{ scrollSnapType: 'y mandatory' }}>
+    }`}>
       {/* Smooth entrance overlay */}
       <div className={`fixed inset-0 bg-gradient-to-br from-green-900/20 via-black to-purple-900/20 z-50 transition-all duration-1000 pointer-events-none ${
         isLoaded ? 'opacity-0' : 'opacity-100'
@@ -80,25 +61,13 @@ const InvestorSite = () => {
         </div>
       </div>
 
-      {/* Progress indicator - kept but made more subtle */}
-      <div className="fixed top-0 left-0 w-full h-0.5 bg-gray-900 z-40">
-        <div 
-          className="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500"
-          style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
-        />
-      </div>
-
-      {/* Sections */}
-      {sections.map((Section, index) => (
-        <div
-          key={index}
-          ref={(el) => (sectionRefs.current[index] = el)}
-          className="min-h-screen"
-          style={{ scrollSnapAlign: 'start' }}
-        >
-          <Section.component />
-        </div>
-      ))}
+      <SwipeableContainer onSectionChange={handleSectionChange}>
+        {sections.map((Section, index) => (
+          <div key={index} className="w-full h-full">
+            <Section.component />
+          </div>
+        ))}
+      </SwipeableContainer>
     </div>
   );
 };
