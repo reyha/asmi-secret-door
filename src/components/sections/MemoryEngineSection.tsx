@@ -11,28 +11,36 @@ const MemoryEngineSection = () => {
       source: "Email",
       target: "Meeting",
       description: "Connect meeting prep to recent email threads",
-      color: "from-green-400 to-blue-400"
+      color: "from-green-400 to-blue-400",
+      dotIndex: 0
     },
     {
       source: "Calendar", 
       target: "Person",
       description: "Link past interactions with upcoming meetings",
-      color: "from-blue-400 to-purple-400"
+      color: "from-blue-400 to-purple-400",
+      dotIndex: 1
     },
     {
       source: "Conversation",
       target: "Context",
       description: "Transform scattered chats into actionable insights",
-      color: "from-purple-400 to-green-400"
+      color: "from-purple-400 to-green-400",
+      dotIndex: 2
     }
   ];
 
   const dataPoints = [
-    { type: "Email", position: { x: 20, y: 30 }, color: "bg-green-400" },
-    { type: "Meeting", position: { x: 80, y: 20 }, color: "bg-blue-400" },
-    { type: "Calendar", position: { x: 70, y: 70 }, color: "bg-purple-400" },
-    { type: "Chat", position: { x: 30, y: 80 }, color: "bg-yellow-400" },
-    { type: "Context", position: { x: 50, y: 50 }, color: "bg-red-400" }
+    { type: "Emails", position: { x: 20, y: 30 }, color: "bg-green-400", label: "Emails" },
+    { type: "Calendar", position: { x: 80, y: 20 }, color: "bg-blue-400", label: "Calendar" },
+    { type: "Meetings", position: { x: 70, y: 70 }, color: "bg-purple-400", label: "Meetings" },
+    { type: "Conversations", position: { x: 30, y: 80 }, color: "bg-yellow-400", label: "Conversations" }
+  ];
+
+  const processSteps = [
+    { label: "Capture", color: "bg-green-400" },
+    { label: "Connect", color: "bg-blue-400" },
+    { label: "Context", color: "bg-purple-400" }
   ];
 
   useEffect(() => {
@@ -76,31 +84,41 @@ const MemoryEngineSection = () => {
                 ))}
               </defs>
               
-              {/* Dynamic connections */}
-              <path 
-                d="M20,30 Q50,10 80,20 M80,20 Q90,45 70,70 M70,70 Q35,85 30,80 M30,80 Q10,55 20,30 M50,50 Q65,35 80,20 M50,50 Q35,65 30,80"
-                stroke={`url(#gradient-${activeConnection})`}
-                strokeWidth="1"
-                fill="none"
-                className="transition-all duration-1000"
-              />
+              {/* Dynamic connections - connecting all dots to center */}
+              {dataPoints.map((point, index) => (
+                <line
+                  key={index}
+                  x1={point.position.x}
+                  y1={point.position.y}
+                  x2="50"
+                  y2="50"
+                  stroke={`url(#gradient-${activeConnection})`}
+                  strokeWidth="1"
+                  className="transition-all duration-1000"
+                />
+              ))}
             </svg>
 
-            {/* Data Points */}
+            {/* Data Points with Labels */}
             {dataPoints.map((point, index) => (
               <div
                 key={index}
-                className={`absolute w-3 h-3 ${point.color} rounded-full flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 ${
-                  index === activeConnection ? 'animate-pulse scale-125' : ''
+                className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${
+                  connections[activeConnection]?.dotIndex === index ? 'animate-pulse scale-125' : ''
                 }`}
                 style={{
                   left: `${point.position.x}%`,
                   top: `${point.position.y}%`
                 }}
               >
-                <div className={`absolute inset-0 rounded-full ${point.color} opacity-30 animate-ping ${
-                  index === activeConnection ? '' : 'hidden'
-                }`}></div>
+                <div className={`w-3 h-3 ${point.color} rounded-full flex items-center justify-center relative`}>
+                  {connections[activeConnection]?.dotIndex === index && (
+                    <div className={`absolute inset-0 rounded-full ${point.color} opacity-30 animate-ping`}></div>
+                  )}
+                </div>
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+                  <span className="text-xs text-gray-300 whitespace-nowrap">{point.label}</span>
+                </div>
               </div>
             ))}
 
@@ -120,19 +138,20 @@ const MemoryEngineSection = () => {
           </div>
         </div>
 
-        {/* Connection Process Steps */}
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <div className="p-3 bg-white/5 rounded-xl">
-            <div className="w-2 h-2 bg-green-400 rounded-full mx-auto mb-2"></div>
-            <p className="text-gray-300">Capture</p>
-          </div>
-          <div className="p-3 bg-white/5 rounded-xl">
-            <div className="w-2 h-2 bg-blue-400 rounded-full mx-auto mb-2"></div>
-            <p className="text-gray-300">Connect</p>
-          </div>
-          <div className="p-3 bg-white/5 rounded-xl">
-            <div className="w-2 h-2 bg-purple-400 rounded-full mx-auto mb-2"></div>
-            <p className="text-gray-300">Context</p>
+        {/* Connection Process Steps with Dynamic Lines */}
+        <div className="relative">
+          <div className="grid grid-cols-3 gap-2 text-xs relative">
+            {/* Connecting lines between steps */}
+            <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-800 transform -translate-y-1/2 z-0">
+              <div className="h-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 opacity-50 animate-pulse"></div>
+            </div>
+            
+            {processSteps.map((step, index) => (
+              <div key={index} className="p-3 bg-white/5 rounded-xl relative z-10">
+                <div className={`w-2 h-2 ${step.color} rounded-full mx-auto mb-2`}></div>
+                <p className="text-gray-300">{step.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

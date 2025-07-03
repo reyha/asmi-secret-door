@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react';
-import { MessageSquare, Brain, Zap } from 'lucide-react';
+import { Mic, Link, Brain } from 'lucide-react';
 
 const TimelineHowItWorks = () => {
   const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
@@ -12,23 +12,23 @@ const TimelineHowItWorks = () => {
 
   const steps = [
     {
-      icon: <MessageSquare className="text-green-400" size={16} />,
-      title: "You message",
-      description: "Natural conversation on WhatsApp or iMessage. Just like texting a friend."
+      icon: <Mic className="text-green-400" size={16} />,
+      title: "Voice note → Stored",
+      description: '"Had a great call with Raj about the partnership. He\'s interested in the API integration."'
     },
     {
-      icon: <Brain className="text-blue-400" size={16} />,
-      title: "Asmi understands",
-      description: "Context from your entire digital life. Meetings, emails, past conversations."
+      icon: <Link className="text-blue-400" size={16} />,
+      title: "Context linked",
+      description: "Asmi connects: Raj → Partnership → API → Your roadmap → Previous technical discussions + Email thread about API specs + Calendar meetings with Raj"
     },
     {
-      icon: <Zap className="text-purple-400" size={16} />,
-      title: "Things get done",
-      description: "Scheduling, research, follow-ups. All handled intelligently."
+      icon: <Brain className="text-purple-400" size={16} />,
+      title: "Deep insights generated",
+      description: "Raj (CTO at TechCorp) → Met 3x this quarter → Always asks about scalability → Prefers technical demos → Decision maker for $50K+ deals → Best contact time: 2-4 PM → Responds well to data-driven pitches"
     }
   ];
 
-  const highlightText = "Your personal chief of staff that knows everything and handles everything. No apps to switch, no context to lose.";
+  const highlightText = "Asmi compounds each day to become super-intelligent, high agency version of yourself.";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -138,7 +138,7 @@ const TimelineHowItWorks = () => {
 
         {/* Highlighted summary */}
         {showHighlight && (
-          <div className="mt-8 sm:mt-12 md:mt-16 bg-black border border-white/20 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 text-center animate-fade-in">
+          <div className="mt-8 sm:mt-12 md:mt-16 bg-gradient-to-r from-green-900/20 via-black to-purple-900/20 border border-green-400/30 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 text-center animate-fade-in">
             <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-space font-bold text-white mb-2 sm:mb-4 leading-relaxed">
               {typedText}
               {isTyping && <span className="animate-pulse text-green-400">|</span>}
