@@ -12,17 +12,17 @@ const VoiceToOSSection = () => {
 
   const steps = [
     {
-      icon: <Mic className="text-green-400" size={20} />,
+      icon: <Mic className="text-green-400" size={18} />,
       year: "Now: Memory Assistant",
       description: "Knows everything you've said. Reminds you when it matters."
     },
     {
-      icon: <Zap className="text-blue-400" size={20} />,
+      icon: <Zap className="text-blue-400" size={18} />,
       year: "2025: Personal OS",
       description: "One interface for everything — calendar, people, inbox, and thoughts."
     },
     {
-      icon: <Brain className="text-purple-400" size={20} />,
+      icon: <Brain className="text-purple-400" size={18} />,
       year: "2026: Decision Layer",
       description: "Asmi starts making calls. Nudges. Scheduling. Purchases. All for you."
     }
@@ -37,15 +37,12 @@ const VoiceToOSSection = () => {
           if (entry.isIntersecting) {
             const index = stepRefs.current.findIndex(ref => ref === entry.target);
             if (index !== -1 && !visibleSteps.includes(index)) {
-              console.log('Step visible:', index); // Debug log
               setVisibleSteps(prev => {
                 const newVisible = [...prev, index].sort((a, b) => a - b);
-                console.log('New visible steps:', newVisible); // Debug log
                 if (newVisible.length === steps.length && !showHighlight) {
-                  console.log('All steps visible, showing highlight'); // Debug log
                   setTimeout(() => {
                     setShowHighlight(true);
-                  }, 1200); // Increased delay
+                  }, 800); // Faster
                 }
                 return newVisible;
               });
@@ -53,7 +50,7 @@ const VoiceToOSSection = () => {
           }
         });
       },
-      { threshold: 0.6, rootMargin: '-30px 0px' } // Adjusted for better detection
+      { threshold: 0.4, rootMargin: '-20px 0px' } // Better for mobile
     );
 
     stepRefs.current.forEach((ref) => {
@@ -65,7 +62,6 @@ const VoiceToOSSection = () => {
 
   useEffect(() => {
     if (showHighlight && !isTyping) {
-      console.log('Starting typewriter effect'); // Debug log
       setIsTyping(true);
       let i = 0;
       const typeInterval = setInterval(() => {
@@ -75,24 +71,23 @@ const VoiceToOSSection = () => {
         } else {
           clearInterval(typeInterval);
           setIsTyping(false);
-          console.log('Typewriter effect complete'); // Debug log
         }
-      }, 50); // Slowed down from 30ms to 50ms
+      }, 40); // Faster typing
       return () => clearInterval(typeInterval);
     }
   }, [showHighlight, isTyping, highlightText]);
 
   return (
-    <div ref={sectionRef} className="min-h-screen bg-black py-20 flex items-center">
-      <div className="max-w-4xl mx-auto px-6">
-        <h2 className="text-4xl md:text-5xl font-space font-bold text-white mb-16 text-center">
+    <div ref={sectionRef} className="min-h-screen bg-black py-12 sm:py-16 md:py-20 flex items-center">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-space font-bold text-white mb-8 sm:mb-12 md:mb-16 text-center leading-tight">
           Starting with personal OS.<br />
           Will end up with universal layer.
         </h2>
 
-        <div className="flex">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Timeline content */}
-          <div className="flex-1 space-y-24 mr-8">
+          <div className="flex-1 space-y-12 sm:space-y-16 lg:space-y-24 lg:mr-8 order-2 lg:order-1">
             {steps.map((step, index) => (
               <div
                 key={index}
@@ -103,15 +98,15 @@ const VoiceToOSSection = () => {
                     : 'opacity-30 translate-x-8'
                 }`}
               >
-                <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-black/50 rounded-lg border border-white/20 flex-shrink-0">
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="p-2 sm:p-3 bg-black/50 rounded-lg border border-white/20 flex-shrink-0">
                     {step.icon}
                   </div>
-                  <div>
-                    <h3 className="text-xl font-space font-bold text-white mb-2">
+                  <div className="min-w-0">
+                    <h3 className="text-lg sm:text-xl font-space font-bold text-white mb-2">
                       {step.year}
                     </h3>
-                    <p className="text-gray-300 font-inter text-lg">
+                    <p className="text-sm sm:text-base lg:text-lg text-gray-300 font-inter leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -121,8 +116,8 @@ const VoiceToOSSection = () => {
           </div>
 
           {/* Timeline line */}
-          <div className="flex flex-col items-center ml-8 relative">
-            <div className="w-1 bg-gray-800 relative" style={{ height: '400px' }}>
+          <div className="flex lg:flex-col items-center lg:ml-8 relative order-1 lg:order-2">
+            <div className="w-1 bg-gray-800 relative h-64 sm:h-80 lg:h-[400px]">
               <div 
                 className="w-1 bg-gradient-to-b from-green-400 via-blue-400 to-purple-400 absolute top-0 transition-all duration-1000 ease-out"
                 style={{ 
@@ -135,10 +130,10 @@ const VoiceToOSSection = () => {
             {steps.map((_, index) => (
               <div
                 key={index}
-                className={`absolute w-4 h-4 rounded-full border-2 bg-black transition-all duration-500 ${
+                className={`absolute w-3 sm:w-4 h-3 sm:h-4 rounded-full border-2 bg-black transition-all duration-500 ${
                   visibleSteps.includes(index) ? 'border-green-400' : 'border-gray-600'
                 }`}
-                style={{ top: `${30 + (index * 133)}px` }}
+                style={{ top: `${20 + (index * (visibleSteps.length > 0 ? 100 : 80))}px` }}
               >
                 {visibleSteps.includes(index) && (
                   <div className="w-full h-full rounded-full bg-green-400 animate-pulse" />
@@ -150,8 +145,8 @@ const VoiceToOSSection = () => {
 
         {/* AI becomes interface card */}
         {showHighlight && (
-          <div className="mt-16 bg-black border border-white/20 rounded-3xl p-8 text-center animate-fade-in">
-            <h3 className="text-2xl font-space font-bold text-white mb-4">
+          <div className="mt-12 sm:mt-16 bg-black border border-white/20 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 text-center animate-fade-in">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-space font-bold text-white mb-4 leading-relaxed">
               {typedText}
               {isTyping && <span className="animate-pulse text-green-400">|</span>}
             </h3>

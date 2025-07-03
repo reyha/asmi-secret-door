@@ -19,25 +19,25 @@ const VoiceRescheduleDemo = () => {
     { 
       type: 'voice', 
       text: 'Move Eric call to 6PM',
-      delay: 800
+      delay: 500 // Faster
     },
     { 
       type: 'typing', 
-      delay: 800
+      delay: 500 // Faster
     },
     { 
       type: 'processing', 
       text: 'Got it. Checking Eric\'s availability...',
-      delay: 1000
+      delay: 600 // Faster
     },
     { 
       type: 'typing', 
-      delay: 800
+      delay: 500 // Faster
     },
     { 
       type: 'confirmation', 
       text: 'Done! Eric\'s team confirmed. Updated your calendar and sent new invite.',
-      delay: 800
+      delay: 500 // Faster
     },
     { 
       type: 'details', 
@@ -46,7 +46,7 @@ const VoiceRescheduleDemo = () => {
         new: '6:00 PM - 7:00 PM',
         attendees: 'You, Eric Chen, Sarah Kim'
       },
-      delay: 600
+      delay: 400 // Faster
     }
   ];
 
@@ -55,7 +55,7 @@ const VoiceRescheduleDemo = () => {
     if (isRecording) {
       const interval = setInterval(() => {
         setAudioWaves(waves => waves.map(() => Math.random() * 4 + 1));
-      }, 150);
+      }, 120); // Faster waves
       return () => clearInterval(interval);
     }
   }, [isRecording]);
@@ -69,7 +69,7 @@ const VoiceRescheduleDemo = () => {
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.4 } // More sensitive for mobile
     );
 
     const currentElement = document.getElementById('voice-reschedule-demo');
@@ -85,7 +85,7 @@ const VoiceRescheduleDemo = () => {
 
     if (currentStep === 0) {
       setIsRecording(true);
-      setTimeout(() => setIsRecording(false), 1200);
+      setTimeout(() => setIsRecording(false), 1000); // Faster recording
     }
 
     const timer = setTimeout(() => {
@@ -94,32 +94,32 @@ const VoiceRescheduleDemo = () => {
       } else {
         setIsComplete(true);
       }
-    }, steps[currentStep]?.delay || 500);
+    }, steps[currentStep]?.delay || 400);
 
     return () => clearTimeout(timer);
   }, [currentStep, hasStarted, isComplete]);
 
   return (
-    <div id="voice-reschedule-demo" className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
-      <div className="max-w-sm mx-auto">
+    <div id="voice-reschedule-demo" className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4 py-12 sm:py-16">
+      <div className="max-w-xs sm:max-w-sm mx-auto w-full">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="relative mb-4">
-            <Mic className={`text-red-400 mx-auto transition-all duration-300 ${isRecording ? 'scale-110' : ''}`} size={32} />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="relative mb-3 sm:mb-4">
+            <Mic className={`text-red-400 mx-auto transition-all duration-300 ${isRecording ? 'scale-110' : ''}`} size={28} />
             {isRecording && (
               <div className="absolute inset-0 rounded-full bg-red-400/20 animate-ping"></div>
             )}
           </div>
-          <h2 className="text-2xl font-light text-white mb-2 transform-none">Just speak. It's done.</h2>
+          <h2 className="text-xl sm:text-2xl font-light text-white mb-2 px-2">Just speak. It's done.</h2>
         </div>
 
-        {/* Phone mockup */}
-        <div className="bg-black/80 backdrop-blur-sm rounded-3xl border border-red-400/20 overflow-hidden shadow-2xl relative">
+        {/* Phone mockup - Fixed size */}
+        <div className="bg-black/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-red-400/20 overflow-hidden shadow-2xl relative w-full max-w-[320px] mx-auto">
           <PhoneStatusBar isRecording={isRecording} />
           <ChatHeader isRecording={isRecording} />
 
-          {/* Messages */}
-          <div className="p-4 space-y-4 bg-gradient-to-b from-gray-900 to-black min-h-[450px] relative">
+          {/* Messages - Fixed height container */}
+          <div className="p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gradient-to-b from-gray-900 to-black h-[400px] sm:h-[450px] relative overflow-hidden">
             <VoiceMessage 
               text={steps[0].text}
               isRecording={isRecording}
@@ -150,9 +150,9 @@ const VoiceRescheduleDemo = () => {
 
             {/* Floating indicators */}
             {currentStep >= 2 && (
-              <div className="absolute bottom-4 right-4 space-y-2">
-                <div className="bg-blue-500/20 border border-blue-400/40 rounded-full p-2">
-                  <Phone size={12} className="text-blue-400" />
+              <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 space-y-2">
+                <div className="bg-blue-500/20 border border-blue-400/40 rounded-full p-1.5 sm:p-2">
+                  <Phone size={10} className="text-blue-400 sm:w-3 sm:h-3" />
                 </div>
               </div>
             )}
@@ -160,8 +160,8 @@ const VoiceRescheduleDemo = () => {
         </div>
 
         {/* Bottom insight */}
-        <div className="text-center mt-6">
-          <span className="text-gray-400 text-sm font-light">
+        <div className="text-center mt-4 sm:mt-6 px-4">
+          <span className="text-gray-400 text-xs sm:text-sm font-light">
             Voice → Understanding → Action in seconds
           </span>
         </div>

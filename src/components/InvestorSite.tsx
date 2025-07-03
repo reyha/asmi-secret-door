@@ -13,12 +13,15 @@ import MessagingToOSSection from './sections/MessagingToOSSection';
 import VoiceToOSSection from './sections/VoiceToOSSection';
 import BuiltForEveryoneSection from './sections/BuiltForEveryoneSection';
 import FinalCTASectionNew from './sections/FinalCTASectionNew';
+import PersonalizedWelcome from './sections/PersonalizedWelcome';
 
 const InvestorSite = () => {
   const [currentSection, setCurrentSection] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const sections = [
+    { component: PersonalizedWelcome, title: 'Welcome' },
     { component: InteractiveHeroSection, title: 'Hero' },
     { component: MorningBriefDemo, title: 'Morning Brief' },
     { component: MeetingContextDemo, title: 'Meeting Context' },
@@ -33,6 +36,14 @@ const InvestorSite = () => {
     { component: BuiltForEveryoneSection, title: 'Built for Everyone' },
     { component: FinalCTASectionNew, title: 'CTA' },
   ];
+
+  useEffect(() => {
+    // Smooth entrance animation
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -56,37 +67,29 @@ const InvestorSite = () => {
     return () => observer.disconnect();
   }, []);
 
-  const scrollToSection = (index: number) => {
-    sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <div className="bg-black text-white overflow-x-hidden font-inter" style={{ scrollSnapType: 'y mandatory' }}>
-      {/* Progress indicator */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50">
+    <div className={`bg-black text-white overflow-x-hidden font-inter transition-all duration-1000 ${
+      isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+    }`} style={{ scrollSnapType: 'y mandatory' }}>
+      {/* Smooth entrance overlay */}
+      <div className={`fixed inset-0 bg-gradient-to-br from-green-900/20 via-black to-purple-900/20 z-50 transition-all duration-1000 pointer-events-none ${
+        isLoaded ? 'opacity-0' : 'opacity-100'
+      }`}>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 border-2 border-green-400 rounded-full animate-spin mb-4 mx-auto"></div>
+            <p className="text-green-400 text-lg font-light">Entering the future...</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Progress indicator - kept but made more subtle */}
+      <div className="fixed top-0 left-0 w-full h-0.5 bg-gray-900 z-40">
         <div 
           className="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500"
           style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
         />
       </div>
-
-      {/* Navigation dots */}
-      <nav className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="bg-black/80 backdrop-blur-sm rounded-full p-3 border border-green-500/20 flex space-x-2">
-          {sections.map((section, index) => (
-            <button
-              key={index}
-              onClick={() => scrollToSection(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                currentSection === index
-                  ? 'bg-green-400 scale-125'
-                  : 'bg-gray-600 hover:bg-green-500/50'
-              }`}
-              aria-label={section.title}
-            />
-          ))}
-        </div>
-      </nav>
 
       {/* Sections */}
       {sections.map((Section, index) => (
