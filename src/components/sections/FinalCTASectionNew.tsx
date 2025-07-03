@@ -51,7 +51,7 @@ const FinalCTASectionNew = () => {
 Why me: ${formData.why}
 
 Investment Amount: $${formData.amount.toLocaleString()}
-Valuation: ${formData.valuation}
+Valuation Offer: ${formData.valuation}
 Partner: ${formData.partner}
 USP: ${formData.usp}
 
@@ -94,21 +94,9 @@ UTM: investor-site-interactive-form
           </p>
         </div>
 
-        {/* Step Indicator */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-secondary">Step {formStep + 1} of 4</span>
-            <span className="text-xs text-secondary">{Math.round(((formStep + 1) / 4) * 100)}%</span>
-          </div>
-          <div className="w-full h-2 bg-gray-700 rounded-full">
-            <div 
-              className="h-2 rounded-full transition-all duration-500"
-              style={{ 
-                width: `${((formStep + 1) / 4) * 100}%`,
-                backgroundColor: 'var(--accent-positive)'
-              }}
-            />
-          </div>
+        {/* Step Indicator - Simple text */}
+        <div className="mb-6 text-center">
+          <span className="text-sm text-gray-400">Step {formStep + 1} of 4</span>
         </div>
 
         <form onSubmit={handleInteractiveFormSubmit} className="space-y-4">
@@ -183,10 +171,10 @@ UTM: investor-site-interactive-form
             </div>
           )}
 
-          {/* Step 2: Valuation */}
+          {/* Step 2: Valuation Offer */}
           {formStep === 2 && (
             <div className="animate-fade-in space-y-4">
-              <label className="block text-lg font-bold text-high">Your Valuation</label>
+              <label className="block text-lg font-bold text-high">Valuation Offer</label>
               <input
                 type="text"
                 value={formData.valuation}

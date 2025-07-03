@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { TrendingUp, Building, Users, ArrowRight } from 'lucide-react';
+import { TrendingUp, Building, Users, ArrowRight, ArrowLeft } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
 const InteractiveFOMOSection = () => {
@@ -60,9 +60,25 @@ const InteractiveFOMOSection = () => {
     setCurrentCard(index);
   };
 
+  const handleBackClick = () => {
+    // This will be handled by parent component
+    window.history.back();
+  };
+
   return (
     <MobileOptimizedSection maxWidth="sm">
       <div className="space-y-8 text-center">
+        {/* Back Button */}
+        <div className="flex justify-start">
+          <button
+            onClick={handleBackClick}
+            className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft size={16} />
+            <span className="text-sm">Back to Personal OS</span>
+          </button>
+        </div>
+
         {/* Header */}
         <div className="space-y-3">
           <h2 className="text-2xl font-bold text-red-400 leading-tight">
@@ -86,7 +102,7 @@ const InteractiveFOMOSection = () => {
                   className="w-full flex-shrink-0 p-6"
                   onClick={() => handleCardTap(index)}
                 >
-                  <div className={`bg-gradient-to-br ${opportunity.color} border border-white/10 rounded-2xl p-6 backdrop-blur-sm`}>
+                  <div className={`bg-gradient-to-br ${opportunity.color} border border-white/10 rounded-2xl p-6 backdrop-blur-sm cursor-pointer hover:scale-105 transition-transform`}>
                     <div className="space-y-4">
                       {/* Icon */}
                       <div className="flex justify-center">
@@ -104,13 +120,13 @@ const InteractiveFOMOSection = () => {
                       {/* Values */}
                       <div className="space-y-2">
                         <div className="text-center">
-                          <p className="text-gray-400 text-sm">Then: {opportunity.initialValue}</p>
+                          <p className="text-gray-400 text-sm">{opportunity.initialValue}</p>
                           <div className="flex items-center justify-center space-x-2 my-2">
                             <div className="h-px bg-gray-500 flex-1"></div>
                             <ArrowRight size={16} className="text-gray-500" />
                             <div className="h-px bg-gray-500 flex-1"></div>
                           </div>
-                          <p className="text-white font-semibold">Now: {opportunity.currentValue}</p>
+                          <p className="text-white font-semibold text-lg">{opportunity.currentValue}</p>
                         </div>
                         
                         <div className="bg-black/30 rounded-xl p-3">
@@ -147,7 +163,7 @@ const InteractiveFOMOSection = () => {
           </div>
         </div>
 
-        {/* FOMO Message */}
+        {/* FOMO Message - Always visible */}
         <div className="bg-gradient-to-r from-red-900/20 to-orange-900/20 border border-red-400/30 rounded-2xl p-4">
           <p className="text-lg font-bold text-red-400 mb-2 animate-pulse">
             Don't repeat history.

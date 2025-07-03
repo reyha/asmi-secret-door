@@ -13,7 +13,6 @@ import TractionSectionNew from './sections/TractionSectionNew';
 import MessagingToOSSection from './sections/MessagingToOSSection';
 import VoiceToOSSection from './sections/VoiceToOSSection';
 import BuiltForEveryoneSection from './sections/BuiltForEveryoneSection';
-import InteractiveFOMOSection from './sections/InteractiveFOMOSection';
 import FinalCTASectionNew from './sections/FinalCTASectionNew';
 
 const InvestorSite = () => {
@@ -33,7 +32,6 @@ const InvestorSite = () => {
     { component: MessagingToOSSection, title: 'Messaging to OS' },
     { component: VoiceToOSSection, title: 'Voice to OS' },
     { component: BuiltForEveryoneSection, title: 'Built for Everyone' },
-    { component: InteractiveFOMOSection, title: 'What You\'ll Miss' },
     { component: FinalCTASectionNew, title: 'CTA' },
   ];
 

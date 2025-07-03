@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, ArrowUp } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import NeuralBloomBackground from '../NeuralBloomBackground';
 
 const InteractiveHeroSection = () => {
@@ -9,7 +9,7 @@ const InteractiveHeroSection = () => {
   const [currentInsight, setCurrentInsight] = useState(0);
   const [typedText, setTypedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [showCTA, setShowCTA] = useState(false);
+  const [showCardHint, setShowCardHint] = useState(false);
 
   // Personalized data
   const personalizedData = {
@@ -67,9 +67,9 @@ const InteractiveHeroSection = () => {
           if (currentInsight < personalizedData.insights.length - 1) {
             setCurrentInsight(prev => prev + 1);
           } else {
-            // All insights done, show CTA
-            console.log('All insights completed, showing CTA');
-            setTimeout(() => setShowCTA(true), 1000);
+            // All insights done, show card hint
+            console.log('All insights completed, showing card hint');
+            setTimeout(() => setShowCardHint(true), 1000);
           }
         }, 1500);
       }
@@ -83,7 +83,9 @@ const InteractiveHeroSection = () => {
       {/* Neural Bloom Background */}
       <NeuralBloomBackground />
 
-      <div className="relative z-10 min-h-screen flex flex-col px-4 py-8">
+      <div className={`relative z-10 min-h-screen flex flex-col px-4 py-8 transition-all duration-1000 ${
+        showCardHint ? 'transform -translate-x-4' : ''
+      }`}>
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-space font-light mb-3 tracking-tight leading-tight text-white">
@@ -122,7 +124,7 @@ const InteractiveHeroSection = () => {
               </div>
             )}
 
-            {/* Insights Reveal - Simplified without background box */}
+            {/* Insights Reveal */}
             {showInsights && (
               <div className="mb-8">
                 <div className="min-h-[3rem] flex items-center justify-center">
@@ -150,20 +152,18 @@ const InteractiveHeroSection = () => {
               </div>
             )}
 
-            {/* Final CTA */}
-            {showCTA && (
+            {/* Card Movement Hint */}
+            {showCardHint && (
               <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
-                <p className="text-xl text-white font-space font-light mb-8">
-                  We know you. Now, <span className="font-medium">time to know us!</span>
-                </p>
-                
-                <div className="flex flex-col items-center">
-                  <div className="flex items-center space-x-2 text-green-400 animate-pulse">
-                    <ArrowUp size={20} className="transform rotate-180" />
-                    <span className="text-base font-inter">
-                      Swipe up to know more about Asmi
-                    </span>
+                <div className="flex items-center justify-center space-x-2 text-green-400">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-green-400/50 rounded-full"></div>
+                    <div className="w-2 h-2 bg-green-400/30 rounded-full"></div>
                   </div>
+                  <span className="text-base font-inter">
+                    Swipe to explore Asmi
+                  </span>
                 </div>
               </div>
             )}
@@ -171,7 +171,7 @@ const InteractiveHeroSection = () => {
         </div>
 
         {/* Scroll indicator */}
-        {showCTA && (
+        {showCardHint && (
           <div className="text-center">
             <ChevronDown className="text-green-400 mx-auto animate-bounce" size={20} />
           </div>

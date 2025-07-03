@@ -35,30 +35,30 @@ const VoiceToOSSection = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const index = stepRefs.current.findIndex(ref => ref === entry.target);
-            if (index !== -1 && !visibleSteps.includes(index)) {
-              setVisibleSteps(prev => {
-                const newVisible = [...prev, index].sort((a, b) => a - b);
-                if (newVisible.length === steps.length && !showHighlight) {
-                  setTimeout(() => {
-                    setShowHighlight(true);
-                  }, 800);
-                }
-                return newVisible;
-              });
-            }
+            // Start revealing steps one by one
+            const revealSteps = async () => {
+              for (let i = 0; i < steps.length; i++) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                setVisibleSteps(prev => [...prev, i]);
+              }
+              // After all steps are visible, show highlight
+              setTimeout(() => {
+                setShowHighlight(true);
+              }, 1200);
+            };
+            revealSteps();
           }
         });
       },
       { threshold: 0.3, rootMargin: '-50px 0px' }
     );
 
-    stepRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
 
     return () => observer.disconnect();
-  }, [visibleSteps, showHighlight]);
+  }, []);
 
   useEffect(() => {
     if (showHighlight && !isTyping) {
@@ -95,14 +95,14 @@ const VoiceToOSSection = () => {
                 className={`relative flex items-start space-x-3 sm:space-x-4 transition-all duration-700 transform ${
                   visibleSteps.includes(index) 
                     ? 'opacity-100 translate-x-0' 
-                    : 'opacity-30 translate-x-4'
+                    : 'opacity-0 translate-x-8'
                 }`}
               >
                 {/* Timeline line and dot */}
                 <div className="flex flex-col items-center flex-shrink-0">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black border-2 border-gray-600 flex items-center justify-center relative z-10 transition-all duration-500">
                     <div className={`transition-all duration-300 ${
-                      visibleSteps.includes(index) ? 'opacity-100' : 'opacity-50'
+                      visibleSteps.includes(index) ? 'opacity-100' : 'opacity-0'
                     }`}>
                       {step.icon}
                     </div>

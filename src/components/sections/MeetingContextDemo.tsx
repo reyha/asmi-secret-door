@@ -1,11 +1,12 @@
 
 import { useState, useEffect } from 'react';
-import { Clock, User } from 'lucide-react';
+import { Clock, User, ArrowRight } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
 const MeetingContextDemo = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [typedText, setTypedText] = useState('');
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   const steps = [
     {
@@ -16,6 +17,11 @@ const MeetingContextDemo = () => {
     {
       title: "Context delivered instantly",
       content: "context",
+      message: ""
+    },
+    {
+      title: "Ready to dominate",
+      content: "ready",
       message: ""
     }
   ];
@@ -29,7 +35,10 @@ const MeetingContextDemo = () => {
     ]
   };
 
+  // Auto-advance logic similar to card 3
   useEffect(() => {
+    if (!isAutoPlaying) return;
+
     if (currentStep === 0) {
       const message = steps[0].message;
       let i = 0;
@@ -46,14 +55,26 @@ const MeetingContextDemo = () => {
       }, 50);
 
       return () => clearInterval(typeInterval);
+    } else if (currentStep === 1) {
+      const timer = setTimeout(() => setCurrentStep(2), 3000);
+      return () => clearTimeout(timer);
+    } else if (currentStep === 2) {
+      const timer = setTimeout(() => {
+        setCurrentStep(0);
+        setTypedText('');
+      }, 2000);
+      return () => clearTimeout(timer);
     }
-  }, [currentStep]);
+  }, [currentStep, isAutoPlaying]);
 
   const handleCardTap = () => {
-    if (currentStep === 0) {
-      setCurrentStep(1);
-    } else {
+    setIsAutoPlaying(false);
+    if (currentStep === 2) {
       setCurrentStep(0);
+      setTypedText('');
+      setIsAutoPlaying(true);
+    } else {
+      setCurrentStep(prev => (prev + 1) % steps.length);
     }
   };
 
@@ -72,7 +93,7 @@ const MeetingContextDemo = () => {
 
         {/* Phone Demo */}
         <div 
-          className="bg-gray-900 rounded-3xl p-4 mx-auto max-w-xs cursor-pointer transition-transform hover:scale-105"
+          className="bg-gray-900 rounded-3xl p-4 mx-auto max-w-xs cursor-pointer transition-all duration-300 hover:scale-105"
           onClick={handleCardTap}
         >
           {/* Status Bar */}
@@ -91,7 +112,7 @@ const MeetingContextDemo = () => {
 
           {currentStep === 0 ? (
             // Message Input Step
-            <div className="space-y-4">
+            <div className="space-y-4 animate-fade-in">
               <div className="bg-blue-600/20 border border-blue-500/30 rounded-xl p-3">
                 <div className="flex items-center space-x-3 mb-3">
                   <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -115,9 +136,9 @@ const MeetingContextDemo = () => {
                 <p className="text-gray-300 text-sm">{contextData.meeting}</p>
               </div>
             </div>
-          ) : (
+          ) : currentStep === 1 ? (
             // Context Step
-            <div className="space-y-3">
+            <div className="space-y-3 animate-fade-in">
               <div className="bg-gray-800 rounded-xl p-3">
                 <p className="text-white text-xs font-medium mb-2">{contextData.meeting}</p>
               </div>
@@ -143,6 +164,26 @@ const MeetingContextDemo = () => {
                 </div>
               </div>
             </div>
+          ) : (
+            // Ready Step
+            <div className="space-y-4 animate-fade-in text-center">
+              <div className="bg-green-600/20 border border-green-500/30 rounded-xl p-4">
+                <div className="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-black text-lg font-bold">✓</span>
+                </div>
+                <p className="text-green-300 text-sm font-medium mb-2">
+                  You're prepared!
+                </p>
+                <p className="text-gray-300 text-xs">
+                  All context loaded. Ready to win this meeting.
+                </p>
+              </div>
+              
+              <div className="flex items-center justify-center space-x-2 text-gray-400 text-xs">
+                <span>Tap to restart</span>
+                <ArrowRight size={12} />
+              </div>
+            </div>
           )}
         </div>
 
@@ -151,7 +192,10 @@ const MeetingContextDemo = () => {
           {steps.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentStep(index)}
+              onClick={() => {
+                setCurrentStep(index);
+                setIsAutoPlaying(false);
+              }}
               className={`w-2 h-2 rounded-full transition-all ${
                 index === currentStep ? 'bg-blue-400 w-6' : 'bg-gray-600'
               }`}

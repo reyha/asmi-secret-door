@@ -3,32 +3,43 @@ import { useState, useEffect } from 'react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
 const MemoryEngineSection = () => {
-  const [activeFeature, setActiveFeature] = useState(0);
+  const [activeConnection, setActiveConnection] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
-  const features = [
+  const connections = [
     {
-      title: "Real-time context awareness",
-      color: "bg-green-400",
-      description: "Every interaction mapped and accessible"
+      source: "Email",
+      target: "Meeting",
+      description: "Connect meeting prep to recent email threads",
+      color: "from-green-400 to-blue-400"
     },
     {
-      title: "Intelligent connection mapping", 
-      color: "bg-blue-400",
-      description: "Understanding relationships that matter"
+      source: "Calendar", 
+      target: "Person",
+      description: "Link past interactions with upcoming meetings",
+      color: "from-blue-400 to-purple-400"
     },
     {
-      title: "Predictive assistance",
-      color: "bg-purple-400", 
-      description: "Anticipating what you need, when you need it"
+      source: "Conversation",
+      target: "Context",
+      description: "Transform scattered chats into actionable insights",
+      color: "from-purple-400 to-green-400"
     }
+  ];
+
+  const dataPoints = [
+    { type: "Email", position: { x: 20, y: 30 }, color: "bg-green-400" },
+    { type: "Meeting", position: { x: 80, y: 20 }, color: "bg-blue-400" },
+    { type: "Calendar", position: { x: 70, y: 70 }, color: "bg-purple-400" },
+    { type: "Chat", position: { x: 30, y: 80 }, color: "bg-yellow-400" },
+    { type: "Context", position: { x: 50, y: 50 }, color: "bg-red-400" }
   ];
 
   useEffect(() => {
     setIsVisible(true);
     const interval = setInterval(() => {
-      setActiveFeature(prev => (prev + 1) % features.length);
-    }, 2500);
+      setActiveConnection(prev => (prev + 1) % connections.length);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
@@ -42,76 +53,86 @@ const MemoryEngineSection = () => {
           </h2>
           
           <p className="text-base text-gray-300 leading-relaxed px-2">
-            Your memory, working for you. Every conversation, meeting, and thought—connected and accessible when you need it most.
+            Every conversation, meeting, and thought—connected and accessible when you need it most.
           </p>
         </div>
 
-        {/* Feature List */}
-        <div className="space-y-4">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className={`flex items-center space-x-3 p-3 rounded-xl transition-all duration-500 ${
-                index === activeFeature ? 'bg-white/10' : 'bg-transparent'
-              }`}
-            >
-              <div className={`w-3 h-3 rounded-full ${feature.color} flex-shrink-0 ${
-                index === activeFeature ? 'animate-pulse' : ''
-              }`}></div>
-              <div className="text-left">
-                <p className="text-white font-medium text-sm">{feature.title}</p>
-                {index === activeFeature && (
-                  <p className="text-gray-400 text-xs mt-1 animate-fade-in">
-                    {feature.description}
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Network Visualization */}
+        {/* Scientific Data Connection Visualization */}
         <div className="relative bg-black/40 rounded-2xl p-6 border border-white/10">
-          <div className="relative h-32 flex items-center justify-center">
-            {/* Connecting lines */}
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 100">
+          <h3 className="text-sm font-semibold text-white mb-4">
+            Neural Context Engine
+          </h3>
+          
+          {/* Data Points Network */}
+          <div className="relative h-40">
+            {/* Connection Lines */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
               <defs>
-                <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
-                  <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.5" />
-                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0.3" />
-                </linearGradient>
+                {connections.map((conn, index) => (
+                  <linearGradient key={index} id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#22c55e" stopOpacity={index === activeConnection ? "0.8" : "0.3"} />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={index === activeConnection ? "0.8" : "0.3"} />
+                  </linearGradient>
+                ))}
               </defs>
+              
+              {/* Dynamic connections */}
               <path 
-                d="M60,50 Q100,20 140,50 M60,50 Q100,80 140,50 M100,30 Q120,50 100,70" 
-                stroke="url(#connectionGradient)" 
-                strokeWidth="1" 
+                d="M20,30 Q50,10 80,20 M80,20 Q90,45 70,70 M70,70 Q35,85 30,80 M30,80 Q10,55 20,30 M50,50 Q65,35 80,20 M50,50 Q35,65 30,80"
+                stroke={`url(#gradient-${activeConnection})`}
+                strokeWidth="1"
                 fill="none"
-                className="animate-pulse"
+                className="transition-all duration-1000"
               />
             </svg>
 
-            {/* Network nodes */}
-            <div className="absolute left-6 top-1/2 transform -translate-y-1/2">
-              <div className="w-8 h-8 bg-green-400 rounded-full flex items-center justify-center">
-                <span className="text-black text-xs font-bold">M</span>
+            {/* Data Points */}
+            {dataPoints.map((point, index) => (
+              <div
+                key={index}
+                className={`absolute w-3 h-3 ${point.color} rounded-full flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 ${
+                  index === activeConnection ? 'animate-pulse scale-125' : ''
+                }`}
+                style={{
+                  left: `${point.position.x}%`,
+                  top: `${point.position.y}%`
+                }}
+              >
+                <div className={`absolute inset-0 rounded-full ${point.color} opacity-30 animate-ping ${
+                  index === activeConnection ? '' : 'hidden'
+                }`}></div>
               </div>
-              <p className="text-xs text-gray-400 mt-1">Meetings</p>
-            </div>
+            ))}
 
-            <div className="absolute right-6 top-6">
-              <div className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center">
-                <span className="text-black text-xs font-bold">P</span>
+            {/* Center Processing Node */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center animate-pulse">
+                <span className="text-black text-xs font-bold">AI</span>
               </div>
-              <p className="text-xs text-gray-400 mt-1">People</p>
             </div>
+          </div>
 
-            <div className="absolute right-6 bottom-6">
-              <div className="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center">
-                <span className="text-black text-xs font-bold">I</span>
-              </div>
-              <p className="text-xs text-gray-400 mt-1">Ideas</p>
-            </div>
+          {/* Active Connection Description */}
+          <div className="mt-4 p-3 bg-white/5 rounded-xl border border-white/10">
+            <p className="text-xs text-gray-300">
+              {connections[activeConnection].description}
+            </p>
+          </div>
+        </div>
+
+        {/* Connection Process Steps */}
+        <div className="grid grid-cols-3 gap-2 text-xs">
+          <div className="p-3 bg-white/5 rounded-xl">
+            <div className="w-2 h-2 bg-green-400 rounded-full mx-auto mb-2"></div>
+            <p className="text-gray-300">Capture</p>
+          </div>
+          <div className="p-3 bg-white/5 rounded-xl">
+            <div className="w-2 h-2 bg-blue-400 rounded-full mx-auto mb-2"></div>
+            <p className="text-gray-300">Connect</p>
+          </div>
+          <div className="p-3 bg-white/5 rounded-xl">
+            <div className="w-2 h-2 bg-purple-400 rounded-full mx-auto mb-2"></div>
+            <p className="text-gray-300">Context</p>
           </div>
         </div>
       </div>
