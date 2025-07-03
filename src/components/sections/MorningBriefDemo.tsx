@@ -14,10 +14,10 @@ const MorningBriefDemo = () => {
   const [isComplete, setIsComplete] = useState(false);
 
   const messages = [
-    { type: 'user', text: 'Good morning Asmi', delay: 300 },
-    { type: 'typing', delay: 400 },
-    { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 300 },
-    { type: 'typing', delay: 400 },
+    { type: 'user', text: 'Good morning Asmi', delay: 400 }, // Faster
+    { type: 'typing', delay: 500 }, // Faster
+    { type: 'asmi', text: 'Good morning! Here\'s your day:', delay: 500 }, // Faster
+    { type: 'typing', delay: 500 }, // Faster
     { 
       type: 'schedule', 
       items: [
@@ -25,13 +25,13 @@ const MorningBriefDemo = () => {
         { icon: User, text: '2 PM: 1:1 with Sarah', color: 'text-green-400' },
         { icon: Calendar, text: '4 PM: Investor call', color: 'text-purple-400' }
       ],
-      delay: 300
+      delay: 400 // Faster
     },
-    { type: 'typing', delay: 400 },
+    { type: 'typing', delay: 500 }, // Faster
     { 
       type: 'birthday', 
       text: 'Also, it\'s Ria\'s birthday today! 🎂',
-      delay: 300
+      delay: 500 // Faster
     }
   ];
 
@@ -44,7 +44,7 @@ const MorningBriefDemo = () => {
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.4 } // More sensitive for mobile
     );
 
     const currentElement = document.getElementById('morning-brief-demo');
@@ -67,29 +67,32 @@ const MorningBriefDemo = () => {
           setTimeout(() => {
             setIsTyping(false);
             setCurrentMessage(prev => prev + 1);
-          }, 500);
+          }, 700); // Faster typing
         } else {
           setCurrentMessage(prev => prev + 1);
         }
       } else {
         setIsComplete(true);
       }
-    }, messages[currentMessage]?.delay || 250);
+    }, messages[currentMessage]?.delay || 300);
 
     return () => clearTimeout(timer);
   }, [currentMessage, hasStarted, isComplete]);
 
   return (
-    <div id="morning-brief-demo" className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4 py-8 sm:py-12">
+    <div id="morning-brief-demo" className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4 py-12 sm:py-16">
       <div className="max-w-xs sm:max-w-sm mx-auto w-full">
+        {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
           <div className="text-yellow-400 mx-auto mb-3 sm:mb-4 text-3xl sm:text-4xl">☀️</div>
           <h2 className="text-xl sm:text-2xl font-light text-white mb-2 px-2">Start your day smart.</h2>
         </div>
 
+        {/* Phone mockup - Fixed size */}
         <div className="bg-black/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-green-400/30 overflow-hidden shadow-2xl relative w-full max-w-[320px] mx-auto">
           <PhoneHeader isTyping={isTyping} />
 
+          {/* Messages - Fixed height container */}
           <div className="p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gradient-to-b from-gray-900 to-black h-[400px] sm:h-[450px] relative overflow-hidden">
             <ChatMessage 
               type="user" 
@@ -119,6 +122,7 @@ const MorningBriefDemo = () => {
               isVisible={currentMessage >= 7} 
             />
 
+            {/* Floating action indicators */}
             {currentMessage >= 3 && (
               <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 space-y-2">
                 <div className="bg-green-500/20 border border-green-400/40 rounded-full p-1.5 sm:p-2">
@@ -129,6 +133,7 @@ const MorningBriefDemo = () => {
           </div>
         </div>
 
+        {/* Bottom text */}
         <div className="text-center mt-4 sm:mt-6 px-4">
           <span className="text-gray-400 text-xs sm:text-sm font-light">
             Asmi remembered Ria's birthday from last month's conversation

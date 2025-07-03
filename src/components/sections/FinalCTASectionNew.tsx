@@ -1,10 +1,8 @@
 
 import { useState } from 'react';
-import { TrendingDown, Clock, Target } from 'lucide-react';
 
 const FinalCTASectionNew = () => {
   const [showForm, setShowForm] = useState(false);
-  const [showFOMO, setShowFOMO] = useState(false);
   const [revealedCards, setRevealedCards] = useState<number[]>([]);
   const [formData, setFormData] = useState({
     why: '',
@@ -18,24 +16,6 @@ const FinalCTASectionNew = () => {
     "$5-6M seed → Series A in 18 mo",
     "Founders: $300M GMV & Meta AI systems", 
     "Limited seats. Claim yours."
-  ];
-
-  const fomoScenarios = [
-    {
-      icon: <TrendingDown className="text-red-400" size={24} />,
-      title: "Miss 1000x Returns",
-      content: "OpenAI investors saw 1000x+ returns. Asmi targets similar trajectory with personal OS market (estimated $2T by 2030). Early seed investors typically see 500-1000x on category-defining AI companies."
-    },
-    {
-      icon: <Clock className="text-orange-400" size={24} />,
-      title: "5-7 Year Opportunity Window",
-      content: "Personal AI assistants market growing 40% YoY. By 2030, Asmi could be the dominant OS for personal productivity. Current seed round is your only entry point before Series A at 10x valuation."
-    },
-    {
-      icon: <Target className="text-yellow-400" size={24} />,
-      title: "What If You Missed These?",
-      content: "Imagine passing on Google's early rounds (1999), Facebook's Series A (2005), or OpenAI's seed (2015). Asmi represents the same category-defining moment for personal AI - the OS layer that everything else builds on."
-    }
   ];
 
   const handleCardReveal = (index: number) => {
@@ -149,87 +129,6 @@ UTM: investor-site-form
     );
   }
 
-  if (showFOMO) {
-    return (
-      <div className="min-h-screen bg-black py-20 flex items-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-space font-bold text-red-400 mb-6">
-              What You'll Miss
-            </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              The cost of saying no to the next generation-defining AI company
-            </p>
-          </div>
-
-          <div className="space-y-8 mb-12">
-            {fomoScenarios.map((scenario, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-3xl p-8 animate-fade-in"
-                style={{ animationDelay: `${index * 200}ms` }}
-              >
-                <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-black rounded-xl border border-red-500/30">
-                    {scenario.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-space font-bold text-white mb-4">
-                      {scenario.title}
-                    </h3>
-                    <p className="text-gray-300 font-inter leading-relaxed">
-                      {scenario.content}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Portfolio comparison */}
-          <div className="bg-gradient-to-r from-yellow-500/10 to-red-500/10 border border-yellow-500/20 rounded-3xl p-8 mb-8">
-            <h3 className="text-2xl font-space font-bold text-yellow-400 mb-4 text-center">
-              Your Portfolio's Biggest Misses
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="text-4xl font-bold text-red-400 mb-2">Google</div>
-                <div className="text-gray-300">1999 → 2004</div>
-                <div className="text-yellow-400">2,318x Return</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-red-400 mb-2">Facebook</div>
-                <div className="text-gray-300">2005 → 2012</div>
-                <div className="text-yellow-400">1,000x Return</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-red-400 mb-2">OpenAI</div>
-                <div className="text-gray-300">2015 → 2023</div>
-                <div className="text-yellow-400">1,000x+ Return</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center space-y-4">
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-green-400 text-black px-12 py-4 rounded-full text-xl font-medium hover:bg-green-500 transition-all duration-300 hover:scale-105 font-inter mr-4"
-            >
-              Don't Miss Asmi
-            </button>
-            
-            <button
-              onClick={() => setShowFOMO(false)}
-              className="border border-white/30 px-8 py-4 rounded-full text-lg font-medium hover:bg-white/10 transition-all duration-300 font-inter"
-            >
-              Back to Main
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-black py-20 flex items-center">
       <div className="max-w-4xl mx-auto px-6 text-center">
@@ -255,23 +154,14 @@ UTM: investor-site-form
           ))}
         </div>
 
-        {/* CTA Buttons */}
-        <div className="space-y-4">
-          <button
-            onClick={() => setShowForm(true)}
-            className="bg-green-400 text-black px-12 py-4 rounded-full text-xl font-medium hover:bg-green-500 transition-all duration-300 hover:scale-105 font-inter relative overflow-hidden mr-4"
-          >
-            <span className="relative z-10">Lead our $5M seed</span>
-            <div className="absolute inset-0 bg-green-300 opacity-50 animate-pulse"></div>
-          </button>
-
-          <button
-            onClick={() => setShowFOMO(true)}
-            className="bg-red-500 text-white px-12 py-4 rounded-full text-xl font-medium hover:bg-red-600 transition-all duration-300 hover:scale-105 font-inter"
-          >
-            Miss our seed
-          </button>
-        </div>
+        {/* CTA Button with pulse - directly opens form */}
+        <button
+          onClick={() => setShowForm(true)}
+          className="bg-green-400 text-black px-12 py-4 rounded-full text-xl font-medium hover:bg-green-500 transition-all duration-300 hover:scale-105 font-inter relative overflow-hidden"
+        >
+          <span className="relative z-10">Lead our $5M seed</span>
+          <div className="absolute inset-0 bg-green-300 opacity-50 animate-pulse"></div>
+        </button>
       </div>
     </div>
   );

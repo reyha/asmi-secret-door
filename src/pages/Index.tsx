@@ -2,14 +2,12 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import InvestorSite from '../components/InvestorSite';
-import VaultTransition from '../components/VaultTransition';
 import NeuralBloomBackground from '../components/NeuralBloomBackground';
 
 const Index = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showTransition, setShowTransition] = useState(false);
   const [error, setError] = useState('');
   const [isShaking, setIsShaking] = useState(false);
 
@@ -17,7 +15,7 @@ const Index = () => {
     e.preventDefault();
     
     if (password === 'asmi2025' || password === 'investor') {
-      setShowTransition(true);
+      setIsAuthenticated(true);
       setError('');
     } else {
       setError('Not quite. Try again or contact us.');
@@ -28,17 +26,8 @@ const Index = () => {
     }
   };
 
-  const handleTransitionComplete = () => {
-    setShowTransition(false);
-    setIsAuthenticated(true);
-  };
-
   if (isAuthenticated) {
     return <InvestorSite />;
-  }
-
-  if (showTransition) {
-    return <VaultTransition onComplete={handleTransitionComplete} />;
   }
 
   return (
