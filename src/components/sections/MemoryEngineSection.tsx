@@ -5,7 +5,7 @@ import MobileOptimizedSection from './MobileOptimizedSection';
 const MemoryEngineSection = () => {
   const [activeConnection, setActiveConnection] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const [pulseCenter, setPulseCenter] = useState(false);
+  const [centerScale, setCenterScale] = useState(1);
 
   const connections = [
     {
@@ -43,12 +43,11 @@ const MemoryEngineSection = () => {
     const interval = setInterval(() => {
       setActiveConnection(prev => {
         const newIndex = (prev + 1) % connections.length;
-        // Trigger center pulse when connection changes
-        setPulseCenter(true);
-        setTimeout(() => setPulseCenter(false), 800);
+        // Gradually increase center scale as data accumulates
+        setCenterScale(prevScale => Math.min(prevScale + 0.15, 1.5));
         return newIndex;
       });
-    }, 2000); // Changed to 2 seconds for faster transitions
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -162,24 +161,29 @@ const MemoryEngineSection = () => {
               </div>
             ))}
 
-            {/* Center Asmi Node */}
+            {/* Center Asmi Node - Slowly Growing */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className={`w-12 h-12 bg-white rounded-full flex items-center justify-center transition-all duration-800 shadow-xl ${
-                pulseCenter 
-                  ? 'scale-125 shadow-2xl shadow-green-400/50' 
-                  : 'scale-100'
-              }`}>
-                <span className="text-black text-sm font-bold">Asmi</span>
-                {pulseCenter && (
-                  <div className="absolute inset-0 rounded-full bg-white opacity-30 animate-ping scale-150"></div>
-                )}
+              <div 
+                className="bg-white rounded-full flex items-center justify-center shadow-xl transition-all duration-[3000ms] ease-out"
+                style={{
+                  width: `${48 * centerScale}px`,
+                  height: `${48 * centerScale}px`,
+                  boxShadow: `0 0 ${20 * centerScale}px rgba(34, 197, 94, 0.3)`
+                }}
+              >
+                <span 
+                  className="text-black font-bold transition-all duration-[3000ms] ease-out"
+                  style={{ fontSize: `${14 * Math.min(centerScale, 1.2)}px` }}
+                >
+                  Asmi
+                </span>
               </div>
             </div>
           </div>
 
           {/* Active Connection Description - More Prominent */}
           <div className="p-4 bg-white/10 rounded-xl border border-white/20 backdrop-blur-sm">
-            <p className="text-sm text-white font-medium leading-relaxed">
+            <p className="text-lg text-white font-medium leading-relaxed">
               {connections[activeConnection].description}
             </p>
           </div>
