@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -17,16 +16,28 @@ const TractionSectionNew = () => {
   ];
 
   const testimonials = [
-    "This is exactly what I've been looking for. Asmi actually gets things done without me having to think about it.",
-    "Finally, an AI that remembers everything and helps me stay on top of my game.",
-    "The calendar integration is pure magic. It knows who I'm meeting before I even think about it."
+    {
+      text: "Asmi remembers everything from my calls and emails. It's like having a perfect memory assistant that actually gets things done.",
+      author: "Karan",
+      title: "Cartesia"
+    },
+    {
+      text: "Finally, an AI that understands context across all my conversations. Game-changing for staying on top of portfolio companies.",
+      author: "Nitin", 
+      title: "Antler VC"
+    },
+    {
+      text: "The calendar integration is pure magic. It knows who I'm meeting and why before I even think about it.",
+      author: "Pooja",
+      title: "Head of Growth, Smallest AI"
+    }
   ];
 
   const roadmapCards = [
-    { title: 'Calendar Sync', status: 'Live', color: 'bg-green-400' },
-    { title: 'iMessage', status: 'Beta', color: 'bg-blue-400' },
-    { title: 'Summaries', status: 'Coming', color: 'bg-purple-400' },
-    { title: 'Beta Scale', status: 'Q2', color: 'bg-orange-400' }
+    { title: 'Calendar & Contacts', status: 'Live', color: 'bg-green-400' },
+    { title: 'Mail Sync', status: 'Live', color: 'bg-green-400' },
+    { title: 'iMessage', status: "Q3'25", color: 'bg-blue-400' },
+    { title: '50K Users', status: "Q3'25", color: 'bg-purple-400' }
   ];
 
   useEffect(() => {
@@ -46,13 +57,13 @@ const TractionSectionNew = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-cycle stats and testimonials
+  // Auto-cycle stats and testimonials - faster ticker
   useEffect(() => {
     if (!isVisible) return;
     
     const statInterval = setInterval(() => {
       setCurrentStat(prev => (prev + 1) % stats.length);
-    }, 3000);
+    }, 2000); // Faster from 3000 to 2000
 
     const testimonialInterval = setInterval(() => {
       setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
@@ -68,7 +79,7 @@ const TractionSectionNew = () => {
   useEffect(() => {
     if (!isVisible) return;
     
-    const currentText = testimonials[currentTestimonial];
+    const currentText = testimonials[currentTestimonial].text;
     setTypedText('');
     let i = 0;
     
@@ -114,9 +125,11 @@ const TractionSectionNew = () => {
               <div className="flex-1 min-w-0">
                 <p className="text-base md:text-lg text-white font-inter mb-2 min-h-[3rem] md:min-h-[4rem] break-words">
                   "{typedText}"
-                  {typedText.length < testimonials[currentTestimonial].length && <span className="animate-pulse">|</span>}
+                  {typedText.length < testimonials[currentTestimonial].text.length && <span className="animate-pulse">|</span>}
                 </p>
-                <p className="text-gray-400 font-inter text-sm md:text-base">— Beta User</p>
+                <p className="text-gray-400 font-inter text-sm md:text-base">
+                  — {testimonials[currentTestimonial].author}, {testimonials[currentTestimonial].title}
+                </p>
               </div>
             </div>
           </div>
