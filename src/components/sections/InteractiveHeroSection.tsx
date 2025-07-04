@@ -10,6 +10,8 @@ const InteractiveHeroSection = () => {
   const [showWelcome, setShowWelcome] = useState(false);
   const [showRoasts, setShowRoasts] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [password, setPassword] = useState('');
 
   // Personalized roasts - fun & conversational
   const roasts = [
@@ -65,6 +67,14 @@ const InteractiveHeroSection = () => {
 
     return () => clearInterval(typingInterval);
   }, [showRoasts, currentRoast, roasts.length]);
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== 'correct123') {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+    }
+  };
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
@@ -149,6 +159,27 @@ const InteractiveHeroSection = () => {
                 </div>
               </div>
             )}
+
+            {/* Error Message (hidden by default, shown when password is wrong) */}
+            {showError && (
+              <div className="fixed bottom-4 left-4 right-4 bg-red-500/90 backdrop-blur-sm border border-red-400 rounded-xl p-4 animate-fade-in z-50">
+                <p className="text-white text-center font-medium">
+                  ❌ Incorrect password. Please reach out to Rishi for access.
+                </p>
+              </div>
+            )}
+
+            {/* Hidden password form for testing */}
+            <form onSubmit={handlePasswordSubmit} className="hidden">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="bg-gray-800 text-white p-2 rounded"
+              />
+              <button type="submit">Test</button>
+            </form>
           </div>
         </div>
       </div>

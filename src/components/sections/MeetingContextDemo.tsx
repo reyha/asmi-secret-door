@@ -6,40 +6,39 @@ import MobileOptimizedSection from './MobileOptimizedSection';
 const MeetingContextDemo = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [typedText, setTypedText] = useState('');
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false); // Changed to false
 
   const steps = [
     {
       title: "Win every meeting.",
       content: "prep",
-      message: "Prep me for my call with Raj"
+      message: "Help me prep for meeting with Ben"
     },
     {
-      title: "Context delivered instantly",
+      title: "Win every meeting.",
       content: "context",
       message: ""
     },
     {
-      title: "Ready to dominate",
+      title: "Win every meeting.",
       content: "ready",
       message: ""
     }
   ];
 
   const contextData = {
-    meeting: "Your 2 PM with Raj from Accel:",
+    meeting: "Meeting with Ben from a16z at 2pm tomorrow:",
     insights: [
-      { icon: "💡", text: "Last discussed: User retention metrics", time: "3 weeks ago" },
-      { icon: "📊", text: "He asked about monthly churn rates", time: "3 weeks ago" },
-      { icon: "🎯", text: "Follow up: API partnership timeline", time: "2 weeks ago" }
+      { icon: "📚", text: "Co-founded a16z, wrote 'The Hard Thing About Hard Things'", time: "Background" },
+      { icon: "🎯", text: "Focus areas: Enterprise software, AI/ML, fintech", time: "Investment thesis" },
+      { icon: "💡", text: "Values: Product-market fit, strong founding teams", time: "Key priorities" },
+      { icon: "🤝", text: "Meeting style: Direct, data-driven discussions", time: "Approach" }
     ]
   };
 
-  // Auto-advance logic similar to card 3
+  // Manual typing effect only for first step
   useEffect(() => {
-    if (!isAutoPlaying) return;
-
-    if (currentStep === 0) {
+    if (currentStep === 0 && !typedText) {
       const message = steps[0].message;
       let i = 0;
       setTypedText('');
@@ -50,31 +49,22 @@ const MeetingContextDemo = () => {
           i++;
         } else {
           clearInterval(typeInterval);
-          setTimeout(() => setCurrentStep(1), 1000);
         }
       }, 50);
 
       return () => clearInterval(typeInterval);
-    } else if (currentStep === 1) {
-      const timer = setTimeout(() => setCurrentStep(2), 3000);
-      return () => clearTimeout(timer);
-    } else if (currentStep === 2) {
-      const timer = setTimeout(() => {
-        setCurrentStep(0);
-        setTypedText('');
-      }, 2000);
-      return () => clearTimeout(timer);
     }
-  }, [currentStep, isAutoPlaying]);
+  }, [currentStep]);
 
   const handleCardTap = () => {
-    setIsAutoPlaying(false);
     if (currentStep === 2) {
       setCurrentStep(0);
       setTypedText('');
-      setIsAutoPlaying(true);
     } else {
-      setCurrentStep(prev => (prev + 1) % steps.length);
+      setCurrentStep(prev => prev + 1);
+      if (currentStep === 0) {
+        setTypedText('');
+      }
     }
   };
 
@@ -101,7 +91,7 @@ const MeetingContextDemo = () => {
             <span>1:45</span>
             <div className="text-blue-400 text-xs">
               <Clock size={12} className="inline mr-1" />
-              15 min until call
+              25 hours until meeting
             </div>
             <div className="flex space-x-1">
               <div className="w-1 h-1 bg-white rounded-full"></div>
@@ -132,9 +122,14 @@ const MeetingContextDemo = () => {
                 </p>
               </div>
 
-              <div className="bg-gray-800 rounded-xl p-3">
-                <p className="text-gray-300 text-sm">{contextData.meeting}</p>
-              </div>
+              {typedText.length === steps[0].message.length && (
+                <div className="bg-gray-800 rounded-xl p-3 animate-fade-in">
+                  <p className="text-gray-300 text-sm">{contextData.meeting}</p>
+                  <div className="mt-2 text-center">
+                    <button className="text-blue-400 text-xs underline">Tap to continue →</button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : currentStep === 1 ? (
             // Context Step
@@ -160,7 +155,7 @@ const MeetingContextDemo = () => {
               <div className="bg-green-600/20 border border-green-500/30 rounded-xl p-2">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <p className="text-green-300 text-xs font-medium">Smart Brief Ready</p>
+                  <p className="text-green-300 text-xs font-medium">Context Brief Ready</p>
                 </div>
               </div>
             </div>
@@ -172,10 +167,10 @@ const MeetingContextDemo = () => {
                   <span className="text-black text-lg font-bold">✓</span>
                 </div>
                 <p className="text-green-300 text-sm font-medium mb-2">
-                  You're prepared!
+                  You're prepared for Ben!
                 </p>
                 <p className="text-gray-300 text-xs">
-                  All context loaded. Ready to win this meeting.
+                  All context loaded. Ready to impress a16z.
                 </p>
               </div>
               
@@ -192,9 +187,10 @@ const MeetingContextDemo = () => {
           {steps.map((_, index) => (
             <button
               key={index}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setCurrentStep(index);
-                setIsAutoPlaying(false);
+                if (index === 0) setTypedText('');
               }}
               className={`w-2 h-2 rounded-full transition-all ${
                 index === currentStep ? 'bg-blue-400 w-6' : 'bg-gray-600'

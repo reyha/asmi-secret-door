@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import SwipeableContainer from './SwipeableContainer';
 import InteractiveHeroSection from './sections/InteractiveHeroSection';
+import AsmiIntroSection from './sections/AsmiIntroSection';
 import MorningBriefDemo from './sections/MorningBriefDemo';
 import MeetingContextDemo from './sections/MeetingContextDemo';
 import PersonBackgroundDemo from './sections/PersonBackgroundDemo';
@@ -21,6 +22,7 @@ const InvestorSite = () => {
 
   const sections = [
     { component: InteractiveHeroSection, title: 'Hero' },
+    { component: AsmiIntroSection, title: 'Asmi Intro' },
     { component: MorningBriefDemo, title: 'Morning Brief' },
     { component: MeetingContextDemo, title: 'Meeting Context' },
     { component: PersonBackgroundDemo, title: 'Person Background' },

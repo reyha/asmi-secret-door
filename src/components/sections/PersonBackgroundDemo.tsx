@@ -1,11 +1,10 @@
 
 import { useState, useEffect } from 'react';
-import { Search, User, Building, GraduationCap, Briefcase } from 'lucide-react';
+import { Search, User, Building, Award, TrendingUp } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
 const PersonBackgroundDemo = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const steps = [
     {
@@ -14,30 +13,14 @@ const PersonBackgroundDemo = () => {
       icon: <User className="text-purple-400" size={20} />
     },
     {
-      title: "Instant person lookup",
+      title: "Know who you're meeting.",
       content: "profile",
       icon: <User className="text-purple-400" size={20} />
     }
   ];
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentStep(1);
-        setIsAnimating(false);
-      }, 500);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleCardTap = () => {
-    if (currentStep === 0) {
-      setCurrentStep(1);
-    } else {
-      setCurrentStep(0);
-    }
+    setCurrentStep(currentStep === 0 ? 1 : 0);
   };
 
   return (
@@ -77,7 +60,7 @@ const PersonBackgroundDemo = () => {
               
               <div className="bg-gray-800 rounded-xl p-3 flex items-center space-x-3">
                 <Search size={16} className="text-gray-400" />
-                <span className="text-gray-300 text-sm">Who's Karan again?</span>
+                <span className="text-gray-300 text-sm">Who's Sarah Chen again?</span>
               </div>
 
               <div className="bg-purple-600/20 border border-purple-500/30 rounded-xl p-3">
@@ -93,35 +76,55 @@ const PersonBackgroundDemo = () => {
               </div>
 
               <div className="bg-purple-500 rounded-2xl p-3">
-                <p className="text-white text-sm text-center">Who's Karan again?</p>
+                <p className="text-white text-sm text-center">Who's Sarah Chen again?</p>
               </div>
             </div>
           ) : (
-            // Profile Step
+            // Profile Step - Rich founder profile
             <div className="space-y-4">
               <div className="bg-gray-800 rounded-xl p-3">
-                <p className="text-white text-sm">Karan Mehta - Partner at Lightspeed Ventures</p>
+                <p className="text-white text-sm">Sarah Chen - CEO at CloudFlow Technologies</p>
               </div>
 
               <div className="bg-purple-600/20 border border-purple-500/30 rounded-xl p-4">
-                <div className="flex items-start space-x-3 mb-3">
-                  <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-bold">K</span>
+                <div className="flex items-start space-x-3 mb-4">
+                  <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-bold text-lg">S</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-white font-semibold text-sm">Karan Mehta</h4>
-                    <p className="text-purple-300 text-xs">Partner @ Lightspeed</p>
+                    <h4 className="text-white font-semibold text-sm">Sarah Chen</h4>
+                    <p className="text-purple-300 text-xs">CEO @ CloudFlow Technologies</p>
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-start space-x-2">
                     <Building size={12} className="text-blue-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-gray-300 text-xs">Ex-Facebook, Stanford MBA</p>
+                    <div>
+                      <p className="text-gray-300 text-xs font-medium">Background</p>
+                      <p className="text-gray-400 text-xs">Ex-Google PM, Stanford CS, 2nd-time founder</p>
+                    </div>
                   </div>
+                  
                   <div className="flex items-start space-x-2">
-                    <Briefcase size={12} className="text-green-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-gray-300 text-xs">AI/ML, Enterprise SaaS</p>
+                    <TrendingUp size={12} className="text-green-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-gray-300 text-xs font-medium">Company Traction</p>
+                      <p className="text-gray-400 text-xs">$2M ARR, 40% MoM growth, 50+ enterprise clients</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-2">
+                    <Award size={12} className="text-yellow-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-gray-300 text-xs font-medium">Secret Sauce</p>
+                      <p className="text-gray-400 text-xs">Built proprietary ML model that reduces cloud costs by 60%</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white/5 rounded-lg p-2 mt-3">
+                    <p className="text-yellow-300 text-xs font-medium">💡 Inside Intel</p>
+                    <p className="text-gray-300 text-xs">Raised Series A at 3x revenue multiple. Rumored to be courting Google Cloud for strategic partnership.</p>
                   </div>
                 </div>
               </div>
