@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Mic, Link, Brain } from 'lucide-react';
 
@@ -12,7 +13,7 @@ const TimelineHowItWorks = () => {
   const steps = [
     {
       icon: <Mic className="text-green-400" size={16} />,
-      title: "Post meeting brief",
+      title: "Voice note → Stored",
       description: '"Had a great call with Raj about the partnership. He\'s interested in the API integration."'
     },
     {
@@ -80,7 +81,7 @@ const TimelineHowItWorks = () => {
     <div ref={sectionRef} className="min-h-screen bg-black py-8 sm:py-12 md:py-16 lg:py-20 flex items-center">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-space font-bold text-white mb-6 sm:mb-8 md:mb-12 lg:mb-16 text-center leading-tight">
-          How it flows
+          How it works
         </h2>
 
         <div className="relative">

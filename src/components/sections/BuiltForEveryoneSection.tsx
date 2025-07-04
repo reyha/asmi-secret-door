@@ -9,27 +9,27 @@ const BuiltForEveryoneSection = () => {
   const personas = [
     {
       icon: <User className="text-white" size={20} />,
-      title: "Founders",
+      title: "Founder",
       summary: "Investor readiness",
-      example: "Asmi tracks all investor conversations from emails and meetings, surfaces follow-up commitments from your calendar, and reminds you of key contact preferences to keep fundraising momentum strong."
+      example: "Asmi prepares detailed investor updates from scattered voice notes, tracks key metrics across conversations, and reminds you of follow-ups with potential backers."
     },
     {
       icon: <Briefcase className="text-white" size={20} />,
-      title: "Sales Teams",
+      title: "VP Sales",
       summary: "Deal intelligence", 
-      example: "Asmi analyzes client emails and meeting notes, identifies buying signals from conversation patterns, and surfaces contact history before each prospect call to close more deals."
+      example: "Asmi analyzes every client interaction, surfaces buying signals from emails and calls, and provides context before each prospect meeting to close more deals."
     },
     {
       icon: <TrendingUp className="text-white" size={20} />,
-      title: "Fast Growing Startups",
-      summary: "Scale intelligence",
-      example: "Asmi monitors team conversations and meeting outcomes, tracks calendar conflicts and contact overlaps, and ensures leadership stays aligned on priorities through mail and meeting insights."
+      title: "Investor",
+      summary: "Portfolio insights",
+      example: "Asmi tracks portfolio company progress from updates, flags red flags early, and prepares briefings before board meetings with key insights and action items."
     },
     {
       icon: <Users className="text-white" size={20} />,
-      title: "Knowledge Workers", 
-      summary: "Context mastery",
-      example: "Asmi maintains deep project context from email threads and meeting history, connects contacts across conversations, and ensures you're always prepared with relevant background for every interaction."
+      title: "Consultant", 
+      summary: "Client context",
+      example: "Asmi maintains deep client history, surfaces relevant past work and insights, and ensures you're always prepared with the right context for every client interaction."
     }
   ];
 
@@ -37,7 +37,7 @@ const BuiltForEveryoneSection = () => {
     <MobileOptimizedSection>
       <div className="text-center space-y-8">
         <h2 className="text-3xl font-bold text-white">
-          Built for fast moving people.
+          Built for everyone.
         </h2>
 
         {/* Main selected persona */}
