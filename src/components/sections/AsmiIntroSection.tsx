@@ -6,10 +6,12 @@ const AsmiIntroSection = () => {
   const [typedText, setTypedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showPlatforms, setShowPlatforms] = useState(false);
+  const [currentPlatform, setCurrentPlatform] = useState(0);
   const [showTags, setShowTags] = useState(false);
   const [activeTags, setActiveTags] = useState<number[]>([]);
 
-  const fullText = "Asmi is your smart Chief of Staff";
+  const fullText = "Asmi is your smart Chief of Staff within ";
+  const platforms = ["WhatsApp", "iMessage"];
   const tags = ["Calendar", "Meeting Preps", "Mails"];
 
   // Typewriter effect
@@ -29,12 +31,23 @@ const AsmiIntroSection = () => {
         // Show tags after platforms are visible
         setTimeout(() => {
           setShowTags(true);
-        }, 1000);
+        }, 1500);
       }
-    }, 80);
+    }, 50);
 
     return () => clearInterval(typeInterval);
   }, []);
+
+  // Platform scroll effect
+  useEffect(() => {
+    if (showPlatforms) {
+      const platformInterval = setInterval(() => {
+        setCurrentPlatform(prev => (prev + 1) % platforms.length);
+      }, 2000);
+
+      return () => clearInterval(platformInterval);
+    }
+  }, [showPlatforms]);
 
   // Tag animation effect
   useEffect(() => {
@@ -42,31 +55,42 @@ const AsmiIntroSection = () => {
       tags.forEach((_, index) => {
         setTimeout(() => {
           setActiveTags(prev => [...prev, index]);
-        }, index * 600);
+        }, index * 500);
       });
     }
   }, [showTags]);
 
   return (
     <MobileOptimizedSection maxWidth="md">
-      <div className="space-y-16 text-center min-h-screen flex flex-col justify-center">
+      <div className="space-y-8 text-center">
         {/* Main Text with Typewriter Effect */}
-        <div className="space-y-12">
-          <div className="text-4xl md:text-5xl font-thin text-white leading-tight min-h-[120px] flex items-center justify-center">
-            <div className="font-extralight tracking-wide">
+        <div className="space-y-6">
+          <div className="text-3xl md:text-4xl font-space font-bold text-white leading-tight min-h-[120px] flex items-center justify-center">
+            <div>
               {typedText}
-              {isTyping && <span className="animate-pulse text-white">|</span>}
+              {showPlatforms && (
+                <span className="text-green-400 relative inline-block min-w-[140px] text-left">
+                  <span 
+                    key={currentPlatform}
+                    className="absolute left-0 top-0 animate-fade-in"
+                  >
+                    {platforms[currentPlatform]}
+                  </span>
+                </span>
+              )}
+              {isTyping && <span className="animate-pulse text-green-400">|</span>}
             </div>
           </div>
 
-          {/* Platform Icons */}
+          {/* Visual Enhancement */}
           {showPlatforms && (
-            <div className="flex items-center justify-center space-x-8 animate-fade-in">
-              <div className="w-20 h-20 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
-                <span className="text-3xl">💬</span>
+            <div className="flex items-center justify-center space-x-4 animate-fade-in">
+              <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                <span className="text-green-400 text-2xl">💬</span>
               </div>
-              <div className="w-20 h-20 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center backdrop-blur-sm hover:bg-white/10 transition-all duration-300">
-                <span className="text-3xl">📱</span>
+              <div className="w-px h-8 bg-gray-600"></div>
+              <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
+                <span className="text-blue-400 text-2xl">📱</span>
               </div>
             </div>
           )}
@@ -74,17 +98,17 @@ const AsmiIntroSection = () => {
 
         {/* Feature Tags */}
         {showTags && (
-          <div className="flex items-center justify-center flex-wrap gap-4 pt-8">
+          <div className="flex items-center justify-center space-x-4 pt-8">
             {tags.map((tag, index) => (
               <div
                 key={tag}
-                className={`px-8 py-4 rounded-full border transition-all duration-700 ${
+                className={`px-4 py-2 rounded-full border transition-all duration-500 ${
                   activeTags.includes(index)
-                    ? 'bg-white/10 border-white/30 text-white shadow-lg backdrop-blur-sm scale-105 opacity-100'
-                    : 'bg-transparent border-white/5 text-gray-500 scale-95 opacity-0'
+                    ? 'bg-white/10 border-white/30 text-white animate-pulse'
+                    : 'bg-transparent border-gray-600 text-gray-500'
                 }`}
               >
-                <span className="text-sm font-light tracking-wide">{tag}</span>
+                <span className="text-sm font-medium">{tag}</span>
               </div>
             ))}
           </div>
