@@ -1,112 +1,127 @@
+
 import { useState, useEffect } from 'react';
-import { Mic, Calendar, CheckSquare } from 'lucide-react';
+import { Mic } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
+import VoiceMessage from './voice-reschedule-demo/VoiceMessage';
+import ProcessingMessage from './voice-reschedule-demo/ProcessingMessage';
+import MeetingDetails from './voice-reschedule-demo/MeetingDetails';
+import PhoneStatusBar from './voice-reschedule-demo/PhoneStatusBar';
+import ChatHeader from './voice-reschedule-demo/ChatHeader';
+import TypingIndicator from './voice-reschedule-demo/TypingIndicator';
 
 const VoiceRescheduleDemo = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioWaves, setAudioWaves] = useState<number[]>([]);
+  const [showTyping, setShowTyping] = useState(false);
 
-  const steps = [
-    {
-      id: 1,
-      type: 'user',
-      content: 'Hey Asmi, reschedule my 3 PM meeting to 4 PM',
-      icon: <Mic className="text-blue-400" size={16} />,
-      action: null
-    },
-    {
-      id: 2,
-      type: 'asmi',
-      content: 'Got it! Checking everyone\'s availability for 4 PM...',
-      icon: null,
-      action: 'Checking calendar...'
-    },
-    {
-      id: 3,
-      type: 'asmi',
-      content: 'Okay, I\'ve rescheduled the meeting to 4-5 PM. Calendar invites updated.',
-      icon: <Calendar className="text-green-400" size={16} />,
-      action: 'Rescheduled meeting'
-    },
-    {
-      id: 4,
-      type: 'asmi',
-      content: 'Also, sent a quick note to everyone about the time change.',
-      icon: <CheckSquare className="text-purple-400" size={16} />,
-      action: 'Sent notifications'
-    }
-  ];
-
+  // Generate random audio wave heights
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStep((prev) => (prev + 1) % steps.length);
-    }, 3000);
+    const generateWaves = () => {
+      const waves = Array.from({ length: 12 }, () => Math.random() * 6 + 2);
+      setAudioWaves(waves);
+    };
 
-    return () => clearInterval(interval);
-  }, []);
+    let waveInterval: NodeJS.Timeout;
+    if (isRecording) {
+      generateWaves();
+      waveInterval = setInterval(generateWaves, 150);
+    }
+
+    return () => {
+      if (waveInterval) clearInterval(waveInterval);
+    };
+  }, [isRecording]);
+
+  // Demo flow control
+  useEffect(() => {
+    const stepTimings = [
+      { step: 0, delay: 1000, action: () => { setIsRecording(true); } },
+      { step: 1, delay: 3000, action: () => { setIsRecording(false); setShowTyping(true); } },
+      { step: 2, delay: 1500, action: () => { setShowTyping(false); } },
+      { step: 3, delay: 3000, action: () => {} },
+      { step: 4, delay: 3000, action: () => {} },
+      { step: 5, delay: 4000, action: () => { setCurrentStep(0); } }
+    ];
+
+    const currentTiming = stepTimings[currentStep];
+    if (currentTiming) {
+      const timer = setTimeout(() => {
+        currentTiming.action();
+        if (currentStep < stepTimings.length - 1) {
+          setCurrentStep(prev => prev + 1);
+        }
+      }, currentTiming.delay);
+
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep]);
+
+  const meetingData = {
+    original: "4:00 PM - 5:00 PM",
+    new: "6:00 PM - 7:00 PM", 
+    attendees: "You, Eric Chen, Sarah Kim"
+  };
 
   return (
     <MobileOptimizedSection maxWidth="sm">
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-            <Mic className="text-orange-400" size={20} />
+          <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Mic className="text-red-400" size={20} />
           </div>
           <h2 className="text-2xl font-bold text-white leading-tight">
-            Just say. It's done!
+            Just speak. It's done.
           </h2>
         </div>
 
         {/* Phone Demo */}
-        <div className="bg-gray-900 rounded-3xl p-4 mx-auto max-w-xs">
+        <div className="bg-gray-900 rounded-3xl overflow-hidden mx-auto max-w-xs shadow-2xl">
           {/* Status Bar */}
-          <div className="flex justify-between items-center text-white text-xs mb-4">
-            <span>9:41</span>
-            <div className="flex space-x-1">
-              <div className="w-1 h-1 bg-white rounded-full"></div>
-              <div className="w-1 h-1 bg-white rounded-full"></div>
-              <div className="w-1 h-1 bg-white rounded-full"></div>
-            </div>
-          </div>
+          <PhoneStatusBar isRecording={isRecording} />
+          
+          {/* Chat Header */}
+          <ChatHeader isRecording={isRecording} />
 
-          {/* Chat Bubbles */}
-          <div className="space-y-3">
-            {steps.slice(0, currentStep + 1).map((step, index) => (
-              <div
-                key={step.id}
-                className={`flex ${step.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
-                style={{ animationDelay: `${index * 0.3}s` }}
-              >
-                <div className={`max-w-xs px-4 py-3 rounded-2xl ${
-                  step.type === 'user'
-                    ? 'bg-orange-500 text-white'
-                    : 'bg-gray-800 text-gray-100'
-                }`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    {step.icon}
-                    <span className="text-sm">{step.content}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Progress Indicator */}
-        <div className="flex justify-center space-x-2">
-          {steps.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentStep(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentStep ? 'bg-orange-400 w-6' : 'bg-gray-600'
-              }`}
+          {/* Chat Messages */}
+          <div className="bg-black min-h-[400px] p-4 space-y-4">
+            {/* Voice Message */}
+            <VoiceMessage 
+              text="Move Eric call to 6PM"
+              isRecording={isRecording}
+              audioWaves={audioWaves}
+              isVisible={currentStep >= 0}
             />
-          ))}
+
+            {/* Typing Indicator */}
+            <TypingIndicator isVisible={showTyping} />
+
+            {/* Processing Message */}
+            <ProcessingMessage 
+              type="processing"
+              text="Got it. Checking Eric's availability..."
+              isVisible={currentStep >= 2}
+            />
+
+            {/* Success Message */}
+            <ProcessingMessage 
+              type="confirmation" 
+              text="Done! Eric's team confirmed. Updated your calendar and sent new invite."
+              isVisible={currentStep >= 3}
+            />
+
+            {/* Meeting Details */}
+            <MeetingDetails 
+              data={meetingData}
+              isVisible={currentStep >= 4}
+            />
+          </div>
         </div>
 
-        <p className="text-gray-500 text-xs text-center">
-          Automated with voice
+        {/* Bottom Text */}
+        <p className="text-gray-400 text-sm text-center font-light">
+          Voice → Understanding → Action in seconds
         </p>
       </div>
     </MobileOptimizedSection>
