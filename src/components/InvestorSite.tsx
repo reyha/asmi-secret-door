@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import SwipeableContainer from './SwipeableContainer';
 import InteractiveHeroSection from './sections/InteractiveHeroSection';
@@ -11,7 +10,6 @@ import MemoryEngineSection from './sections/MemoryEngineSection';
 import TimelineHowItWorks from './sections/TimelineHowItWorks';
 import FounderSectionNew from './sections/FounderSectionNew';
 import TractionSectionNew from './sections/TractionSectionNew';
-import MessagingToOSSection from './sections/MessagingToOSSection';
 import VoiceToOSSection from './sections/VoiceToOSSection';
 import BuiltForEveryoneSection from './sections/BuiltForEveryoneSection';
 import FinalCTASectionNew from './sections/FinalCTASectionNew';
@@ -31,7 +29,6 @@ const InvestorSite = () => {
     { component: TimelineHowItWorks, title: 'How It Works' },
     { component: FounderSectionNew, title: 'Founders' },
     { component: TractionSectionNew, title: 'Traction' },
-    { component: MessagingToOSSection, title: 'Messaging to OS' },
     { component: VoiceToOSSection, title: 'Voice to OS' },
     { component: BuiltForEveryoneSection, title: 'Built for Everyone' },
     { component: FinalCTASectionNew, title: 'CTA' },
