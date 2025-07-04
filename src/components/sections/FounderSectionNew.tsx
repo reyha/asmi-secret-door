@@ -1,130 +1,204 @@
 
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Building, TrendingUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Building, TrendingUp, Award, Users, Zap, Star } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
 const FounderSectionNew = () => {
-  const [currentCard, setCurrentCard] = useState(0);
+  const [activeFounder, setActiveFounder] = useState(0);
+  const [showAchievements, setShowAchievements] = useState(false);
 
-  const founderCards = [
+  const founders = [
     {
-      title: "We have built companies",
-      subtitle: "loved by millions",
-      description: "scaled to hundreds of millions",
-      founder: {
-        name: "Rishi Rathore",
-        role: "Co-Founder & CEO",
-        avatar: "R",
-        achievements: [
-          "Built $400M+ Business",
-          "Raised $75M from Tony Xu, Eric Yuan"
-        ]
-      }
+      name: "Rishi Rathore",
+      role: "Co-Founder & CEO",
+      title: "Serial Entrepreneur",
+      image: "/lovable-uploads/3a0a6200-86d3-4ef6-89ac-4b39a0518b26.png", // Using the uploaded image as reference
+      avatar: "R",
+      description: "Serial entrepreneur who raised $75M from top investors, including Tony Xu (DoorDash) & Eric Yuan (Zoom). Scaled Arzoo to $300M in sales, creating India's largest consumer electronics retail network (400+ cities).",
+      keyStats: [
+        { label: "$300M", sublabel: "Sales Revenue", icon: TrendingUp },
+        { label: "$75M", sublabel: "Funds Raised", icon: Building },
+        { label: "400+", sublabel: "Cities", icon: Users }
+      ],
+      companies: ["Arzoo", "GoStor", "NU"],
+      achievements: [
+        "Forbes 30 Under 30 Asia 2020",
+        "HURUN #9 among top 150 entrepreneurs under 35 in India, 2024"
+      ],
+      backgroundColor: "from-blue-600 to-purple-700",
+      accentColor: "text-blue-400"
     },
     {
-      title: "Deep AI Experience",
-      subtitle: "Meta AI Systems",
-      description: "Enterprise-grade AI at scale",
-      founder: {
-        name: "Rishi Rathore", 
-        role: "Technical Background",
-        avatar: "R",
-        achievements: [
-          "Meta AI Infrastructure",
-          "Scaled ML systems to billions"
-        ]
-      }
+      name: "Satwik Kottur",
+      role: "Co-Founder & CTO", 
+      title: "Cracked Scientist",
+      avatar: "S",
+      description: "Ph.D. from Carnegie Mellon and B.Tech from IIT Bombay (AI India Rank-6), a leading AI researcher with 6 years at Meta AI, specialising in foundation models, NLP and vision-language systems.",
+      keyStats: [
+        { label: "25+", sublabel: "Research Papers", icon: Award },
+        { label: "6 Yrs", sublabel: "Meta AI", icon: Zap },
+        { label: "PhD", sublabel: "Carnegie Mellon", icon: Star }
+      ],
+      companies: ["Meta AI", "Google DeepMind", "CMU", "IIT Bombay"],
+      achievements: [
+        "A.G. Milnes Award - For highest quality PhD thesis",
+        "Snap Inc. Research Fellowship"
+      ],
+      backgroundColor: "from-green-600 to-teal-700",
+      accentColor: "text-green-400"
     }
   ];
 
-  const nextCard = () => {
-    setCurrentCard((prev) => (prev + 1) % founderCards.length);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowAchievements(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const switchFounder = (index: number) => {
+    setActiveFounder(index);
+    setShowAchievements(false);
+    setTimeout(() => setShowAchievements(true), 300);
   };
 
-  const prevCard = () => {
-    setCurrentCard((prev) => (prev - 1 + founderCards.length) % founderCards.length);
-  };
+  const currentFounder = founders[activeFounder];
 
   return (
     <MobileOptimizedSection maxWidth="sm">
-      <div className="text-center space-y-6">
+      <div className="space-y-6">
         {/* Header */}
-        <div className="space-y-3">
+        <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold text-white leading-tight">
-            {founderCards[currentCard].title}
+            Serial Founder meets Cracked Scientist
           </h2>
-          <p className="text-lg text-gray-300 font-light">
-            {founderCards[currentCard].subtitle}
-          </p>
-          <p className="text-base text-gray-400">
-            {founderCards[currentCard].description}
+          <p className="text-gray-400 text-sm">
+            $400M+ combined track record in building & scaling
           </p>
         </div>
 
-        {/* Founder Card */}
-        <div className="bg-gray-900/50 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
-          <div className="flex flex-col items-center space-y-4">
-            {/* Avatar */}
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-xl font-bold">
-                {founderCards[currentCard].founder.avatar}
+        {/* Founder Switcher Tabs */}
+        <div className="flex bg-gray-900/50 rounded-full p-1 border border-white/10">
+          {founders.map((founder, index) => (
+            <button
+              key={index}
+              onClick={() => switchFounder(index)}
+              className={`flex-1 py-3 px-4 rounded-full text-sm font-medium transition-all duration-300 ${
+                activeFounder === index
+                  ? 'bg-white text-black shadow-lg'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              {founder.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Active Founder Card */}
+        <div className={`bg-gradient-to-br ${currentFounder.backgroundColor} rounded-2xl p-6 shadow-2xl transform transition-all duration-500 ${showAchievements ? 'scale-100 opacity-100' : 'scale-95 opacity-80'}`}>
+          {/* Founder Header */}
+          <div className="flex items-start space-x-4 mb-6">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-2xl font-bold text-gray-800">
+                {currentFounder.avatar}
               </span>
             </div>
-
-            {/* Name & Role */}
-            <div className="text-center">
-              <h3 className="text-lg font-bold text-white">
-                {founderCards[currentCard].founder.name}
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-white mb-1">
+                {currentFounder.name}
               </h3>
-              <p className="text-sm text-green-400 font-medium">
-                {founderCards[currentCard].founder.role}
+              <p className="text-white/80 text-sm font-medium">
+                {currentFounder.role}
               </p>
             </div>
+          </div>
 
-            {/* Achievements */}
-            <div className="space-y-2 w-full">
-              {founderCards[currentCard].founder.achievements.map((achievement, index) => (
-                <div key={index} className="flex items-start space-x-2">
-                  <div className="w-2 h-2 rounded-full bg-green-400 mt-2 flex-shrink-0"></div>
-                  <p className="text-sm text-gray-300 leading-relaxed">
-                    {achievement}
-                  </p>
+          {/* Description */}
+          <p className="text-white/90 text-sm leading-relaxed mb-6">
+            {currentFounder.description}
+          </p>
+
+          {/* Key Stats */}
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            {currentFounder.keyStats.map((stat, index) => (
+              <div
+                key={index}
+                className={`bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm transform transition-all duration-500 delay-${index * 100}`}
+                style={{
+                  animationDelay: showAchievements ? `${index * 100}ms` : '0ms'
+                }}
+              >
+                <stat.icon className="w-5 h-5 text-white mb-1 mx-auto" />
+                <div className="text-lg font-bold text-white">
+                  {stat.label}
                 </div>
+                <div className="text-xs text-white/70">
+                  {stat.sublabel}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Companies/Logos */}
+          <div className="mb-6">
+            <p className="text-white/60 text-xs mb-3 uppercase tracking-wide">
+              Companies & Institutions
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {currentFounder.companies.map((company, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 bg-white/20 rounded-full text-xs text-white font-medium backdrop-blur-sm"
+                >
+                  {company}
+                </span>
               ))}
             </div>
+          </div>
+
+          {/* Achievements */}
+          <div className={`space-y-2 transition-all duration-700 ${showAchievements ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'}`}>
+            <p className="text-white/60 text-xs mb-3 uppercase tracking-wide">
+              Key Achievements
+            </p>
+            {currentFounder.achievements.map((achievement, index) => (
+              <div
+                key={index}
+                className="flex items-start space-x-2 p-3 bg-white/10 rounded-xl backdrop-blur-sm"
+              >
+                <Award className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                <p className="text-white/90 text-xs leading-relaxed">
+                  {achievement}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Navigation */}
-        {founderCards.length > 1 && (
-          <div className="flex justify-between items-center">
+        {/* Navigation Dots */}
+        <div className="flex justify-center space-x-3">
+          {founders.map((_, index) => (
             <button
-              onClick={prevCard}
-              className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors touch-target"
-            >
-              <ChevronLeft size={18} className="text-white" />
-            </button>
+              key={index}
+              onClick={() => switchFounder(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === activeFounder 
+                  ? 'bg-white scale-125' 
+                  : 'bg-gray-600 hover:bg-gray-500'
+              }`}
+            />
+          ))}
+        </div>
 
-            <div className="flex space-x-2">
-              {founderCards.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentCard(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    index === currentCard ? 'bg-green-400 w-6' : 'bg-gray-600'
-                  }`}
-                />
-              ))}
-            </div>
-
-            <button
-              onClick={nextCard}
-              className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors touch-target"
-            >
-              <ChevronRight size={18} className="text-white" />
-            </button>
-          </div>
-        )}
+        {/* Bottom Impact Statement */}
+        <div className="text-center p-4 bg-gradient-to-r from-green-900/30 to-blue-900/30 rounded-xl border border-white/10">
+          <p className="text-white font-semibold text-sm">
+            🚀 Combined: $400M+ in value creation
+          </p>
+          <p className="text-gray-400 text-xs mt-1">
+            Building the future of personal AI systems
+          </p>
+        </div>
       </div>
     </MobileOptimizedSection>
   );
