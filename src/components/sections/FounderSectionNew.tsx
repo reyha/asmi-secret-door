@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Building, TrendingUp, Award, Users, Zap, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Building, TrendingUp, Award, Users, Zap, Star, Crown, Brain } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
 const FounderSectionNew = () => {
@@ -12,9 +12,9 @@ const FounderSectionNew = () => {
       name: "Rishi Rathore",
       role: "Co-Founder & CEO",
       title: "Serial Entrepreneur",
-      image: "/lovable-uploads/3a0a6200-86d3-4ef6-89ac-4b39a0518b26.png", // Using the uploaded image as reference
+      image: "/lovable-uploads/3a0a6200-86d3-4ef6-89ac-4b39a0518b26.png",
       avatar: "R",
-      description: "Serial entrepreneur who raised $75M from top investors, including Tony Xu (DoorDash) & Eric Yuan (Zoom). Scaled Arzoo to $300M in sales, creating India's largest consumer electronics retail network (400+ cities).",
+      highlight: "Backed by Tony Xu (DoorDash) and Eric Yuan (Zoom)",
       keyStats: [
         { label: "$300M", sublabel: "Sales Revenue", icon: TrendingUp },
         { label: "$75M", sublabel: "Funds Raised", icon: Building },
@@ -25,15 +25,15 @@ const FounderSectionNew = () => {
         "Forbes 30 Under 30 Asia 2020",
         "HURUN #9 among top 150 entrepreneurs under 35 in India, 2024"
       ],
-      backgroundColor: "from-blue-600 to-purple-700",
-      accentColor: "text-blue-400"
+      accentColor: "text-blue-400",
+      highlightIcon: Crown
     },
     {
       name: "Satwik Kottur",
       role: "Co-Founder & CTO", 
       title: "Cracked Scientist",
       avatar: "S",
-      description: "Ph.D. from Carnegie Mellon and B.Tech from IIT Bombay (AI India Rank-6), a leading AI researcher with 6 years at Meta AI, specialising in foundation models, NLP and vision-language systems.",
+      highlight: "One of top researchers in NLP & foundational models",
       keyStats: [
         { label: "25+", sublabel: "Research Papers", icon: Award },
         { label: "6 Yrs", sublabel: "Meta AI", icon: Zap },
@@ -44,8 +44,8 @@ const FounderSectionNew = () => {
         "A.G. Milnes Award - For highest quality PhD thesis",
         "Snap Inc. Research Fellowship"
       ],
-      backgroundColor: "from-green-600 to-teal-700",
-      accentColor: "text-green-400"
+      accentColor: "text-green-400",
+      highlightIcon: Brain
     }
   ];
 
@@ -68,7 +68,7 @@ const FounderSectionNew = () => {
     <MobileOptimizedSection maxWidth="sm">
       <div className="space-y-6">
         {/* Header */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-3">
           <h2 className="text-2xl font-bold text-white leading-tight">
             Serial Founder meets Cracked Scientist
           </h2>
@@ -78,7 +78,7 @@ const FounderSectionNew = () => {
         </div>
 
         {/* Founder Switcher Tabs */}
-        <div className="flex bg-gray-900/50 rounded-full p-1 border border-white/10">
+        <div className="flex bg-gray-800/50 rounded-full p-1 border border-gray-700">
           {founders.map((founder, index) => (
             <button
               key={index}
@@ -95,11 +95,12 @@ const FounderSectionNew = () => {
         </div>
 
         {/* Active Founder Card */}
-        <div className={`bg-gradient-to-br ${currentFounder.backgroundColor} rounded-2xl p-6 shadow-2xl transform transition-all duration-500 ${showAchievements ? 'scale-100 opacity-100' : 'scale-95 opacity-80'}`}>
+        <div className={`bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-2xl transform transition-all duration-500 ${showAchievements ? 'scale-100 opacity-100' : 'scale-95 opacity-80'}`}>
+          
           {/* Founder Header */}
           <div className="flex items-start space-x-4 mb-6">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-2xl font-bold text-gray-800">
+            <div className="w-16 h-16 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center shadow-lg border border-gray-600">
+              <span className="text-2xl font-bold text-white">
                 {currentFounder.avatar}
               </span>
             </div>
@@ -107,32 +108,37 @@ const FounderSectionNew = () => {
               <h3 className="text-xl font-bold text-white mb-1">
                 {currentFounder.name}
               </h3>
-              <p className="text-white/80 text-sm font-medium">
+              <p className="text-gray-400 text-sm font-medium">
                 {currentFounder.role}
               </p>
             </div>
           </div>
 
-          {/* Description */}
-          <p className="text-white/90 text-sm leading-relaxed mb-6">
-            {currentFounder.description}
-          </p>
+          {/* Key Highlight */}
+          <div className="mb-6 p-4 bg-black/40 rounded-xl border border-gray-700">
+            <div className="flex items-start space-x-3">
+              <currentFounder.highlightIcon className={`w-5 h-5 ${currentFounder.accentColor} mt-0.5 flex-shrink-0`} />
+              <p className="text-white font-medium text-sm leading-relaxed">
+                {currentFounder.highlight}
+              </p>
+            </div>
+          </div>
 
           {/* Key Stats */}
           <div className="grid grid-cols-3 gap-3 mb-6">
             {currentFounder.keyStats.map((stat, index) => (
               <div
                 key={index}
-                className={`bg-white/10 rounded-xl p-3 text-center backdrop-blur-sm transform transition-all duration-500 delay-${index * 100}`}
+                className={`bg-black/30 border border-gray-700 rounded-xl p-3 text-center backdrop-blur-sm transform transition-all duration-500 delay-${index * 100}`}
                 style={{
                   animationDelay: showAchievements ? `${index * 100}ms` : '0ms'
                 }}
               >
-                <stat.icon className="w-5 h-5 text-white mb-1 mx-auto" />
+                <stat.icon className={`w-5 h-5 ${currentFounder.accentColor} mb-1 mx-auto`} />
                 <div className="text-lg font-bold text-white">
                   {stat.label}
                 </div>
-                <div className="text-xs text-white/70">
+                <div className="text-xs text-gray-400">
                   {stat.sublabel}
                 </div>
               </div>
@@ -141,14 +147,14 @@ const FounderSectionNew = () => {
 
           {/* Companies/Logos */}
           <div className="mb-6">
-            <p className="text-white/60 text-xs mb-3 uppercase tracking-wide">
+            <p className="text-gray-500 text-xs mb-3 uppercase tracking-wide font-medium">
               Companies & Institutions
             </p>
             <div className="flex flex-wrap gap-2">
               {currentFounder.companies.map((company, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-white/20 rounded-full text-xs text-white font-medium backdrop-blur-sm"
+                  className="px-3 py-1 bg-black/30 border border-gray-700 rounded-full text-xs text-gray-300 font-medium"
                 >
                   {company}
                 </span>
@@ -158,16 +164,16 @@ const FounderSectionNew = () => {
 
           {/* Achievements */}
           <div className={`space-y-2 transition-all duration-700 ${showAchievements ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'}`}>
-            <p className="text-white/60 text-xs mb-3 uppercase tracking-wide">
+            <p className="text-gray-500 text-xs mb-3 uppercase tracking-wide font-medium">
               Key Achievements
             </p>
             {currentFounder.achievements.map((achievement, index) => (
               <div
                 key={index}
-                className="flex items-start space-x-2 p-3 bg-white/10 rounded-xl backdrop-blur-sm"
+                className="flex items-start space-x-3 p-3 bg-black/30 border border-gray-700 rounded-xl"
               >
                 <Award className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
-                <p className="text-white/90 text-xs leading-relaxed">
+                <p className="text-gray-300 text-xs leading-relaxed">
                   {achievement}
                 </p>
               </div>
@@ -191,7 +197,7 @@ const FounderSectionNew = () => {
         </div>
 
         {/* Bottom Impact Statement */}
-        <div className="text-center p-4 bg-gradient-to-r from-green-900/30 to-blue-900/30 rounded-xl border border-white/10">
+        <div className="text-center p-4 bg-black/40 border border-gray-700 rounded-xl">
           <p className="text-white font-semibold text-sm">
             🚀 Combined: $400M+ in value creation
           </p>
