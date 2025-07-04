@@ -5,6 +5,7 @@ import MobileOptimizedSection from './MobileOptimizedSection';
 const MemoryEngineSection = () => {
   const [activeConnection, setActiveConnection] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [pulseCenter, setPulseCenter] = useState(false);
 
   const connections = [
     {
@@ -37,65 +38,93 @@ const MemoryEngineSection = () => {
     { type: "Conversations", position: { x: 30, y: 80 }, color: "bg-yellow-400", label: "Conversations" }
   ];
 
-  const processSteps = [
-    { label: "Capture", color: "bg-green-400" },
-    { label: "Connect", color: "bg-blue-400" },
-    { label: "Context", color: "bg-purple-400" }
-  ];
-
   useEffect(() => {
     setIsVisible(true);
     const interval = setInterval(() => {
-      setActiveConnection(prev => (prev + 1) % connections.length);
-    }, 3000);
+      setActiveConnection(prev => {
+        const newIndex = (prev + 1) % connections.length;
+        // Trigger center pulse when connection changes
+        setPulseCenter(true);
+        setTimeout(() => setPulseCenter(false), 800);
+        return newIndex;
+      });
+    }, 2000); // Changed to 2 seconds for faster transitions
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <MobileOptimizedSection maxWidth="sm">
-      <div className="space-y-8 text-center">
+      <div className="space-y-6 text-center">
         <div className="space-y-4">
           <h2 className="text-3xl font-bold text-white leading-tight">
             Memory that scales.
           </h2>
           
           <p className="text-base text-gray-300 leading-relaxed px-2">
-            Every conversation, meeting, and thought—connected and accessible when you need it most.
+            Every conversation, meeting and mail - linked and pulling insights when you need it most.
           </p>
         </div>
 
         {/* Scientific Data Connection Visualization */}
         <div className="relative bg-black/40 rounded-2xl p-6 border border-white/10">
-          <h3 className="text-sm font-semibold text-white mb-4">
+          <h3 className="text-sm font-semibold text-white mb-6">
             Neural Context Engine
           </h3>
           
           {/* Data Points Network */}
-          <div className="relative h-40">
+          <div className="relative h-48 mb-6">
             {/* Connection Lines */}
             <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
               <defs>
                 {connections.map((conn, index) => (
                   <linearGradient key={index} id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#22c55e" stopOpacity={index === activeConnection ? "0.8" : "0.3"} />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={index === activeConnection ? "0.8" : "0.3"} />
+                    <stop offset="0%" stopColor="#22c55e" stopOpacity={index === activeConnection ? "0.9" : "0.2"} />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={index === activeConnection ? "0.9" : "0.2"} />
                   </linearGradient>
                 ))}
+                
+                {/* Animated flow gradient */}
+                <linearGradient id="flow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity="0">
+                    <animate attributeName="stop-opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+                  </stop>
+                  <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.8">
+                    <animate attributeName="stop-opacity" values="0.2;1;0.2" dur="1s" repeatCount="indefinite" />
+                  </stop>
+                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0">
+                    <animate attributeName="stop-opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+                  </stop>
+                </linearGradient>
               </defs>
               
-              {/* Dynamic connections - connecting all dots to center */}
+              {/* Dynamic connections - connecting active dot to center with animated flow */}
               {dataPoints.map((point, index) => (
-                <line
-                  key={index}
-                  x1={point.position.x}
-                  y1={point.position.y}
-                  x2="50"
-                  y2="50"
-                  stroke={`url(#gradient-${activeConnection})`}
-                  strokeWidth="1"
-                  className="transition-all duration-1000"
-                />
+                <g key={index}>
+                  {/* Base connection line */}
+                  <line
+                    x1={point.position.x}
+                    y1={point.position.y}
+                    x2="50"
+                    y2="50"
+                    stroke={`url(#gradient-${activeConnection})`}
+                    strokeWidth={connections[activeConnection]?.dotIndex === index ? "2" : "1"}
+                    className="transition-all duration-1000"
+                  />
+                  
+                  {/* Animated flow line for active connection */}
+                  {connections[activeConnection]?.dotIndex === index && (
+                    <line
+                      x1={point.position.x}
+                      y1={point.position.y}
+                      x2="50"
+                      y2="50"
+                      stroke="url(#flow-gradient)"
+                      strokeWidth="3"
+                      className="animate-pulse"
+                    />
+                  )}
+                </g>
               ))}
             </svg>
 
@@ -103,55 +132,56 @@ const MemoryEngineSection = () => {
             {dataPoints.map((point, index) => (
               <div
                 key={index}
-                className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${
-                  connections[activeConnection]?.dotIndex === index ? 'animate-pulse scale-125' : ''
+                className={`absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ${
+                  connections[activeConnection]?.dotIndex === index 
+                    ? 'animate-pulse scale-150 z-10' 
+                    : 'scale-100 opacity-70'
                 }`}
                 style={{
                   left: `${point.position.x}%`,
                   top: `${point.position.y}%`
                 }}
               >
-                <div className={`w-3 h-3 ${point.color} rounded-full flex items-center justify-center relative`}>
+                <div className={`w-4 h-4 ${point.color} rounded-full flex items-center justify-center relative shadow-lg`}>
                   {connections[activeConnection]?.dotIndex === index && (
-                    <div className={`absolute inset-0 rounded-full ${point.color} opacity-30 animate-ping`}></div>
+                    <>
+                      <div className={`absolute inset-0 rounded-full ${point.color} opacity-40 animate-ping scale-150`}></div>
+                      <div className={`absolute inset-0 rounded-full ${point.color} opacity-60 animate-ping scale-125 animation-delay-200`}></div>
+                    </>
                   )}
                 </div>
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="text-xs text-gray-300 whitespace-nowrap">{point.label}</span>
+                <div className="absolute top-5 left-1/2 transform -translate-x-1/2">
+                  <span className={`text-xs whitespace-nowrap transition-all duration-300 ${
+                    connections[activeConnection]?.dotIndex === index 
+                      ? 'text-white font-semibold scale-110' 
+                      : 'text-gray-400'
+                  }`}>
+                    {point.label}
+                  </span>
                 </div>
               </div>
             ))}
 
-            {/* Center Processing Node */}
+            {/* Center Asmi Node */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center animate-pulse">
-                <span className="text-black text-xs font-bold">AI</span>
+              <div className={`w-12 h-12 bg-white rounded-full flex items-center justify-center transition-all duration-800 shadow-xl ${
+                pulseCenter 
+                  ? 'scale-125 shadow-2xl shadow-green-400/50' 
+                  : 'scale-100'
+              }`}>
+                <span className="text-black text-sm font-bold">Asmi</span>
+                {pulseCenter && (
+                  <div className="absolute inset-0 rounded-full bg-white opacity-30 animate-ping scale-150"></div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Active Connection Description */}
-          <div className="mt-4 p-3 bg-white/5 rounded-xl border border-white/10">
-            <p className="text-xs text-gray-300">
+          {/* Active Connection Description - More Prominent */}
+          <div className="p-4 bg-white/10 rounded-xl border border-white/20 backdrop-blur-sm">
+            <p className="text-sm text-white font-medium leading-relaxed">
               {connections[activeConnection].description}
             </p>
-          </div>
-        </div>
-
-        {/* Connection Process Steps with Dynamic Lines */}
-        <div className="relative">
-          <div className="grid grid-cols-3 gap-2 text-xs relative">
-            {/* Connecting lines between steps */}
-            <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-800 transform -translate-y-1/2 z-0">
-              <div className="h-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 opacity-50 animate-pulse"></div>
-            </div>
-            
-            {processSteps.map((step, index) => (
-              <div key={index} className="p-3 bg-white/5 rounded-xl relative z-10">
-                <div className={`w-2 h-2 ${step.color} rounded-full mx-auto mb-2`}></div>
-                <p className="text-gray-300">{step.label}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>
