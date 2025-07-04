@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Sparkles, Zap } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import NeuralBloomBackground from '../NeuralBloomBackground';
 
 const InteractiveHeroSection = () => {
@@ -71,42 +71,25 @@ const InteractiveHeroSection = () => {
       {/* Neural Bloom Background */}
       <NeuralBloomBackground />
 
-      <div className="relative z-10 min-h-screen flex flex-col px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-sm font-inter text-green-400">Live on WhatsApp & iMessage</span>
-          </div>
-          
-          <h1 className="text-2xl md:text-3xl font-space font-light tracking-tight text-white">
-            Asmi
-          </h1>
-          
-          <p className="text-sm text-gray-400 font-light mt-1">
-            Your AI-first personal OS
-          </p>
-        </div>
-
-        {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex flex-col justify-center px-6 py-12">
+        {/* Main Content - Centered */}
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center max-w-sm mx-auto">
+          <div className="text-center max-w-md mx-auto">
             {/* Welcome Message */}
             {showWelcome && (
-              <div className="mb-8 animate-fade-in">
-                <div className="flex items-center justify-center mb-6 relative">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center text-black font-space font-bold text-xl relative">
+              <div className="mb-12 animate-fade-in">
+                <div className="flex items-center justify-center mb-8 relative">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center text-black font-space font-bold text-2xl relative">
                     AS
                     <div className="absolute inset-0 rounded-full bg-green-400/20 animate-ping"></div>
                   </div>
-                  <Sparkles className="absolute -top-2 -right-2 text-green-400 animate-pulse" size={20} />
                 </div>
                 
-                <h2 className="text-xl font-space font-light text-white mb-2">
+                <h2 className="text-2xl md:text-3xl font-space font-light text-white mb-3">
                   Well, well... <span className="font-medium text-green-400">Alex</span> 👋
                 </h2>
                 
-                <p className="text-sm text-gray-300 font-light">
+                <p className="text-base text-gray-300 font-light">
                   Let me tell you what I know about you...
                 </p>
               </div>
@@ -114,20 +97,19 @@ const InteractiveHeroSection = () => {
 
             {/* Roasts */}
             {showRoasts && (
-              <div className="mb-8">
-                <div className="min-h-[120px] flex items-center justify-center">
+              <div className="mb-12">
+                <div className="min-h-[140px] flex items-center justify-center">
                   <div className="text-center">
                     {/* Roast counter */}
-                    <div className="flex items-center justify-center space-x-2 mb-4">
-                      <Zap className="text-green-400" size={16} />
-                      <span className="text-xs text-green-400 font-medium">
+                    <div className="flex items-center justify-center space-x-2 mb-6">
+                      <span className="text-sm text-green-400 font-medium">
                         {currentRoast + 1} of {roasts.length}
                       </span>
                     </div>
                     
                     {/* Typing indicator when starting new roast */}
                     {isTyping && typedText === '' && (
-                      <div className="flex items-center justify-center space-x-1 mb-4">
+                      <div className="flex items-center justify-center space-x-1 mb-6">
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-100"></div>
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-200"></div>
@@ -136,8 +118,8 @@ const InteractiveHeroSection = () => {
                     
                     {/* Typed roast */}
                     {typedText && (
-                      <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
-                        <p className="text-base text-white font-inter leading-relaxed">
+                      <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                        <p className="text-lg text-white font-inter leading-relaxed">
                           {typedText}
                           {isTyping && (
                             <span className="animate-pulse text-green-400">|</span>
@@ -153,24 +135,17 @@ const InteractiveHeroSection = () => {
             {/* Swipe Hint */}
             {showSwipeHint && (
               <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
-                <div className="flex items-center justify-center space-x-3 text-green-400 mb-4">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <div className="w-2 h-2 bg-green-400/60 rounded-full"></div>
-                    <div className="w-2 h-2 bg-green-400/30 rounded-full"></div>
-                  </div>
+                <div className="flex items-center justify-center space-x-3 text-gray-400">
+                  <ArrowLeft 
+                    className="animate-pulse" 
+                    size={20}
+                    style={{
+                      animation: 'pulse 2s ease-in-out infinite, translateX 2s ease-in-out infinite',
+                    }}
+                  />
                   <span className="text-sm font-inter">
-                    Swipe to see what I can do
+                    Now, you can swipe to know me
                   </span>
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-green-400/30 rounded-full"></div>
-                    <div className="w-2 h-2 bg-green-400/60 rounded-full"></div>
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  </div>
-                </div>
-                
-                <div className="text-xs text-gray-400 font-light">
-                  Impressed? This is just the beginning...
                 </div>
               </div>
             )}
