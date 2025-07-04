@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Mic, Calendar, CheckSquare } from 'lucide-react';
+import { Mic, CheckCircle, Calendar } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
 const VoiceRescheduleDemo = () => {
@@ -13,7 +13,6 @@ const VoiceRescheduleDemo = () => {
       type: 'user-voice',
       content: 'Move Eric call to 6PM',
       icon: <Mic className="text-red-400" size={16} />,
-      action: null,
       isVoice: true
     },
     {
@@ -21,15 +20,13 @@ const VoiceRescheduleDemo = () => {
       type: 'asmi-processing',
       content: 'Got it. Checking Eric\'s availability...',
       icon: null,
-      action: 'Processing',
       status: 'processing'
     },
     {
       id: 3,
       type: 'asmi-success',
       content: 'Done! Eric\'s team confirmed. Updated your calendar and sent new invite.',
-      icon: <CheckSquare className="text-green-400" size={16} />,
-      action: 'Success',
+      icon: <CheckCircle className="text-green-400" size={16} />,
       status: 'success'
     },
     {
@@ -37,7 +34,6 @@ const VoiceRescheduleDemo = () => {
       type: 'meeting-details',
       content: null,
       icon: null,
-      action: 'Meeting Updated',
       status: 'details'
     }
   ];
@@ -75,9 +71,9 @@ const VoiceRescheduleDemo = () => {
         </div>
 
         {/* Phone Demo */}
-        <div className="bg-gray-900 rounded-3xl p-4 mx-auto max-w-xs">
+        <div className="bg-gray-900/90 rounded-3xl p-0 mx-auto max-w-xs border border-gray-700 backdrop-blur-sm">
           {/* Status Bar */}
-          <div className="flex justify-between items-center text-white text-xs mb-4">
+          <div className="flex justify-between items-center text-white text-xs px-4 py-2 bg-black rounded-t-3xl">
             <span>2:47</span>
             <div className="flex space-x-1">
               <div className="w-4 h-2 bg-yellow-400 rounded-sm"></div>
@@ -85,7 +81,7 @@ const VoiceRescheduleDemo = () => {
           </div>
 
           {/* Asmi Header */}
-          <div className="bg-red-600/80 rounded-t-3xl p-3 mb-4 flex items-center space-x-3">
+          <div className="bg-gradient-to-r from-red-800 to-red-900 p-4 flex items-center space-x-3">
             <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">A</span>
             </div>
@@ -99,34 +95,22 @@ const VoiceRescheduleDemo = () => {
           </div>
 
           {/* Messages */}
-          <div className="space-y-3">
+          <div className="space-y-4 p-4 bg-gray-900">
             {currentStep >= 1 && (
               <div className="flex justify-end animate-fade-in">
-                <div className="bg-red-600 text-white px-4 py-3 rounded-2xl rounded-tr-md max-w-xs flex items-center space-x-2">
-                  {showVoiceAnimation ? (
-                    <div className="flex items-center space-x-1">
-                      <div className="w-1 h-3 bg-white rounded-full animate-bounce"></div>
-                      <div className="w-1 h-4 bg-white rounded-full animate-bounce delay-100"></div>
-                      <div className="w-1 h-2 bg-white rounded-full animate-bounce delay-200"></div>
-                    </div>
-                  ) : (
-                    <>
-                      <Mic className="text-white" size={16} />
-                      <span className="text-sm">Move Eric call to 6PM</span>
-                    </>
-                  )}
+                <div className="bg-red-600/80 text-white px-4 py-4 rounded-2xl rounded-tr-sm max-w-xs flex items-center space-x-3 border border-red-500/50">
+                  <Mic className="text-red-200" size={16} />
+                  <span className="text-sm font-medium">Move Eric call to 6PM</span>
                 </div>
               </div>
             )}
 
             {currentStep >= 2 && (
               <div className="flex justify-start animate-fade-in">
-                <div className="bg-blue-600 text-white px-4 py-3 rounded-2xl max-w-xs">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <div className="w-4 h-4 bg-blue-400 rounded-full flex items-center justify-center">
-                      <span className="text-xs">C</span>
-                    </div>
-                    <span className="text-xs font-semibold">Processing</span>
+                <div className="bg-blue-800/80 text-white px-4 py-4 rounded-2xl rounded-tl-sm max-w-xs border border-blue-600/50">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-blue-300 text-xs font-semibold">Processing</span>
                   </div>
                   <p className="text-sm">Got it. Checking Eric's availability...</p>
                 </div>
@@ -135,10 +119,10 @@ const VoiceRescheduleDemo = () => {
 
             {currentStep >= 3 && (
               <div className="flex justify-start animate-fade-in">
-                <div className="bg-green-600 text-white px-4 py-3 rounded-2xl max-w-xs">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <CheckSquare className="text-white" size={16} />
-                    <span className="text-xs font-semibold">Success</span>
+                <div className="bg-green-800/80 text-white px-4 py-4 rounded-2xl rounded-tl-sm max-w-xs border border-green-600/50">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <CheckCircle className="text-green-400" size={16} />
+                    <span className="text-green-300 text-xs font-semibold">Success</span>
                   </div>
                   <p className="text-sm">Done! Eric's team confirmed. Updated your calendar and sent new invite.</p>
                 </div>
@@ -147,33 +131,26 @@ const VoiceRescheduleDemo = () => {
 
             {currentStep >= 4 && (
               <div className="flex justify-start animate-fade-in">
-                <div className="bg-purple-700 text-white px-4 py-3 rounded-2xl max-w-xs">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Calendar className="text-white" size={16} />
-                    <span className="text-xs font-semibold">Meeting Updated</span>
+                <div className="bg-purple-800/80 text-white px-4 py-4 rounded-2xl rounded-tl-sm max-w-xs border border-purple-600/50">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <Calendar className="text-purple-300" size={16} />
+                    <span className="text-purple-300 text-xs font-semibold">Meeting Updated</span>
                   </div>
-                  <div className="text-xs space-y-1">
-                    <p><span className="text-purple-200">Was:</span> 4:00 PM - 5:00 PM</p>
-                    <p><span className="text-white font-semibold">Now:</span> 6:00 PM - 7:00 PM</p>
-                    <p className="text-purple-200 mt-2">You, Eric Chen, Sarah Kim</p>
+                  <div className="text-sm space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-300">Was:</span>
+                      <span className="text-gray-400 line-through">4:00 PM - 5:00 PM</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-white font-medium">Now:</span>
+                      <span className="text-white font-semibold">6:00 PM - 7:00 PM</span>
+                    </div>
+                    <p className="text-purple-200 text-sm mt-2">You, Eric Chen, Sarah Kim</p>
                   </div>
                 </div>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Progress Indicator */}
-        <div className="flex justify-center space-x-2">
-          {steps.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentStep(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentStep ? 'bg-red-400 w-6' : 'bg-gray-600'
-              }`}
-            />
-          ))}
         </div>
 
         {/* Bottom Text */}
