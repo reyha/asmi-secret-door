@@ -1,309 +1,111 @@
 
-import { useState } from 'react';
-import { TrendingUp, Building, Calendar, DollarSign, Users, ArrowRight, ChevronUp, ChevronDown, Zap } from 'lucide-react';
-import InteractiveFOMOSection from './InteractiveFOMOSection';
+import { useState, useEffect } from 'react';
+import { ArrowRight, Zap, Crown } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
 const FinalCTASectionNew = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [showFOMO, setShowFOMO] = useState(false);
-  const [showInteractiveForm, setShowInteractiveForm] = useState(false);
-  const [revealedCards, setRevealedCards] = useState<number[]>([]);
-  const [formData, setFormData] = useState({
-    why: '',
-    amount: 500000,
-    valuation: '',
-    partner: '',
-    usp: ''
-  });
-  const [formStep, setFormStep] = useState(0);
-  const [showConfetti, setShowConfetti] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeCard, setActiveCard] = useState(0);
 
-  const ctaPoints = [
-    "$5-6M seed → Series A in 18 mo",
-    "Founders: $300M GMV & Meta AI systems", 
-    "Limited seats. Claim yours."
+  const cards = [
+    {
+      icon: <Crown className="w-6 h-6 text-yellow-400" />,
+      title: "$5M seed - Series A in 6-8 months",
+      description: "Join the round that's building the future of personal AI",
+      color: "from-yellow-400/20 to-orange-400/20",
+      borderColor: "border-yellow-400/30"
+    },
+    {
+      icon: <Zap className="w-6 h-6 text-green-400" />,
+      title: "Led by top 1% operator & AI researcher",
+      description: "Proven track record of $400M+ in value creation",
+      color: "from-green-400/20 to-blue-400/20", 
+      borderColor: "border-green-400/30"
+    }
   ];
 
-  const suggestionChips = [
-    "I led $50M+ rounds in AI infrastructure",
-    "My network includes top AI founders",
-    "I backed 3 unicorns in developer tools"
-  ];
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 500);
 
-  const handleCardReveal = (index: number) => {
-    if (!revealedCards.includes(index)) {
-      setRevealedCards(prev => [...prev, index]);
-    }
-  };
+    const cardInterval = setInterval(() => {
+      setActiveCard(prev => (prev + 1) % cards.length);
+    }, 3000);
 
-  const handleFOMOClick = () => {
-    setShowFOMO(true);
-  };
+    return () => {
+      clearTimeout(timer);
+      clearInterval(cardInterval);
+    };
+  }, []);
 
-  const handleInteractiveFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowConfetti(true);
-    
-    setTimeout(() => {
-      const subject = encodeURIComponent('Investment Interest - Asmi');
-      const body = encodeURIComponent(`
-Why me: ${formData.why}
-
-Investment Amount: $${formData.amount.toLocaleString()}
-Valuation Offer: ${formData.valuation}
-Partner: ${formData.partner}
-USP: ${formData.usp}
-
-UTM: investor-site-interactive-form
-      `);
-      
-      window.location.href = `mailto:rishi@asmi.ai?subject=${subject}&body=${body}`;
-    }, 2000);
-  };
-
-  const handleAmountChange = (value: number) => {
-    setFormData(prev => ({ ...prev, amount: value }));
-  };
-
-  const handleChipClick = (chip: string) => {
-    setFormData(prev => ({ ...prev, why: chip }));
-  };
-
-  const nextStep = () => {
-    if (formStep < 3) {
-      setFormStep(prev => prev + 1);
-    }
-  };
-
-  // Show Interactive FOMO Section
-  if (showFOMO) {
-    return <InteractiveFOMOSection />;
-  }
-
-  // Show Interactive Form
-  if (showInteractiveForm) {
-    return (
-      <MobileOptimizedSection maxWidth="sm">
-        {/* Live Offer Preview Card */}
-        <div className="mb-4 p-3 rounded-xl border border-white/10" style={{ backgroundColor: 'var(--bg-surface)' }}>
-          <p className="text-xs text-secondary mb-1">Live Offer Preview</p>
-          <p className="text-sm text-high">
-            ${formData.amount.toLocaleString()} {formData.valuation && `on ${formData.valuation}`}
-            {formData.partner && ` | ${formData.partner}`}
+  return (
+    <MobileOptimizedSection>
+      <div className={`text-center space-y-8 transition-all duration-1000 ${
+        isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+      }`}>
+        
+        {/* Main CTA */}
+        <div className="space-y-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+            Ready to be part of the
+            <span className="block bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+              AI revolution?
+            </span>
+          </h1>
+          
+          <p className="text-gray-300 text-lg leading-relaxed max-w-md mx-auto">
+            Join the waitlist for early access to Asmi and experience the future of personal AI.
           </p>
         </div>
 
-        {/* Step Indicator - Simple text */}
-        <div className="mb-6 text-center">
-          <span className="text-sm text-gray-400">Step {formStep + 1} of 4</span>
-        </div>
-
-        <form onSubmit={handleInteractiveFormSubmit} className="space-y-4">
-          {/* Step 0: Investment Amount Slider */}
-          {formStep === 0 && (
-            <div className="animate-fade-in space-y-4">
-              <label className="block text-lg font-bold text-high">Investment Amount</label>
-              <div className="relative">
-                <input
-                  type="range"
-                  min="500000"
-                  max="10000000"
-                  step="250000"
-                  value={formData.amount}
-                  onChange={(e) => handleAmountChange(parseInt(e.target.value))}
-                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
-                  style={{
-                    background: `linear-gradient(to right, var(--accent-positive) 0%, var(--accent-positive) ${((formData.amount - 500000) / 9500000) * 100}%, #374151 ${((formData.amount - 500000) / 9500000) * 100}%, #374151 100%)`
-                  }}
-                />
-                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black px-2 py-1 rounded-lg text-xs text-white">
-                  ${formData.amount.toLocaleString()}
-                </div>
-              </div>
-              <div className="flex justify-between text-xs text-secondary">
-                <span>$500K</span>
-                <span>$10M</span>
-              </div>
-              <button
-                type="button"
-                onClick={nextStep}
-                className="button-primary w-full"
-              >
-                Continue
-              </button>
-            </div>
-          )}
-
-          {/* Step 1: Why You */}
-          {formStep === 1 && (
-            <div className="animate-fade-in space-y-4">
-              <label className="block text-lg font-bold text-high">Why you?</label>
-              <div className="space-y-2">
-                {suggestionChips.map((chip, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => handleChipClick(chip)}
-                    className="block w-full p-3 rounded-xl border border-white/20 text-left text-secondary hover:text-high hover:border-white/40 transition-colors text-sm"
-                    style={{ backgroundColor: 'var(--bg-surface)' }}
-                  >
-                    {chip}
-                  </button>
-                ))}
-              </div>
-              <textarea
-                value={formData.why}
-                onChange={(e) => setFormData({...formData, why: e.target.value})}
-                className="w-full p-3 rounded-xl border border-white/20 text-white placeholder-gray-400 focus:border-green-400 focus:outline-none text-sm"
-                style={{ backgroundColor: 'var(--bg-surface)' }}
-                placeholder="What makes you the right investor for Asmi?"
-                rows={3}
-              />
-              <button
-                type="button"
-                onClick={nextStep}
-                className="button-primary w-full"
-                disabled={!formData.why}
-              >
-                Continue
-              </button>
-            </div>
-          )}
-
-          {/* Step 2: Valuation Offer */}
-          {formStep === 2 && (
-            <div className="animate-fade-in space-y-4">
-              <label className="block text-lg font-bold text-high">Valuation Offer</label>
-              <input
-                type="text"
-                value={formData.valuation}
-                onChange={(e) => setFormData({...formData, valuation: e.target.value})}
-                className="w-full p-3 rounded-xl border border-white/20 text-white placeholder-gray-400 focus:border-green-400 focus:outline-none text-sm"
-                style={{ backgroundColor: 'var(--bg-surface)' }}
-                placeholder="e.g., $30M pre-money"
-              />
-              <button
-                type="button"
-                onClick={nextStep}
-                className="button-primary w-full"
-                disabled={!formData.valuation}
-              >
-                Continue
-              </button>
-            </div>
-          )}
-
-          {/* Step 3: Partner & USP */}
-          {formStep === 3 && (
-            <div className="animate-fade-in space-y-4">
-              <div>
-                <label className="block text-lg font-bold text-high mb-2">Partner we'd work with</label>
-                <input
-                  type="text"
-                  value={formData.partner}
-                  onChange={(e) => setFormData({...formData, partner: e.target.value})}
-                  className="w-full p-3 rounded-xl border border-white/20 text-white placeholder-gray-400 focus:border-green-400 focus:outline-none text-sm"
-                  style={{ backgroundColor: 'var(--bg-surface)' }}
-                  placeholder="Partner name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-lg font-bold text-high mb-2">What's their USP?</label>
-                <textarea
-                  value={formData.usp}
-                  onChange={(e) => setFormData({...formData, usp: e.target.value})}
-                  className="w-full p-3 rounded-xl border border-white/20 text-white placeholder-gray-400 focus:border-green-400 focus:outline-none text-sm"
-                  style={{ backgroundColor: 'var(--bg-surface)' }}
-                  placeholder="What unique value do they bring?"
-                  rows={2}
-                />
-              </div>
-
-              {showConfetti ? (
-                <div className="text-center">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-400 text-black font-medium mb-3 text-sm">
-                    <Zap size={16} />
-                    Thank You—We'll be in touch!
-                  </div>
-                  <div className="p-3 rounded-xl border-2 border-green-400 bg-green-400/10">
-                    <p className="text-sm font-bold text-high mb-1">🏆 Asmi Vanguard Investor</p>
-                    <p className="text-xs text-secondary">#3 of 10 seats claimed</p>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  type="submit"
-                  className="button-primary w-full animate-pulse"
-                >
-                  Submit Your Offer
-                </button>
-              )}
-            </div>
-          )}
-        </form>
-
-        <button
-          onClick={() => setShowInteractiveForm(false)}
-          className="mt-3 text-secondary hover:text-high transition-colors text-sm"
-        >
-          ← Back
-        </button>
-      </MobileOptimizedSection>
-    );
-  }
-
-  // Main CTA Section
-  return (
-    <MobileOptimizedSection maxWidth="sm">
-      <div className="text-center space-y-6">
-        <h2 className="text-2xl font-bold text-high leading-tight">
-          Back the personal OS of the future.
-        </h2>
-
-        {/* Three key points - tap to reveal */}
+        {/* Investment Opportunity Cards */}
         <div className="space-y-4">
-          {ctaPoints.map((point, index) => (
-            <div 
+          {cards.map((card, index) => (
+            <div
               key={index}
-              onClick={() => handleCardReveal(index)}
-              className={`p-4 rounded-xl border border-white/10 cursor-pointer transition-all duration-500 ${
-                revealedCards.includes(index) 
-                  ? 'opacity-100 transform scale-100 bg-white/5' 
-                  : 'opacity-70 transform scale-95'
+              className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-500 ${
+                activeCard === index 
+                  ? `bg-gradient-to-r ${card.color} ${card.borderColor} scale-105` 
+                  : 'bg-black/40 border-white/10'
               }`}
-              style={{ backgroundColor: 'var(--bg-surface)' }}
             >
-              <div className="text-sm font-medium text-high">
-                {revealedCards.includes(index) ? point : 'Tap to reveal'}
+              <div className="flex items-center space-x-4">
+                <div className={`p-3 rounded-full transition-all duration-300 ${
+                  activeCard === index ? 'bg-black/20' : 'bg-white/10'
+                }`}>
+                  {card.icon}
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-lg font-bold text-white mb-1">
+                    {card.title}
+                  </h3>
+                  <p className="text-gray-300 text-sm">
+                    {card.description}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* CTA Buttons */}
-        <div className="space-y-3">
-          <button
-            onClick={() => setShowInteractiveForm(true)}
-            className="button-primary w-full py-4 text-lg relative overflow-hidden"
-          >
-            <span className="relative z-10">Lead our $5M seed</span>
-            <div className="absolute inset-0 bg-green-300 opacity-30 animate-pulse"></div>
+        {/* Action Buttons */}
+        <div className="space-y-4 pt-4">
+          <button className="w-full bg-gradient-to-r from-green-400 to-blue-400 text-black font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 hover:shadow-2xl hover:shadow-green-400/25 hover:scale-105">
+            Get Early Access
+            <ArrowRight className="inline ml-2 w-5 h-5" />
           </button>
           
-          <button
-            onClick={handleFOMOClick}
-            className="w-full py-4 rounded-full text-lg font-medium transition-all duration-300 relative overflow-hidden"
-            style={{ 
-              backgroundColor: 'rgba(255, 114, 111, 0.1)',
-              border: '2px solid rgba(255, 114, 111, 0.5)',
-              color: 'var(--text-alert)'
-            }}
-          >
-            <span className="relative z-10">Miss our seed?</span>
-            <div className="absolute inset-0 bg-red-400/10 animate-pulse"></div>
+          <button className="w-full border border-white/30 text-white font-medium py-4 px-8 rounded-2xl text-lg transition-all duration-300 hover:bg-white/10 hover:border-white/50">
+            Investor Deck
           </button>
+        </div>
+
+        {/* Bottom tagline */}
+        <div className="pt-8 opacity-80">
+          <p className="text-gray-400 text-sm">
+            🚀 Building the future, one conversation at a time
+          </p>
         </div>
       </div>
     </MobileOptimizedSection>

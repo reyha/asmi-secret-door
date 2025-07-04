@@ -17,16 +17,28 @@ const TractionSectionNew = () => {
   ];
 
   const testimonials = [
-    "This is exactly what I've been looking for. Asmi actually gets things done without me having to think about it.",
-    "Finally, an AI that remembers everything and helps me stay on top of my game.",
-    "The calendar integration is pure magic. It knows who I'm meeting before I even think about it."
+    {
+      text: "Asmi remembers everything I forget. It's like having a personal chief of staff who actually gets things done.",
+      name: "Karan",
+      title: "Cartesia"
+    },
+    {
+      text: "Finally, an AI that doesn't just chat but actually helps me stay ahead of my portfolio. Game changing for VCs.",
+      name: "Nitin", 
+      title: "Antler VC"
+    },
+    {
+      text: "The context switching between meetings used to kill my productivity. Asmi solved this completely.",
+      name: "Pooja",
+      title: "Head of Growth, Smallest AI"
+    }
   ];
 
   const roadmapCards = [
-    { title: 'Calendar Sync', status: 'Live', color: 'bg-green-400' },
-    { title: 'iMessage', status: 'Beta', color: 'bg-blue-400' },
-    { title: 'Summaries', status: 'Coming', color: 'bg-purple-400' },
-    { title: 'Beta Scale', status: 'Q2', color: 'bg-orange-400' }
+    { title: 'Calendar & Contacts', status: 'Live', color: 'bg-green-400' },
+    { title: 'Mail Sync', status: 'Live', color: 'bg-green-400' },
+    { title: 'iMessage', status: "Q3'25", color: 'bg-blue-400' },
+    { title: '50K Users', status: "Q3'25", color: 'bg-purple-400' }
   ];
 
   useEffect(() => {
@@ -46,13 +58,13 @@ const TractionSectionNew = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-cycle stats and testimonials
+  // Auto-cycle stats and testimonials - faster for stats
   useEffect(() => {
     if (!isVisible) return;
     
     const statInterval = setInterval(() => {
       setCurrentStat(prev => (prev + 1) % stats.length);
-    }, 3000);
+    }, 1500); // Faster from 3000ms to 1500ms
 
     const testimonialInterval = setInterval(() => {
       setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
@@ -68,13 +80,13 @@ const TractionSectionNew = () => {
   useEffect(() => {
     if (!isVisible) return;
     
-    const currentText = testimonials[currentTestimonial];
+    const currentTestimonialData = testimonials[currentTestimonial];
     setTypedText('');
     let i = 0;
     
     const typeInterval = setInterval(() => {
-      if (i < currentText.length) {
-        setTypedText(currentText.substring(0, i + 1));
+      if (i < currentTestimonialData.text.length) {
+        setTypedText(currentTestimonialData.text.substring(0, i + 1));
         i++;
       } else {
         clearInterval(typeInterval);
@@ -110,13 +122,19 @@ const TractionSectionNew = () => {
           {/* Right: Testimonial with typing */}
           <div className="bg-black/80 border border-white/20 rounded-3xl p-6 md:p-8">
             <div className="flex items-start space-x-4">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex-shrink-0"></div>
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex-shrink-0 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">
+                  {testimonials[currentTestimonial].name[0]}
+                </span>
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-base md:text-lg text-white font-inter mb-2 min-h-[3rem] md:min-h-[4rem] break-words">
                   "{typedText}"
-                  {typedText.length < testimonials[currentTestimonial].length && <span className="animate-pulse">|</span>}
+                  {typedText.length < testimonials[currentTestimonial].text.length && <span className="animate-pulse">|</span>}
                 </p>
-                <p className="text-gray-400 font-inter text-sm md:text-base">— Beta User</p>
+                <p className="text-gray-400 font-inter text-sm md:text-base">
+                  — {testimonials[currentTestimonial].name}, {testimonials[currentTestimonial].title}
+                </p>
               </div>
             </div>
           </div>

@@ -9,27 +9,27 @@ const BuiltForEveryoneSection = () => {
   const personas = [
     {
       icon: <User className="text-white" size={20} />,
-      title: "Founder",
+      title: "Founders",
       summary: "Investor readiness",
       example: "Asmi prepares detailed investor updates from scattered voice notes, tracks key metrics across conversations, and reminds you of follow-ups with potential backers."
     },
     {
       icon: <Briefcase className="text-white" size={20} />,
-      title: "VP Sales",
+      title: "Sales Teams",
       summary: "Deal intelligence", 
       example: "Asmi analyzes every client interaction, surfaces buying signals from emails and calls, and provides context before each prospect meeting to close more deals."
     },
     {
       icon: <TrendingUp className="text-white" size={20} />,
-      title: "Investor",
-      summary: "Portfolio insights",
-      example: "Asmi tracks portfolio company progress from updates, flags red flags early, and prepares briefings before board meetings with key insights and action items."
+      title: "Fast Growing Startups",
+      summary: "Scale intelligence",
+      example: "Asmi tracks team conversations across slack and meetings, surfaces blockers and opportunities early, and keeps leadership aligned on priorities and progress."
     },
     {
       icon: <Users className="text-white" size={20} />,
-      title: "Consultant", 
-      summary: "Client context",
-      example: "Asmi maintains deep client history, surfaces relevant past work and insights, and ensures you're always prepared with the right context for every client interaction."
+      title: "Knowledge Workers", 
+      summary: "Context mastery",
+      example: "Asmi maintains deep project history, surfaces relevant past work and insights, and ensures you're always prepared with the right context for every client interaction."
     }
   ];
 
@@ -37,7 +37,7 @@ const BuiltForEveryoneSection = () => {
     <MobileOptimizedSection>
       <div className="text-center space-y-8">
         <h2 className="text-3xl font-bold text-white">
-          Built for everyone.
+          Built for fast moving people.
         </h2>
 
         {/* Main selected persona */}
