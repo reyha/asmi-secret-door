@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import NeuralBloomBackground from '../NeuralBloomBackground';
 
-const InteractiveHeroSection = () => {
+const InteractiveHeroSection = ({isActive}) => {
   const [currentRoast, setCurrentRoast] = useState(0);
   const [typedText, setTypedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -12,6 +12,12 @@ const InteractiveHeroSection = () => {
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [showError, setShowError] = useState(false);
   const [password, setPassword] = useState('');
+
+    useEffect(() => {
+    if (!isActive) return;
+
+    // Trigger animation here
+  }, [isActive]);
 
   // Personalized roasts - fun & conversational
   const roasts = [

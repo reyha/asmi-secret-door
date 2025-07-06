@@ -106,7 +106,7 @@ const Index = () => {
           </form>
 
           {/* Contact */}
-          <div className="text-gray-500">
+          {/* <div className="text-gray-500">
             <p className="mb-2 font-light font-inter text-sm">If you're here without a password, reach out to</p>
             <a 
               href="mailto:rishi@asmi.ai" 
@@ -114,7 +114,7 @@ const Index = () => {
             >
               rishi@asmi.ai
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

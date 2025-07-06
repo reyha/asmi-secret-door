@@ -69,9 +69,9 @@ const FounderSectionNew = () => {
       <div className="space-y-6">
         {/* Header */}
         <div className="text-center space-y-3">
-          <h2 className="text-2xl font-bold text-white leading-tight">
+          {/* <h2 className="text-2xl font-bold text-white leading-tight">
             Serial Founder meets Cracked Scientist
-          </h2>
+          </h2> */}
           <p className="text-gray-400 text-sm">
             $400M+ combined track record in building & scaling
           </p>

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { TrendingUp, Building, Users, ArrowRight, ArrowLeft } from 'lucide-react';
 import MobileOptimizedSection from './MobileOptimizedSection';
 
-const InteractiveFOMOSection = () => {
+const InteractiveFOMOSection = ({setShowFOMO}) => {
   const [currentCard, setCurrentCard] = useState(0);
   const [showCTA, setShowCTA] = useState(false);
 
@@ -62,7 +62,8 @@ const InteractiveFOMOSection = () => {
 
   const handleBackClick = () => {
     // This will be handled by parent component
-    window.history.back();
+    // window.history.back();
+    setShowFOMO(false)
   };
 
   return (

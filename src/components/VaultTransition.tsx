@@ -101,7 +101,7 @@ const VaultTransition = ({ onComplete }: VaultTransitionProps) => {
       
       {/* Text */}
       <div className="absolute bottom-20 text-center">
-        <p className="text-green-400 text-lg font-light animate-pulse">
+        <p className="text-white text-lg font-light animate-pulse">
           {stage === 'closed' ? 'Accessing vault...' : 
            stage === 'opening' ? 'Opening secure chamber...' : 
            'Welcome to the future'}

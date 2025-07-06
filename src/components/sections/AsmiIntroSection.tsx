@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
+import MobileOptimizedSection from "./MobileOptimizedSection";
+import { motion } from "framer-motion";
 
-import { useState, useEffect } from 'react';
-import MobileOptimizedSection from './MobileOptimizedSection';
-
-const AsmiIntroSection = () => {
-  const [typedText, setTypedText] = useState('');
+const AsmiIntroSection = ({ isActive }) => {
+  const [typedText, setTypedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showPlatforms, setShowPlatforms] = useState(false);
   const [currentPlatform, setCurrentPlatform] = useState(0);
@@ -14,11 +14,23 @@ const AsmiIntroSection = () => {
   const platforms = ["WhatsApp", "iMessage"];
   const tags = ["Calendar", "Meeting Preps", "Mails"];
 
-  // Typewriter effect
+  // Reset all state when isActive toggles
   useEffect(() => {
+    if (!isActive) {
+      // Reset state when user navigates away
+      setTypedText("");
+      setIsTyping(false);
+      setShowPlatforms(false);
+      setCurrentPlatform(0);
+      setShowTags(false);
+      setActiveTags([]);
+      return;
+    }
+
+    // Trigger typewriter only when active
     setIsTyping(true);
     let i = 0;
-    
+
     const typeInterval = setInterval(() => {
       if (i <= fullText.length) {
         setTypedText(fullText.substring(0, i));
@@ -27,50 +39,50 @@ const AsmiIntroSection = () => {
         clearInterval(typeInterval);
         setIsTyping(false);
         setShowPlatforms(true);
-        
-        // Show tags after platforms are visible
+
         setTimeout(() => {
           setShowTags(true);
-        }, 1500);
+        }, 500);
       }
     }, 50);
 
     return () => clearInterval(typeInterval);
-  }, []);
+  }, [isActive]);
 
-  // Platform scroll effect
   useEffect(() => {
-    if (showPlatforms) {
-      const platformInterval = setInterval(() => {
-        setCurrentPlatform(prev => (prev + 1) % platforms.length);
-      }, 2000);
+    if (!isActive || !showPlatforms) return;
 
-      return () => clearInterval(platformInterval);
-    }
-  }, [showPlatforms]);
+    const platformInterval = setInterval(() => {
+      setCurrentPlatform((prev) => (prev + 1) % platforms.length);
+    }, 2000);
 
-  // Tag animation effect
+    return () => clearInterval(platformInterval);
+  }, [isActive, showPlatforms]);
+
   useEffect(() => {
-    if (showTags) {
-      tags.forEach((_, index) => {
-        setTimeout(() => {
-          setActiveTags(prev => [...prev, index]);
-        }, index * 500);
-      });
-    }
-  }, [showTags]);
+    if (!isActive || !showTags) return;
+
+    tags.forEach((_, index) => {
+      setTimeout(() => {
+        setActiveTags((prev) => [...prev, index]);
+      }, index * 500);
+    });
+  }, [isActive, showTags]);
+
+  // Optional: don't render anything if not active (for optimization)
+  if (!isActive) return null;
 
   return (
     <MobileOptimizedSection maxWidth="md">
       <div className="space-y-8 text-center">
-        {/* Main Text with Typewriter Effect */}
+        {/* Main Text */}
         <div className="space-y-6">
           <div className="text-3xl md:text-4xl font-space font-bold text-white leading-tight min-h-[120px] flex items-center justify-center">
             <div>
               {typedText}
               {showPlatforms && (
                 <span className="text-green-400 relative inline-block min-w-[140px] text-left">
-                  <span 
+                  <span
                     key={currentPlatform}
                     className="absolute left-0 top-0 animate-fade-in"
                   >
@@ -78,11 +90,13 @@ const AsmiIntroSection = () => {
                   </span>
                 </span>
               )}
-              {isTyping && <span className="animate-pulse text-green-400">|</span>}
+              {isTyping && (
+                <span className="animate-pulse text-green-400">|</span>
+              )}
             </div>
           </div>
 
-          {/* Visual Enhancement */}
+          {/* Platform Icons */}
           {showPlatforms && (
             <div className="flex items-center justify-center space-x-4 animate-fade-in">
               <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
@@ -96,22 +110,34 @@ const AsmiIntroSection = () => {
           )}
         </div>
 
-        {/* Feature Tags */}
+        {/* Tags */}
         {showTags && (
-          <div className="flex items-center justify-center space-x-4 pt-8">
+          <motion.div
+            className="flex items-center justify-center space-x-4 pt-8"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.3,
+                },
+              },
+            }}
+          >
             {tags.map((tag, index) => (
-              <div
+              <motion.div
                 key={tag}
-                className={`px-4 py-2 rounded-full border transition-all duration-500 ${
-                  activeTags.includes(index)
-                    ? 'bg-white/10 border-white/30 text-white animate-pulse'
-                    : 'bg-transparent border-gray-600 text-gray-500'
-                }`}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.8, y: 10 },
+                  visible: { opacity: 1, scale: 1, y: 0 },
+                }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="px-4 py-2 rounded-full border border-white/30 text-white bg-white/10"
               >
                 <span className="text-sm font-medium">{tag}</span>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </MobileOptimizedSection>

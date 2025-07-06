@@ -78,7 +78,7 @@ UTM: investor-site-interactive-form
 
   // Show Interactive FOMO Section
   if (showFOMO) {
-    return <InteractiveFOMOSection />;
+    return <InteractiveFOMOSection setShowFOMO={setShowFOMO}/>;
   }
 
   // Show Interactive Form

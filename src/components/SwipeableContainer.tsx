@@ -10,13 +10,10 @@ interface SwipeableContainerProps {
 const SwipeableContainer = ({ children, onSectionChange }: SwipeableContainerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showGuide, setShowGuide] = useState(true);
+    const [showSwipeHint, setShowSwipeHint] = useState(true);
 
   useEffect(() => {
-    // Hide guide after 3 seconds
-    const timer = setTimeout(() => {
-      setShowGuide(false);
-    }, 3000);
-    return () => clearTimeout(timer);
+     setShowSwipeHint(true);
   }, []);
 
   useEffect(() => {
@@ -41,7 +38,7 @@ const SwipeableContainer = ({ children, onSectionChange }: SwipeableContainerPro
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black">
+    <div className="relative w-full h-screen overflow-x-hidden overflow-y-auto bg-black">
       {/* Progress Dots */}
       <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-30 flex space-x-2">
         {children.map((_, index) => (
@@ -77,6 +74,7 @@ const SwipeableContainer = ({ children, onSectionChange }: SwipeableContainerPro
               onSwipeRight={handleSwipeRight}
               isActive={index === currentIndex}
               showGuide={showGuide && index === 0}
+              showSwipeHint={true}
             >
               {child}
             </SwipeableCard>

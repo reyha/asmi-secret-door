@@ -33,7 +33,7 @@ const TimelineHowItWorks = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        entries.forEach((entry) => {          
           if (entry.isIntersecting) {
             // Start revealing steps one by one
             const revealSteps = async () => {
