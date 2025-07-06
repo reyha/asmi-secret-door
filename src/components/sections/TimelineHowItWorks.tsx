@@ -29,6 +29,8 @@ const TimelineHowItWorks = () => {
   ];
 
   const highlightText = "Asmi compounds each day to become super-intelligent, high agency version of yourself.";
+  console.log(showHighlight, isTyping, typedText);
+  
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -61,21 +63,23 @@ const TimelineHowItWorks = () => {
   }, []);
 
   useEffect(() => {
-    if (showHighlight && !isTyping) {
-      setIsTyping(true);
-      let i = 0;
-      const typeInterval = setInterval(() => {
-        if (i <= highlightText.length) {
-          setTypedText(highlightText.substring(0, i));
-          i++;
-        } else {
-          clearInterval(typeInterval);
-          setIsTyping(false);
-        }
-      }, 40);
-      return () => clearInterval(typeInterval);
-    }
-  }, [showHighlight, isTyping, highlightText]);
+    if (!showHighlight) return;
+
+    let i = 0;
+    setIsTyping(true);
+    const typeInterval = setInterval(() => {
+      if (i <= highlightText.length) {
+        setTypedText(highlightText.substring(0, i));
+        i++;
+      } else {
+        clearInterval(typeInterval);
+        setIsTyping(false);
+      }
+    }, 40);
+
+    return () => clearInterval(typeInterval);
+  }, [showHighlight]);
+
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-8 sm:py-12 md:py-16 lg:py-20 flex items-center">
