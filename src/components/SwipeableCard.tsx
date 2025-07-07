@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -8,6 +9,7 @@ interface SwipeableCardProps {
   isActive: boolean;
   showGuide?: boolean;
   showSwipeHint?: boolean;
+  showSwipeTilt: any
 }
 
 const SwipeableCard = ({
@@ -16,7 +18,7 @@ const SwipeableCard = ({
   onSwipeRight,
   isActive,
   showGuide = false,
-  showSwipeHint = false,
+  showSwipeTilt = false,
 }: SwipeableCardProps) => {
   const [dragState, setDragState] = useState({
     isDragging: false,
@@ -26,9 +28,11 @@ const SwipeableCard = ({
   });
   const cardRef = useRef<HTMLDivElement>(null);
   const [hasSwipedOnce, setHasSwipedOnce] = useState(false);
+  console.log(showSwipeTilt);
+  
 
   useEffect(() => {
-    if (!showSwipeHint || hasSwipedOnce) return;
+    if (!showSwipeTilt || hasSwipedOnce) return;
 
     const animateSwipe = () => {
       // Delay before animation starts
@@ -56,7 +60,7 @@ const SwipeableCard = ({
     };
 
     animateSwipe();
-  }, [showSwipeHint, hasSwipedOnce]);
+  }, [showSwipeTilt, hasSwipedOnce]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];

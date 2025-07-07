@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect } from 'react';
 import SwipeableCard from './SwipeableCard';
@@ -5,16 +6,12 @@ import SwipeableCard from './SwipeableCard';
 interface SwipeableContainerProps {
   children: React.ReactNode[];
   onSectionChange?: (index: number) => void;
+  showSwipeTilt?: any
 }
 
-const SwipeableContainer = ({ children, onSectionChange }: SwipeableContainerProps) => {
+const SwipeableContainer = ({ children, onSectionChange, showSwipeTilt }: SwipeableContainerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showGuide, setShowGuide] = useState(true);
-    const [showSwipeHint, setShowSwipeHint] = useState(true);
-
-  useEffect(() => {
-     setShowSwipeHint(true);
-  }, []);
 
   useEffect(() => {
     onSectionChange?.(currentIndex);
@@ -74,7 +71,7 @@ const SwipeableContainer = ({ children, onSectionChange }: SwipeableContainerPro
               onSwipeRight={handleSwipeRight}
               isActive={index === currentIndex}
               showGuide={showGuide && index === 0}
-              showSwipeHint={true}
+              showSwipeTilt={showSwipeTilt}
             >
               {child}
             </SwipeableCard>

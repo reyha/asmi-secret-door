@@ -1,19 +1,18 @@
+import { useState, useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
+import NeuralBloomBackground from "../NeuralBloomBackground";
 
-import { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import NeuralBloomBackground from '../NeuralBloomBackground';
-
-const InteractiveHeroSection = ({isActive}) => {
+const InteractiveHeroSection = ({ isActive, setShowSwipeTilt }) => {
   const [currentRoast, setCurrentRoast] = useState(0);
-  const [typedText, setTypedText] = useState('');
+  const [typedText, setTypedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showRoasts, setShowRoasts] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
 
-    useEffect(() => {
+  useEffect(() => {
     if (!isActive) return;
 
     // Trigger animation here
@@ -25,7 +24,7 @@ const InteractiveHeroSection = ({isActive}) => {
     "Your LinkedIn says 'Thought Leader' but you haven't posted in 6 months. Busy making actual money? 💰",
     "You backed that unicorn everyone said would fail. Guess coffee meetings at 6 AM do pay off ☕",
     "Your portfolio company just raised at 2x valuation. Meanwhile, you're here scouting the next big thing 🚀",
-    "You said 'AI is overhyped' in 2022. Your recent investments suggest otherwise... 🤖"
+    "You said 'AI is overhyped' in 2022. Your recent investments suggest otherwise... 🤖",
   ];
 
   // Welcome sequence
@@ -46,11 +45,11 @@ const InteractiveHeroSection = ({isActive}) => {
     }
 
     const roast = roasts[currentRoast];
-    setTypedText('');
+    setTypedText("");
     setIsTyping(true);
-    
+
     let charIndex = 0;
-    
+
     const typingInterval = setInterval(() => {
       if (charIndex <= roast.length) {
         setTypedText(roast.slice(0, charIndex));
@@ -58,14 +57,17 @@ const InteractiveHeroSection = ({isActive}) => {
       } else {
         clearInterval(typingInterval);
         setIsTyping(false);
-        
+
         // Wait before moving to next roast
         setTimeout(() => {
           if (currentRoast < roasts.length - 1) {
-            setCurrentRoast(prev => prev + 1);
+            setCurrentRoast((prev) => prev + 1);
           } else {
             // All roasts done, show swipe hint
-            setTimeout(() => setShowSwipeHint(true), 1000);
+            setShowSwipeTilt(true);
+            setTimeout(() => {
+              setShowSwipeHint(true);
+            }, 1000);
           }
         }, 2000);
       }
@@ -76,7 +78,7 @@ const InteractiveHeroSection = ({isActive}) => {
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== 'correct123') {
+    if (password !== "correct123") {
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
     }
@@ -100,11 +102,12 @@ const InteractiveHeroSection = ({isActive}) => {
                     <div className="absolute inset-0 rounded-full bg-green-400/20 animate-ping"></div>
                   </div>
                 </div>
-                
+
                 <h2 className="text-2xl md:text-3xl font-space font-light text-white mb-3">
-                  Well, well... <span className="font-medium text-green-400">Alex</span> 👋
+                  Well, well...{" "}
+                  <span className="font-medium text-green-400">Alex</span> 👋
                 </h2>
-                
+
                 <p className="text-base text-gray-300 font-light">
                   Let me tell you what I know about you...
                 </p>
@@ -122,23 +125,25 @@ const InteractiveHeroSection = ({isActive}) => {
                         {currentRoast + 1} of {roasts.length}
                       </span>
                     </div>
-                    
+
                     {/* Typing indicator when starting new roast */}
-                    {isTyping && typedText === '' && (
+                    {isTyping && typedText === "" && (
                       <div className="flex items-center justify-center space-x-1 mb-6">
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-100"></div>
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-200"></div>
                       </div>
                     )}
-                    
+
                     {/* Typed roast */}
                     {typedText && (
                       <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
                         <p className="text-lg text-white font-inter leading-relaxed">
                           {typedText}
                           {isTyping && (
-                            <span className="animate-pulse text-green-400">|</span>
+                            <span className="animate-pulse text-green-400">
+                              |
+                            </span>
                           )}
                         </p>
                       </div>
@@ -150,13 +155,17 @@ const InteractiveHeroSection = ({isActive}) => {
 
             {/* Swipe Hint */}
             {showSwipeHint && (
-              <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
+              <div
+                className="animate-fade-in"
+                style={{ animationDelay: "500ms" }}
+              >
                 <div className="flex items-center justify-center space-x-3 text-gray-400">
-                  <ArrowLeft 
-                    className="animate-pulse" 
+                  <ArrowLeft
+                    className="animate-pulse"
                     size={20}
                     style={{
-                      animation: 'pulse 2s ease-in-out infinite, translateX 2s ease-in-out infinite',
+                      animation:
+                        "pulse 2s ease-in-out infinite, translateX 2s ease-in-out infinite",
                     }}
                   />
                   <span className="text-sm font-inter">

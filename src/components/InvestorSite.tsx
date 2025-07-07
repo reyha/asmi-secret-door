@@ -29,6 +29,7 @@ const FinalCTASectionNew = lazy(() => import("./sections/FinalCTASectionNew"));
 const InvestorSite = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showSwipeTilt, setShowSwipeTilt] = useState(false);
 
   // 👇 List of sections with components and titles
   const sections = [
@@ -81,7 +82,7 @@ const InvestorSite = () => {
       </div>
 
       {/* Main swipe-based container */}
-      <SwipeableContainer onSectionChange={handleSectionChange}>
+      <SwipeableContainer onSectionChange={handleSectionChange} showSwipeTilt={showSwipeTilt}>
         {sections.map((Section, index) => {
           const isVisible = Math.abs(currentSection - index) <= 1;
 
@@ -95,7 +96,7 @@ const InvestorSite = () => {
                     </div>
                   }
                 >
-                  <Section.component isActive={index === currentSection} />
+                  <Section.component isActive={index === currentSection} setShowSwipeTilt={setShowSwipeTilt} />
                 </Suspense>
               )}
             </div>
