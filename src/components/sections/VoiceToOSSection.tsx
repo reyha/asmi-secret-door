@@ -61,7 +61,8 @@ const VoiceToOSSection = () => {
   }, []);
 
   useEffect(() => {
-    if (showHighlight && !isTyping) {
+    if (!showHighlight) return;
+
       setIsTyping(true);
       let i = 0;
       const typeInterval = setInterval(() => {
@@ -74,8 +75,7 @@ const VoiceToOSSection = () => {
         }
       }, 40);
       return () => clearInterval(typeInterval);
-    }
-  }, [showHighlight, isTyping, highlightText]);
+  }, [showHighlight]);
 
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-8 sm:py-12 md:py-16 lg:py-20 flex items-center">

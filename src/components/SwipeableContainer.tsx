@@ -47,9 +47,9 @@ const SwipeableContainer = ({ children, onSectionChange }: SwipeableContainerPro
             onClick={() => handleDotClick(index)}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${
               index === currentIndex 
-                ? 'bg-green-400 w-6' 
+                ? 'bg-white w-6' 
                 : index < currentIndex
-                ? 'bg-green-400/60'
+                ? 'bg-white/80'
                 : 'bg-white/30'
             }`}
           />

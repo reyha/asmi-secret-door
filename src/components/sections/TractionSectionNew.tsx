@@ -98,17 +98,17 @@ const TractionSectionNew = () => {
   return (
     <div ref={sectionRef} className="min-h-screen bg-black py-12 md:py-20 flex items-center">
       <div className="max-w-6xl mx-auto px-4 md:px-6">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-white mb-12 md:mb-16 text-center leading-tight">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-white mb-6 md:mb-16 text-center leading-tight">
           Built. Shipped. Growing.
         </h2>
 
         {/* Split Screen - Stats and Testimonials */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-6 md:mb-16">
           {/* Left: Stats Carousel */}
-          <div className="bg-black/80 border border-white/20 rounded-3xl p-6 md:p-8 text-center">
+          <div className="bg-black/80 border border-white/20 rounded-3xl p-3 md:p-8 text-center">
             <div className="h-24 md:h-32 flex items-center justify-center">
               <div className="animate-fade-in" key={currentStat}>
-                <div className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-green-400 mb-2">
+                <div className="text-3xl md:text-4xl lg:text-5xl font-space font-bold text-green-400">
                   {stats[currentStat].number}
                 </div>
                 <div className="text-lg md:text-xl text-white font-inter">
@@ -137,7 +137,7 @@ const TractionSectionNew = () => {
 
         {/* Next 100 Days Roadmap */}
         <div className="text-center">
-          <h3 className="text-xl md:text-2xl font-space font-medium text-white mb-6 md:mb-8">
+          <h3 className="text-xl md:text-2xl font-space font-medium text-white mb-3 md:mb-8">
             Next 100 Days
           </h3>
 

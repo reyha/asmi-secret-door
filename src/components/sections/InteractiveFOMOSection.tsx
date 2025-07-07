@@ -67,10 +67,10 @@ const InteractiveFOMOSection = ({setShowFOMO}) => {
   };
 
   return (
-    <MobileOptimizedSection maxWidth="sm">
+    <MobileOptimizedSection maxWidth="sm" className='overflow-auto'>
       <div className="space-y-8 text-center">
         {/* Back Button */}
-        <div className="flex justify-start">
+        {/* <div className="flex justify-start">
           <button
             onClick={handleBackClick}
             className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
@@ -78,16 +78,16 @@ const InteractiveFOMOSection = ({setShowFOMO}) => {
             <ArrowLeft size={16} />
             <span className="text-sm">Back to Personal OS</span>
           </button>
-        </div>
+        </div> */}
 
         {/* Header */}
         <div className="space-y-3">
           <h2 className="text-2xl font-bold text-red-400 leading-tight">
             What You'll Miss
           </h2>
-          <p className="text-base text-gray-400">
+          {/* <p className="text-base text-gray-400">
             The cost of missing the Personal OS revolution
-          </p>
+          </p> */}
         </div>
 
         {/* Auto-swiping Cards */}

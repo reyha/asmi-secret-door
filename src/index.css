@@ -550,3 +550,12 @@ All colors MUST be HSL.
     margin-top: 2rem !important;
   }
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* For IE and Edge */
+  scrollbar-width: none; /* For Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in WebKit-based browsers */
+}

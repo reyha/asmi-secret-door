@@ -39,7 +39,7 @@ const FounderSectionNew = () => {
         { label: "6 Yrs", sublabel: "Meta AI", icon: Zap },
         { label: "PhD", sublabel: "Carnegie Mellon", icon: Star }
       ],
-      companies: ["Meta AI", "Google DeepMind", "CMU", "IIT Bombay"],
+      companies: ["Meta AI", "Google DeepMind", "CMU"],
       achievements: [
         "A.G. Milnes Award - For highest quality PhD thesis",
         "Snap Inc. Research Fellowship"
@@ -72,9 +72,9 @@ const FounderSectionNew = () => {
           {/* <h2 className="text-2xl font-bold text-white leading-tight">
             Serial Founder meets Cracked Scientist
           </h2> */}
-          <p className="text-gray-400 text-sm">
+          {/* <p className="text-gray-400 text-sm">
             $400M+ combined track record in building & scaling
-          </p>
+          </p> */}
         </div>
 
         {/* Founder Switcher Tabs */}
@@ -99,12 +99,12 @@ const FounderSectionNew = () => {
           
           {/* Founder Header */}
           <div className="flex items-start space-x-4 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center shadow-lg border border-gray-600">
+            {/* <div className="w-16 h-16 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center shadow-lg border border-gray-600">
               <span className="text-2xl font-bold text-white">
                 {currentFounder.avatar}
               </span>
-            </div>
-            <div className="flex-1">
+            </div> */}
+            <div className="flex-1 flex items-center gap-2">
               <h3 className="text-xl font-bold text-white mb-1">
                 {currentFounder.name}
               </h3>

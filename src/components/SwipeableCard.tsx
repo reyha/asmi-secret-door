@@ -33,7 +33,7 @@ const SwipeableCard = ({
     const animateSwipe = () => {
       // Delay before animation starts
       setTimeout(() => {
-        // Swipe left
+        // Swipe right only
         setDragState({
           isDragging: true,
           startX: 0,
@@ -42,26 +42,16 @@ const SwipeableCard = ({
         });
 
         setTimeout(() => {
-          // Swipe right
+          // Reset to center
           setDragState({
-            isDragging: true,
+            isDragging: false,
             startX: 0,
-            currentX: 50,
-            deltaX: 50,
+            currentX: 0,
+            deltaX: 0,
           });
 
-          setTimeout(() => {
-            // Reset to center
-            setDragState({
-              isDragging: false,
-              startX: 0,
-              currentX: 0,
-              deltaX: 0,
-            });
-
-            setHasSwipedOnce(true);
-          }, 700); // pause after swipe right
-        }, 700); // pause after swipe left
+          setHasSwipedOnce(true);
+        }, 700); // pause after right tilt
       }, 600); // initial delay before starting animation
     };
 
@@ -115,14 +105,30 @@ const SwipeableCard = ({
   };
 
   const getCardStyle = () => {
-    const rotation = dragState.deltaX * 0.05; // reduce tilt
-    const opacity = Math.max(0.85, 1 - Math.abs(dragState.deltaX) / 300);
+    const rotation = dragState.deltaX * (hasSwipedOnce ? 0.1 : 0.05);
+    const opacity = Math.max(
+      hasSwipedOnce ? 0.8 : 0.85,
+      1 - Math.abs(dragState.deltaX) / 300
+    );
 
-    return {
+    const style = {
       transform: `translateX(${dragState.deltaX}px) rotate(${rotation}deg)`,
       opacity,
-      transition: "transform 0.6s ease-in-out, opacity 0.4s ease-in-out",
       willChange: "transform, opacity",
+    };
+
+    if (!hasSwipedOnce) {
+      return {
+        ...style,
+        transition: "transform 0.6s ease-in-out, opacity 0.4s ease-in-out",
+      };
+    }
+
+    return {
+      ...style,
+      transition: dragState.isDragging
+        ? "none"
+        : "all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
     };
   };
 
