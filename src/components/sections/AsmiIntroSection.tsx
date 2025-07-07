@@ -79,17 +79,17 @@ const AsmiIntroSection = ({ isActive }) => {
         <div className="space-y-6">
           <div className="text-3xl md:text-4xl font-space font-bold text-white leading-tight min-h-[120px] flex items-center justify-center">
             <div>
-              {typedText}
-              {showPlatforms && (
-                <span className="text-green-400 relative inline-block min-w-[140px] text-left">
-                  <span
-                    key={currentPlatform}
-                    className="absolute left-0 top-0 animate-fade-in"
-                  >
-                    {platforms[currentPlatform]}
-                  </span>
-                </span>
-              )}
+              {typedText.split(" ").map((word, index) => {
+                if (index === 3) {
+                  // Split the fullText at the 5th word
+                  return (
+                    <span key={index}>
+                      {word} <br /> {/* Insert a line break */}
+                    </span>
+                  );
+                }
+                return <span key={index}>{word} </span>;
+              })}
               {isTyping && (
                 <span className="animate-pulse text-green-400">|</span>
               )}
@@ -100,11 +100,15 @@ const AsmiIntroSection = ({ isActive }) => {
           {showPlatforms && (
             <div className="flex items-center justify-center space-x-4 animate-fade-in">
               <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                <span className="text-green-400 text-2xl">💬</span>
+                <span className="text-green-400 text-2xl">
+                  <img src="/whatsapp.png" />
+                </span>
               </div>
               <div className="w-px h-8 bg-gray-600"></div>
               <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                <span className="text-blue-400 text-2xl">📱</span>
+                <span className="text-blue-400 text-2xl">
+                  <img src="/imessage.png" />
+                </span>
               </div>
             </div>
           )}
@@ -119,7 +123,7 @@ const AsmiIntroSection = ({ isActive }) => {
             variants={{
               visible: {
                 transition: {
-                  staggerChildren: 0.3,
+                  staggerChildren: 0.3, // Delay the start of each child animation by 0.3s
                 },
               },
             }}
@@ -128,10 +132,14 @@ const AsmiIntroSection = ({ isActive }) => {
               <motion.div
                 key={tag}
                 variants={{
-                  hidden: { opacity: 0, scale: 0.8, y: 10 },
-                  visible: { opacity: 1, scale: 1, y: 0 },
+                  hidden: { opacity: 0, scale: 0.8, y: 10 }, // Initial state
+                  visible: { opacity: 1, scale: 1, y: 0 }, // Final state when visible
                 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                transition={{
+                  duration: 0.4, // Duration for each tag animation
+                  ease: "easeOut", // Ease function for smooth animation
+                  delay: index * 0.3, // Stagger delay based on the tag's index
+                }}
                 className="px-4 py-2 rounded-full border border-white/30 text-white bg-white/10"
               >
                 <span className="text-sm font-medium">{tag}</span>
