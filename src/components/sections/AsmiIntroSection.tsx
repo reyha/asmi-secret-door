@@ -10,7 +10,7 @@ const AsmiIntroSection = ({ isActive }) => {
   const [showTags, setShowTags] = useState(false);
   const [activeTags, setActiveTags] = useState<number[]>([]);
 
-  const fullText = "Asmi is your smart Chief of Staff within ";
+  const fullText = "Asmi is your smart Chief of Staff ";
   const platforms = ["WhatsApp", "iMessage"];
   const tags = ["Calendar", "Meeting Preps", "Mails"];
 
@@ -80,16 +80,43 @@ const AsmiIntroSection = ({ isActive }) => {
           <div className="text-3xl md:text-4xl font-space font-bold text-white leading-tight min-h-[120px] flex items-center justify-center">
             <div>
               {typedText.split(" ").map((word, index) => {
-                if (index === 3) {
-                  // Split the fullText at the 5th word
+                const isChief = word.toLowerCase() === "chief";
+                const isOf = word.toLowerCase() === "of";
+                const isStaff = word.toLowerCase().includes("staff");
+
+                if (isChief) {
                   return (
-                    <span key={index}>
-                      {word} <br /> {/* Insert a line break */}
+                    <span
+                      key={index}
+                      className="text-4xl md:text-5xl font-extrabold text-white"
+                    >
+                      {word}{" "}
                     </span>
                   );
                 }
+
+                if (isOf || isStaff) {
+                  return (
+                    <span
+                      key={index}
+                      className="text-4xl md:text-5xl font-extrabold text-white"
+                    >
+                      {word}{" "}
+                    </span>
+                  );
+                }
+
+                if (index === 3) {
+                  return (
+                    <span key={index}>
+                      {word} <br />
+                    </span>
+                  );
+                }
+
                 return <span key={index}>{word} </span>;
               })}
+
               {isTyping && (
                 <span className="animate-pulse text-green-400">|</span>
               )}
@@ -99,6 +126,7 @@ const AsmiIntroSection = ({ isActive }) => {
           {/* Platform Icons */}
           {showPlatforms && (
             <div className="flex items-center justify-center space-x-4 animate-fade-in">
+              <span className="text-xs">Within</span>
               <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
                 <span className="text-green-400 text-2xl">
                   <img src="/whatsapp.png" />

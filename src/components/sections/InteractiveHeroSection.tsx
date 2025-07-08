@@ -10,7 +10,7 @@ const InteractiveHeroSection = ({ isActive, setShowSwipeTilt }) => {
   const [showRoasts, setShowRoasts] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");  
 
   useEffect(() => {
     if (!isActive) return;

@@ -27,9 +27,7 @@ const SwipeableCard = ({
     deltaX: 0,
   });
   const cardRef = useRef<HTMLDivElement>(null);
-  const [hasSwipedOnce, setHasSwipedOnce] = useState(false);
-  console.log(showSwipeTilt);
-  
+  const [hasSwipedOnce, setHasSwipedOnce] = useState(false);  
 
   useEffect(() => {
     if (!showSwipeTilt || hasSwipedOnce) return;
