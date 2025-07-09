@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import {
   TrendingUp,
   Building,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import InteractiveFOMOSection from "./InteractiveFOMOSection";
 import MobileOptimizedSection from "./MobileOptimizedSection";
+import NumberScroller from "./number-scroller";
 import { Dialog, DialogContent } from "../ui/dialog";
 
 const FinalCTASectionNew = () => {
@@ -21,13 +23,37 @@ const FinalCTASectionNew = () => {
   const [revealedCards, setRevealedCards] = useState<number[]>([]);
   const [formData, setFormData] = useState({
     why: "",
-    amount: 500000,
+    amount: 1_000_000,
     valuation: "",
     partner: "",
     usp: "",
   });
   const [formStep, setFormStep] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+
+  const amounts = [1_000_000, 2_000_000, 5_000_000];
+
+  const formatNumber = (num: number) => {
+    if (num % 1_000_000 === 0) return `$${num / 1_000_000}M`;
+    if (num >= 1_000_000) return `$${(num / 1_000_000).toFixed(1)}M`;
+    if (num >= 1_000) return `$${(num / 1_000).toFixed(1)}K`;
+    return `$${num}`;
+  };
+
+  const nextAmount = () => {
+    const currentIndex = amounts.indexOf(formData.amount);
+    const nextIndex = (currentIndex + 1) % amounts.length;
+    setFormData(prev => ({ ...prev, amount: amounts[nextIndex] }));
+  };
+
+  // Auto-change amount every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextAmount();
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [formData.amount]);
 
   const ctaPoints = [
     "$5M seed → Series A in 8 mo",
@@ -87,20 +113,15 @@ UTM: investor-site-interactive-form
     }
   };
 
-  // Show Interactive FOMO Section
-  // if (showFOMO) {
-  //   return <InteractiveFOMOSection setShowFOMO={setShowFOMO}/>;
-  // }
-
   // Show Interactive Form
   if (showInteractiveForm) {
     return (
       <Dialog open={showInteractiveForm} onOpenChange={setShowInteractiveForm}>
-        <DialogContent className="p-0 bg-background max-h-[90vh] w-[90vw] overflow-y-auto rounded-xl border-black/60 scrollbar-hide">
-      <MobileOptimizedSection maxWidth="sm">
+        <DialogContent className="bg w-[90vw] bg-black overflow-y-auto rounded-xl border-white/40 scrollbar-hide p-3">
+      <MobileOptimizedSection className="!min-h-0" maxWidth="sm">
         {/* Live Offer Preview Card */}
         <div
-          className="mb-4 p-3 rounded-xl border border-white/10"
+          className="mb-4 p-3 rounded-xl"
           style={{ backgroundColor: "var(--bg-surface)" }}
         >
           <p className="text-xs text-secondary mb-1">Live Offer Preview</p>
@@ -160,7 +181,7 @@ UTM: investor-site-interactive-form
             </div>
           )}
 
-          {/* Step 1: Why You */}
+          {/* ... keep existing code (form steps 1-3) */}
           {formStep === 1 && (
             <div className="animate-fade-in space-y-4">
               <label className="block text-lg font-bold text-high">
@@ -200,7 +221,6 @@ UTM: investor-site-interactive-form
             </div>
           )}
 
-          {/* Step 2: Valuation Offer */}
           {formStep === 2 && (
             <div className="animate-fade-in space-y-4">
               <label className="block text-lg font-bold text-high">
@@ -227,7 +247,6 @@ UTM: investor-site-interactive-form
             </div>
           )}
 
-          {/* Step 3: Partner & USP */}
           {formStep === 3 && (
             <div className="animate-fade-in space-y-4">
               <div>
@@ -288,13 +307,6 @@ UTM: investor-site-interactive-form
             </div>
           )}
         </form>
-
-        {/* <button
-          onClick={() => setShowInteractiveForm(false)}
-          className="mt-3 text-secondary hover:text-high transition-colors text-sm"
-        >
-          ← Back
-        </button> */}
       </MobileOptimizedSection>
       </DialogContent>
       </Dialog>
@@ -338,9 +350,17 @@ UTM: investor-site-interactive-form
         <div className="space-y-3">
           <button
             onClick={() => setShowInteractiveForm(true)}
-            className="button-primary w-full py-4 text-lg relative overflow-hidden"
+            className="button-primary w-full py-4 text-lg relative overflow-hidden bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-200 shadow-lg"
           >
-            <span className="relative z-10">Lead our $5M seed</span>
+            <span className="relative z-10">
+              Lead our{' '}
+              <NumberScroller 
+                value={formData.amount} 
+                formatNumber={formatNumber}
+                className="font-bold"
+              />
+              {' '}seed
+            </span>
             <div className="absolute inset-0 bg-green-300 opacity-30 animate-pulse"></div>
           </button>
 

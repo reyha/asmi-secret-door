@@ -119,12 +119,12 @@ const SwipeableCard = ({
       willChange: "transform, opacity",
     };
 
-    if (!hasSwipedOnce) {
-      return {
-        ...style,
-        transition: "transform 0.6s ease-in-out, opacity 0.4s ease-in-out",
-      };
-    }
+    // if (!hasSwipedOnce) {
+    //   return {
+    //     ...style,
+    //     transition: "transform 0.6s ease-in-out, opacity 0.4s ease-in-out",
+    //   };
+    // }
 
     return {
       ...style,
