@@ -166,8 +166,8 @@ const InteractiveFOMOSection = ({setShowFOMO}) => {
 
         {/* FOMO Message - Always visible */}
         <div className="bg-gradient-to-r from-red-900/20 to-orange-900/20 border border-red-400/30 rounded-2xl p-4">
-          <p className="text-lg font-bold text-red-400 mb-2 animate-pulse">
-            Don't repeat history.
+          <p className="text-lg font-bold text-green-400 mb-2 animate-pulse">
+            Repeat history.
           </p>
           <p className="text-gray-300 text-sm">
             Asmi is building the infrastructure for human-AI collaboration.
