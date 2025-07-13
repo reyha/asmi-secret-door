@@ -237,50 +237,55 @@ if (showInteractiveForm) {
                 <div className="animate-fade-in space-y-4">
                   <label className="block text-lg font-bold text-high">Why you?</label>
 
-                  {/* Chips shown separately with distinct styling */}
-                  <div className="flex flex-wrap gap-3">
-                    {suggestionChips.map((chip, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => handleChipClick(chip)}
-                        className={`px-4 py-2 rounded-xl border text-sm font-semibold transition-colors
-                          ${
-                            formData.why === chip
-                             ? "bg-white/10 border-green-400 text-white"
-                             : "bg-[var(--bg-surface)] border-white/20 text-white hover:border-green-400 hover:bg-white/10"
+                  <div className="space-y-2">
+                    {suggestionChips.map((chip, index) => {
+                      const isSelected = formData.why === chip;
+
+                      return (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => handleChipClick(chip)}
+                          className={`block w-full p-3 rounded-xl border text-left text-sm transition-colors duration-300
+                            ${
+                              isSelected
+                                ? "bg-emerald-600 border-emerald-400 text-white hover:bg-emerald-700"
+                                : "bg-green-100 border-green-300 text-green-800 hover:bg-emerald-600 hover:text-white hover:border-emerald-400"
                             }
-                        `}
-                      >
-                        {chip}
-                      </button>
-                    ))}
+                          `}
+                        >
+                          {chip}
+                        </button>
+                      );
+                    })}
                   </div>
 
-                  {/* Textarea */}
-                  <textarea
+                {/* Textarea */}
+                <textarea
                   value={formData.why}
                   onChange={(e) =>
                     setFormData({ ...formData, why: e.target.value })
                   }
-                  className="w-full p-3 rounded-xl border border-white/20 text-black placeholder-gray-600 focus:border-green-400 focus:outline-none text-sm"
-                  style={{ backgroundColor: "#d6d6d6" }}
+                  className="w-full p-3 rounded-xl border border-white/20 text-white placeholder-gray-400 focus:border-green-400 focus:outline-none text-sm"
+                  style={{ backgroundColor: "var(--bg-surface)" }}
                   placeholder="What makes you the right investor for Asmi?"
                   rows={3}
                 />
 
-                  {/* Continue button */}
-                  <button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!formData.why.trim()}
-                    className={`button-primary w-full transition-opacity duration-300 ${
-                      formData.why.trim() ? "opacity-100 cursor-pointer" : "opacity-50 cursor-not-allowed"
-                    }`}
-                  >
-                    Continue
-                  </button>
-                </div>
+                {/* Continue button */}
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  disabled={!formData.why}
+                  className={`button-primary w-full transition-colors duration-300 ${
+                    !formData.why
+                      ? "opacity-50 cursor-not-allowed"
+                      : "opacity-100 text-white cursor-pointer"
+                  }`}
+                >
+                Continue
+                </button>
+              </div>
             )}
 
             {formStep === 2 && (

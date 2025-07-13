@@ -53,7 +53,7 @@ const FinalCTASection = () => {
                   value={formData.why}
                   onChange={(e) => setFormData({...formData, why: e.target.value})}
                   className="w-full p-4 bg-black/40 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:border-green-400 focus:outline-none"
-                  placeholder="What makes you the right investor for Asmi?"
+                  placeholder="What makes you the right investor?"
                   rows={3}
                 />
               </div>
