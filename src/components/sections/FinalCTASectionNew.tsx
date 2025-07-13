@@ -69,9 +69,9 @@ const FinalCTASectionNew = () => {
   ];
 
   const suggestionChips = [
-    "I have backed GOAT consumer companies",
+    "I have backed GOAT consumer apps",
     "I have deep pockets",
-    "I am the GTM god (1K → 100M consumers)",
+    "I am the GTM god (1K → 100M user)",
   ];
 
   const handleCardReveal = (index: number) => {
