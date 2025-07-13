@@ -58,7 +58,7 @@ const FinalCTASectionNew = () => {
   const ctaPoints = [
     "$5M seed → Series A in 8 mo",
     // "Founders: $300M GMV & Meta AI systems",
-    "Serial Entrepreneur meets Cracked Research Scientist",
+    "Proven Team: Serial founder with cracked AI scientist",
     "Limited seats. Claim yours.",
   ];
 
