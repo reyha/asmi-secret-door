@@ -136,6 +136,27 @@ const SwipeableCard = ({
 
   return (
     <div className="relative w-full h-full overflow-hidden">
+      {/* Left arrow */}
+      <button
+        onClick={onSwipeRight}
+        className="hidden md:flex fixed left-4 top-1/2 transform -translate-y-1/2 z-30 p-3 bg-green-500/20 border-2 border-green-400 rounded-full hover:bg-green-500/40 transition"
+        aria-label="Swipe Left"
+        type="button"
+      >
+        <ChevronLeft size={24} className="text-green-400" />
+      </button>
+
+      {/* Right arrow */}
+      <button
+        onClick={onSwipeLeft}
+        className="hidden md:flex fixed right-4 top-1/2 transform -translate-y-1/2 z-30 p-3 bg-blue-500/20 border-2 border-blue-400 rounded-full hover:bg-blue-500/40 transition"
+        aria-label="Swipe Right"
+        type="button"
+      >
+        <ChevronRight size={24} className="text-blue-400" />
+      </button>
+
+      {/* Swipeable Card */}
       <div
         ref={cardRef}
         className={`w-full h-full touch-none select-none cursor-grab active:cursor-grabbing ${

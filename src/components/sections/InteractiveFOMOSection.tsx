@@ -177,21 +177,21 @@ const InteractiveFOMOSection = ({setShowFOMO}) => {
         {/* CTA */}
         {showCTA && (
           <div className="space-y-4 animate-fade-in">
-            <h3 className="text-xl font-bold text-white">
-              Back the memory OS of the future.
-            </h3>
+            {/*<h3 className="text-xl font-bold text-white">*/}
+            {/*  Back the memory OS of the future.*/}
+            {/*</h3>*/}
             
-            <div className="space-y-3">
-              <div className="bg-white/5 rounded-xl p-3 border border-white/10">
-                <p className="text-sm font-medium text-white">$5-6M seed → Series A in 18 mo</p>
-              </div>
-              <div className="bg-white/5 rounded-xl p-3 border border-white/10">
-                <p className="text-sm font-medium text-white">Founders: $300M GMV & Meta AI systems</p>
-              </div>
-              <div className="bg-white/5 rounded-xl p-3 border border-white/10">
-                <p className="text-sm font-medium text-white">Limited seats. Claim yours.</p>
-              </div>
-            </div>
+            {/*<div className="space-y-3">*/}
+            {/*  <div className="bg-white/5 rounded-xl p-3 border border-white/10">*/}
+            {/*    <p className="text-sm font-medium text-white">$5-6M seed → Series A in 18 mo</p>*/}
+            {/*  </div>*/}
+            {/*  <div className="bg-white/5 rounded-xl p-3 border border-white/10">*/}
+            {/*    <p className="text-sm font-medium text-white">Founders: $300M GMV & Meta AI systems</p>*/}
+            {/*  </div>*/}
+            {/*  <div className="bg-white/5 rounded-xl p-3 border border-white/10">*/}
+            {/*    <p className="text-sm font-medium text-white">Limited seats. Claim yours.</p>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
 
             <button className="w-full bg-green-400 hover:bg-green-500 text-black font-bold py-3 px-6 rounded-full transition-colors animate-pulse">
               Lead our $5M seed <ArrowRight className="inline ml-2" size={16} />

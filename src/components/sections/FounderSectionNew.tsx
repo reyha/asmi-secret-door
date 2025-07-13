@@ -20,7 +20,7 @@ const FounderSectionNew = () => {
         { label: "$75M", sublabel: "Funds Raised", icon: Building },
         { label: "400+", sublabel: "Cities", icon: Users }
       ],
-      companies: ["Arzoo", "GoStor", "NU"],
+      companies: ["Arzooo", "Flipkart", "IIT"],
       achievements: [
         "Forbes 30 Under 30 Asia 2020",
         "HURUN #9 among top 150 entrepreneurs under 35 in India, 2024"
